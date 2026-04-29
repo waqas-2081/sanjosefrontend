@@ -1017,9 +1017,15 @@ section {
 }
 
 .solution-accordion-content {
-    height: 0;
+    max-height: 0;
+    opacity: 0;
     overflow: hidden;
-    transition: height 0.35s ease;
+    transition: max-height 0.35s ease, opacity 0.25s ease;
+}
+
+.solution-accordion-item.is-open .solution-accordion-content {
+    max-height: 1200px;
+    opacity: 1;
 }
 
 .solution-accordion-inner {

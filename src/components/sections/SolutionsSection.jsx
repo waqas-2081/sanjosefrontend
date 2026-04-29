@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { GalleryLightboxPortal } from '../ui/GalleryLightbox';
 
 export function SolutionsSection() {
@@ -8,6 +8,46 @@ export function SolutionsSection() {
   const toggleSolution = useCallback((solutionId) => {
     setOpenSolution((current) => (current === solutionId ? null : solutionId));
   }, []);
+
+  const syncSolutionSwipers = useCallback(() => {
+    if (typeof window === 'undefined' || typeof window.Swiper === 'undefined') return;
+
+    const sliders = document.querySelectorAll('.solution-slider.branding-swiper');
+    sliders.forEach((el) => {
+      if (el.swiper) {
+        el.swiper.update();
+        return;
+      }
+
+      const prev = el.querySelector('.branding-prev');
+      const next = el.querySelector('.branding-next');
+      // Initialize only if legacy widgets didn't already do it.
+      // This keeps slider behavior stable after React accordion toggles.
+      // eslint-disable-next-line no-new
+      new window.Swiper(el, {
+        slidesPerView: 4,
+        spaceBetween: 18,
+        loop: true,
+        observer: true,
+        observeParents: true,
+        navigation: prev && next ? { nextEl: next, prevEl: prev } : undefined,
+        breakpoints: {
+          0: { slidesPerView: 2.2 },
+          576: { slidesPerView: 2 },
+          992: { slidesPerView: 4 },
+        },
+      });
+    });
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const id = window.requestAnimationFrame(() => {
+      window.dispatchEvent(new Event('resize'));
+      window.setTimeout(syncSolutionSwipers, 40);
+    });
+    return () => window.cancelAnimationFrame(id);
+  }, [openSolution, syncSolutionSwipers]);
 
   const openFromSlide = useCallback((e) => {
     const slide = e.currentTarget;
@@ -66,7 +106,7 @@ export function SolutionsSection() {
                             </span>
                         </div>
                     </button>
-                    <div className="solution-accordion-content" style={{ height: openSolution === 'branding' ? 'auto' : '0px' }}>
+                    <div className="solution-accordion-content">
                         <div className="solution-accordion-inner">
                             <div className="row align-items-center">
                                 <div className="col-lg-12">
@@ -188,7 +228,7 @@ export function SolutionsSection() {
                             </span>
                         </div>
                     </button>
-                    <div className="solution-accordion-content" style={{ height: openSolution === 'vehicle' ? 'auto' : '0px' }}>
+                    <div className="solution-accordion-content">
                         <div className="solution-accordion-inner">
                             <div className="row align-items-center">
                                 <div className="col-lg-12">
@@ -301,7 +341,7 @@ export function SolutionsSection() {
                             </span>
                         </div>
                     </button>
-                    <div className="solution-accordion-content" style={{ height: openSolution === 'website' ? 'auto' : '0px' }}>
+                    <div className="solution-accordion-content">
                         <div className="solution-accordion-inner">
                             <div className="row align-items-center">
                                 <div className="col-lg-12">
@@ -414,7 +454,7 @@ export function SolutionsSection() {
                             </span>
                         </div>
                     </button>
-                    <div className="solution-accordion-content" style={{ height: openSolution === 'mobile-apps' ? 'auto' : '0px' }}>
+                    <div className="solution-accordion-content">
                         <div className="solution-accordion-inner">
                             <div className="row align-items-center">
                                 <div className="col-lg-12">
@@ -527,7 +567,7 @@ export function SolutionsSection() {
                             </span>
                         </div>
                     </button>
-                    <div className="solution-accordion-content" style={{ height: openSolution === 'digital-marketing' ? 'auto' : '0px' }}>
+                    <div className="solution-accordion-content">
                         <div className="solution-accordion-inner">
                             <div className="row align-items-center">
                                 <div className="col-lg-12">
@@ -640,7 +680,7 @@ export function SolutionsSection() {
                             </span>
                         </div>
                     </button>
-                    <div className="solution-accordion-content" style={{ height: openSolution === 'seo' ? 'auto' : '0px' }}>
+                    <div className="solution-accordion-content">
                         <div className="solution-accordion-inner">
                             <div className="row align-items-center">
                                 <div className="col-lg-12">
