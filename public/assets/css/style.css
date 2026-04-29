@@ -1033,6 +1033,21 @@ section {
     overflow: hidden;
 }
 
+/* Fallback layout: keep 5 images in one row if Swiper is not ready */
+.solution-slider:not(.swiper-initialized) .swiper-wrapper {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.solution-slider:not(.swiper-initialized) .swiper-slide {
+    width: auto;
+}
+
+.solution-slider:not(.swiper-initialized) .solution-slider-nav {
+    display: none;
+}
+
 .stories-slider-rows {
     display: grid;
     gap: 24px;

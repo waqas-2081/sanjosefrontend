@@ -3,6 +3,11 @@ import { GalleryLightboxPortal } from '../ui/GalleryLightbox';
 
 export function SolutionsSection() {
   const [lightbox, setLightbox] = useState(null);
+  const [openSolution, setOpenSolution] = useState('branding');
+
+  const toggleSolution = useCallback((solutionId) => {
+    setOpenSolution((current) => (current === solutionId ? null : solutionId));
+  }, []);
 
   const openFromSlide = useCallback((e) => {
     const slide = e.currentTarget;
@@ -42,9 +47,14 @@ export function SolutionsSection() {
                 <p>We are your full-stack, five-star creative design agency ready to tackle any job you have for us.</p>
             </div>
 
-            <div className="solutions-accordion">
-                <div className="solution-accordion-item" data-solution="branding">
-                    <button className="solution-accordion-header" type="button">
+            <div className="solutions-accordion" data-react-accordion="true">
+                <div className={`solution-accordion-item${openSolution === 'branding' ? ' is-open' : ''}`} data-solution="branding">
+                    <button
+                        className="solution-accordion-header"
+                        type="button"
+                        aria-expanded={openSolution === 'branding'}
+                        onClick={() => toggleSolution('branding')}
+                    >
                         <div className="solution-accordion-title">
                             <h3>Branding/Logo</h3>
                         </div>
@@ -56,7 +66,7 @@ export function SolutionsSection() {
                             </span>
                         </div>
                     </button>
-                    <div className="solution-accordion-content">
+                    <div className="solution-accordion-content" style={{ height: openSolution === 'branding' ? 'auto' : '0px' }}>
                         <div className="solution-accordion-inner">
                             <div className="row align-items-center">
                                 <div className="col-lg-12">
@@ -159,8 +169,13 @@ export function SolutionsSection() {
                     </div>
                 </div>
 
-                <div className="solution-accordion-item" data-solution="vehicle">
-                    <button className="solution-accordion-header" type="button">
+                <div className={`solution-accordion-item${openSolution === 'vehicle' ? ' is-open' : ''}`} data-solution="vehicle">
+                    <button
+                        className="solution-accordion-header"
+                        type="button"
+                        aria-expanded={openSolution === 'vehicle'}
+                        onClick={() => toggleSolution('vehicle')}
+                    >
                         <div className="solution-accordion-title">
                             <h3>Vehicle Wrap Design</h3>
                         </div>
@@ -173,7 +188,7 @@ export function SolutionsSection() {
                             </span>
                         </div>
                     </button>
-                    <div className="solution-accordion-content">
+                    <div className="solution-accordion-content" style={{ height: openSolution === 'vehicle' ? 'auto' : '0px' }}>
                         <div className="solution-accordion-inner">
                             <div className="row align-items-center">
                                 <div className="col-lg-12">
@@ -268,8 +283,13 @@ export function SolutionsSection() {
                     </div>
                 </div>
 
-                <div className="solution-accordion-item" data-solution="website">
-                    <button className="solution-accordion-header" type="button">
+                <div className={`solution-accordion-item${openSolution === 'website' ? ' is-open' : ''}`} data-solution="website">
+                    <button
+                        className="solution-accordion-header"
+                        type="button"
+                        aria-expanded={openSolution === 'website'}
+                        onClick={() => toggleSolution('website')}
+                    >
                         <div className="solution-accordion-title">
                             <h3>Website Design</h3>
                         </div>
@@ -281,7 +301,7 @@ export function SolutionsSection() {
                             </span>
                         </div>
                     </button>
-                    <div className="solution-accordion-content">
+                    <div className="solution-accordion-content" style={{ height: openSolution === 'website' ? 'auto' : '0px' }}>
                         <div className="solution-accordion-inner">
                             <div className="row align-items-center">
                                 <div className="col-lg-12">
@@ -376,8 +396,13 @@ export function SolutionsSection() {
                     </div>
                 </div>
 
-                <div className="solution-accordion-item" data-solution="mobile-apps">
-                    <button className="solution-accordion-header" type="button">
+                <div className={`solution-accordion-item${openSolution === 'mobile-apps' ? ' is-open' : ''}`} data-solution="mobile-apps">
+                    <button
+                        className="solution-accordion-header"
+                        type="button"
+                        aria-expanded={openSolution === 'mobile-apps'}
+                        onClick={() => toggleSolution('mobile-apps')}
+                    >
                         <div className="solution-accordion-title">
                             <h3>Mobile App Design</h3>
                         </div>
@@ -389,7 +414,7 @@ export function SolutionsSection() {
                             </span>
                         </div>
                     </button>
-                    <div className="solution-accordion-content">
+                    <div className="solution-accordion-content" style={{ height: openSolution === 'mobile-apps' ? 'auto' : '0px' }}>
                         <div className="solution-accordion-inner">
                             <div className="row align-items-center">
                                 <div className="col-lg-12">
@@ -484,8 +509,13 @@ export function SolutionsSection() {
                     </div>
                 </div>
 
-                <div className="solution-accordion-item" data-solution="digital-marketing">
-                    <button className="solution-accordion-header" type="button">
+                <div className={`solution-accordion-item${openSolution === 'digital-marketing' ? ' is-open' : ''}`} data-solution="digital-marketing">
+                    <button
+                        className="solution-accordion-header"
+                        type="button"
+                        aria-expanded={openSolution === 'digital-marketing'}
+                        onClick={() => toggleSolution('digital-marketing')}
+                    >
                         <div className="solution-accordion-title">
                             <h3>Digital Marketing</h3>
                         </div>
@@ -497,7 +527,7 @@ export function SolutionsSection() {
                             </span>
                         </div>
                     </button>
-                    <div className="solution-accordion-content">
+                    <div className="solution-accordion-content" style={{ height: openSolution === 'digital-marketing' ? 'auto' : '0px' }}>
                         <div className="solution-accordion-inner">
                             <div className="row align-items-center">
                                 <div className="col-lg-12">
@@ -592,8 +622,13 @@ export function SolutionsSection() {
                     </div>
                 </div>
 
-                <div className="solution-accordion-item" data-solution="seo">
-                    <button className="solution-accordion-header" type="button">
+                <div className={`solution-accordion-item${openSolution === 'seo' ? ' is-open' : ''}`} data-solution="seo">
+                    <button
+                        className="solution-accordion-header"
+                        type="button"
+                        aria-expanded={openSolution === 'seo'}
+                        onClick={() => toggleSolution('seo')}
+                    >
                         <div className="solution-accordion-title">
                             <h3>SEO & Content</h3>
                         </div>
@@ -605,7 +640,7 @@ export function SolutionsSection() {
                             </span>
                         </div>
                     </button>
-                    <div className="solution-accordion-content">
+                    <div className="solution-accordion-content" style={{ height: openSolution === 'seo' ? 'auto' : '0px' }}>
                         <div className="solution-accordion-inner">
                             <div className="row align-items-center">
                                 <div className="col-lg-12">

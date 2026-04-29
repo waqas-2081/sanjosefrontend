@@ -139,7 +139,7 @@ function initMarquee() {
 }
 
 function initSolutionAccordion() {
-  const accordionItems = document.querySelectorAll('.solution-accordion-item');
+  const accordionItems = document.querySelectorAll('.solutions-accordion:not([data-react-accordion]) .solution-accordion-item');
 
   function closeItem(item) {
     const content = item.querySelector('.solution-accordion-content');
