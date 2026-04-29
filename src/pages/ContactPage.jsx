@@ -1,49 +1,134 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
+import { postContact, autoSaveContact } from '../api/contactApi';
 
-const SERVICE_OPTIONS = [
-  { value: '', label: 'Select Service' },
-  { value: 'Brand Strategy', label: 'Brand Strategy' },
-  { value: 'Website Design', label: 'Website Design' },
-  { value: 'Logo Design', label: 'Logo Design' },
-  { value: 'Full Brand Development', label: 'Full Brand Development' },
-];
-
-const CONTACT_ENDPOINT = 'http://127.0.0.1:8000/api/contact';
+const AUTOSAVE_DELAY_MS = 3000; // 3 seconds
 
 const initialForm = {
   full_name: '',
   email: '',
   phone_number: '',
   company_name: '',
-  service: '',
   project_description: '',
 };
 
-function getContactApiErrorMessage(result) {
-  if (result?.errors && typeof result.errors === 'object') {
-    const firstFieldErrors = Object.values(result.errors).find((value) => Array.isArray(value) && value.length > 0);
-    if (firstFieldErrors) return firstFieldErrors[0];
-  }
-  if (result?.message && typeof result.message === 'string') return result.message;
-  return 'Unable to send your message. Please try again.';
-}
-
 export default function ContactPage() {
   useDocumentTitle('Contact Us | San Jose Logo Design');
+  
   const [form, setForm] = useState(initialForm);
   const [submitted, setSubmitted] = useState(false);
   const [submittedId, setSubmittedId] = useState(null);
   const [submitError, setSubmitError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // Auto-save states
+  const [autoSaveStatus, setAutoSaveStatus] = useState(''); // '' | 'saving' | 'saved' | 'error'
+  
+  // Refs
+  const autoSaveTimerRef = useRef(null);
+  const formRef = useRef(form);
+  const isAutoSavingRef = useRef(false);
+  const mountedRef = useRef(true);
+
+  // Keep formRef updated
+  useEffect(() => {
+    formRef.current = form;
+  }, [form]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      mountedRef.current = false;
+      if (autoSaveTimerRef.current) {
+        clearTimeout(autoSaveTimerRef.current);
+      }
+    };
+  }, []);
 
   const setField = (key, value) => {
     setForm((f) => ({ ...f, [key]: value }));
     setSubmitted(false);
     setSubmittedId(null);
     setSubmitError('');
+    // Clear auto-save status when user starts typing again
+    if (autoSaveStatus === 'saved' || autoSaveStatus === 'error') {
+      setAutoSaveStatus('');
+    }
   };
+
+  // ====== AUTO-SAVE LOGIC ======
+  useEffect(() => {
+    // Check if form has any data
+    const hasAnyData = Object.values(form).some(
+      (val) => val !== null && val !== '' && val !== undefined
+    );
+
+    if (!hasAnyData || isSubmitting || submitted) {
+      if (autoSaveTimerRef.current) {
+        clearTimeout(autoSaveTimerRef.current);
+        autoSaveTimerRef.current = null;
+      }
+      if (!hasAnyData) setAutoSaveStatus('');
+      return;
+    }
+
+    // Clear previous timer
+    if (autoSaveTimerRef.current) {
+      clearTimeout(autoSaveTimerRef.current);
+    }
+
+    // Set new timer
+    autoSaveTimerRef.current = setTimeout(async () => {
+      if (!mountedRef.current) return;
+      const currentForm = formRef.current;
+
+      // Build payload with non-empty values only
+      const payload = {};
+      if (currentForm.full_name?.trim()) payload.full_name = currentForm.full_name.trim();
+      if (currentForm.email?.trim()) payload.email = currentForm.email.trim();
+      if (currentForm.phone_number?.trim()) payload.phone_number = currentForm.phone_number.trim();
+      if (currentForm.company_name?.trim()) payload.company_name = currentForm.company_name.trim();
+      if (currentForm.project_description?.trim()) payload.project_description = currentForm.project_description.trim();
+
+      // Only save if there's something
+      if (Object.keys(payload).length === 0) return;
+      if (isAutoSavingRef.current) return;
+
+      isAutoSavingRef.current = true;
+      setAutoSaveStatus('saving');
+
+      try {
+        await autoSaveContact(payload);
+        if (mountedRef.current) {
+          setAutoSaveStatus('saved');
+          setTimeout(() => {
+            if (mountedRef.current) {
+              setAutoSaveStatus((prev) => (prev === 'saved' ? '' : prev));
+            }
+          }, 2000);
+        }
+      } catch (err) {
+        console.error('Auto-save failed:', err);
+        if (mountedRef.current) {
+          setAutoSaveStatus('error');
+          setTimeout(() => {
+            if (mountedRef.current) {
+              setAutoSaveStatus((prev) => (prev === 'error' ? '' : prev));
+            }
+          }, 3000);
+        }
+      } finally {
+        isAutoSavingRef.current = false;
+      }
+    }, AUTOSAVE_DELAY_MS);
+
+    return () => {
+      if (autoSaveTimerRef.current) {
+        clearTimeout(autoSaveTimerRef.current);
+      }
+    };
+  }, [form, isSubmitting, submitted]);
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -52,40 +137,25 @@ export default function ContactPage() {
     setSubmittedId(null);
     setIsSubmitting(true);
 
+    // Clear auto-save timer
+    if (autoSaveTimerRef.current) {
+      clearTimeout(autoSaveTimerRef.current);
+      autoSaveTimerRef.current = null;
+    }
+    setAutoSaveStatus('');
+
     const body = {
       full_name: form.full_name.trim(),
       email: form.email.trim(),
       phone_number: form.phone_number.trim(),
-      company_name: form.company_name.trim(),
-      service: form.service,
+      company_name: form.company_name.trim() || null,
       project_description: form.project_description.trim(),
     };
 
     try {
-      const response = await fetch(CONTACT_ENDPOINT, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-          'X-Requested-With': 'XMLHttpRequest',
-        },
-        body: JSON.stringify(body),
-      });
-
-      const contentType = response.headers.get('content-type') || '';
-      const isJson = contentType.includes('application/json');
-      const result = isJson ? await response.json().catch(() => null) : null;
-
-      if (!response.ok) {
-        throw new Error(getContactApiErrorMessage(result));
-      }
-
-      if (!result || result.success !== true) {
-        throw new Error('Invalid response from server.');
-      }
-
+      const data = await postContact(body);
       setSubmitted(true);
-      setSubmittedId(result.data?.id ?? null);
+      setSubmittedId(data.data?.id ?? null);
       setForm(initialForm);
     } catch (error) {
       setSubmitError(error.message || 'Unable to send your message. Please try again.');
@@ -133,7 +203,7 @@ export default function ContactPage() {
           <div className="row align-items-stretch">
             <div className="col-lg-5 mb-4 mb-lg-0">
               <div className="contact-info-box h-100">
-                <h2 className="contact-title">Let’s Build Your Brand</h2>
+                <h2 className="contact-title">Let&apos;s Build Your Brand</h2>
                 <p className="contact-text">
                   One of the top logo design companies in the US, San Jose Logo Design knows what it takes to get the
                   best results for its customer&apos;s brand with prospects. To execute both easily, logo design must be
@@ -180,6 +250,7 @@ export default function ContactPage() {
             <div className="col-lg-7">
               <div className="contact-form-box">
                 <h3 className="form-title">Start Your Project</h3>
+
 
                 <form onSubmit={onSubmit}>
                   <div className="row">
@@ -228,22 +299,6 @@ export default function ContactPage() {
                         value={form.company_name}
                         onChange={(e) => setField('company_name', e.target.value)}
                       />
-                    </div>
-
-                    <div className="col-12 mb-3">
-                      <select
-                        name="service"
-                        className="form-control custom-input"
-                        value={form.service}
-                        onChange={(e) => setField('service', e.target.value)}
-                        required
-                      >
-                        {SERVICE_OPTIONS.map((opt) => (
-                          <option key={opt.value || 'empty'} value={opt.value}>
-                            {opt.label}
-                          </option>
-                        ))}
-                      </select>
                     </div>
 
                     <div className="col-12 mb-3">

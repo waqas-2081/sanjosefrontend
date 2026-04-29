@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useRef, useCallback } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { postBrandingBrief } from '../../api/brandingBriefApi';
+import { postBrandingBrief, autoSaveBrandingBrief } from '../../api/brandingBriefApi';
 
 const OPEN_DELAY_MS = 3500;
+const AUTOSAVE_DELAY_MS = 3000; // 3 seconds
 
 const emptyForm = {
   fullName: '',
@@ -53,22 +54,46 @@ export function HomeLeadPopup({ autoOpenOnLoad = false }) {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');
   const [submitSuccess, setSubmitSuccess] = useState('');
+  
+  // Auto-save states
+  const [autoSaveStatus, setAutoSaveStatus] = useState(''); // '' | 'saving' | 'saved' | 'error'
+  
+  // Refs for auto-save logic
+  const autoSaveTimerRef = useRef(null);
+  const formRef = useRef(form);
+  const isAutoSavingRef = useRef(false);
+  
   const leftImage = useMemo(() => `${process.env.PUBLIC_URL || ''}/assets/images/popup.png`, []);
 
+  // Keep formRef updated with latest form values
+  useEffect(() => {
+    formRef.current = form;
+  }, [form]);
+
+  // Reset form when popup closes
   useEffect(() => {
     if (open) return;
     setForm(emptyForm);
     setSubmitting(false);
     setSubmitError('');
     setSubmitSuccess('');
+    setAutoSaveStatus('');
+    
+    // Clear any pending auto-save timer
+    if (autoSaveTimerRef.current) {
+      clearTimeout(autoSaveTimerRef.current);
+      autoSaveTimerRef.current = null;
+    }
   }, [open]);
 
+  // Auto-open on load
   useEffect(() => {
     if (!autoOpenOnLoad) return undefined;
     const timer = window.setTimeout(() => setOpen(true), OPEN_DELAY_MS);
     return () => window.clearTimeout(timer);
   }, [autoOpenOnLoad]);
 
+  // Quote trigger click handler
   useEffect(() => {
     const onQuoteTriggerClick = (event) => {
       const trigger = event.target?.closest?.('a, button');
@@ -86,20 +111,110 @@ export function HomeLeadPopup({ autoOpenOnLoad = false }) {
     setForm((prev) => ({ ...prev, [key]: value }));
     setSubmitError('');
     setSubmitSuccess('');
+    // Clear auto-save status when user starts typing
+    if (autoSaveStatus === 'saved' || autoSaveStatus === 'error') {
+      setAutoSaveStatus('');
+    }
   };
+
+  // ====== AUTO-SAVE LOGIC ======
+  useEffect(() => {
+    // Don't auto-save if popup is not open or form is completely empty
+    const { fullName, email, phone, message } = form;
+    const hasAnyData = fullName || email || phone || message;
+    
+    if (!open || !hasAnyData) {
+      if (autoSaveTimerRef.current) {
+        clearTimeout(autoSaveTimerRef.current);
+        autoSaveTimerRef.current = null;
+      }
+      setAutoSaveStatus('');
+      return;
+    }
+
+    // Don't set new timer if currently submitting
+    if (submitting) return;
+
+    // Clear previous timer
+    if (autoSaveTimerRef.current) {
+      clearTimeout(autoSaveTimerRef.current);
+    }
+
+    // Set new timer for auto-save after 3 seconds of inactivity
+    autoSaveTimerRef.current = setTimeout(async () => {
+      const currentForm = formRef.current;
+      
+      // Double-check there's still data to save
+      if (!currentForm.fullName && !currentForm.email && !currentForm.phone && !currentForm.message) {
+        return;
+      }
+
+      // Prevent concurrent auto-saves
+      if (isAutoSavingRef.current) return;
+      
+      isAutoSavingRef.current = true;
+      setAutoSaveStatus('saving');
+      
+      try {
+        const payload = {};
+        if (currentForm.fullName.trim()) payload.full_name = currentForm.fullName.trim();
+        if (currentForm.email.trim()) payload.email = currentForm.email.trim();
+        if (currentForm.phone.trim()) payload.phone = currentForm.phone.trim();
+        if (currentForm.message.trim()) payload.message = currentForm.message.trim();
+        
+        // Only send if there's actual data
+        if (Object.keys(payload).length > 0) {
+          await autoSaveBrandingBrief(payload);
+          setAutoSaveStatus('saved');
+          
+          // Hide "saved" indicator after 2 seconds
+          setTimeout(() => {
+            setAutoSaveStatus((prev) => (prev === 'saved' ? '' : prev));
+          }, 2000);
+        }
+      } catch (err) {
+        console.error('Auto-save failed:', err);
+        setAutoSaveStatus('error');
+        
+        // Hide "error" indicator after 3 seconds
+        setTimeout(() => {
+          setAutoSaveStatus((prev) => (prev === 'error' ? '' : prev));
+        }, 3000);
+      } finally {
+        isAutoSavingRef.current = false;
+      }
+    }, AUTOSAVE_DELAY_MS);
+
+    // Cleanup on unmount or dependency change
+    return () => {
+      if (autoSaveTimerRef.current) {
+        clearTimeout(autoSaveTimerRef.current);
+      }
+    };
+  }, [form, open, submitting]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitError('');
     setSubmitSuccess('');
+    
+    // Clear auto-save timer since we're doing final submit
+    if (autoSaveTimerRef.current) {
+      clearTimeout(autoSaveTimerRef.current);
+      autoSaveTimerRef.current = null;
+    }
+    setAutoSaveStatus('');
+    
     const full_name = form.fullName.trim();
     const email = form.email.trim();
     const phone = form.phone.trim();
     const message = form.message.trim();
+    
     if (!full_name || !email || !phone || !message) {
       setSubmitError('Please fill in all fields.');
       return;
     }
+    
     setSubmitting(true);
     try {
       const data = await postBrandingBrief({
@@ -118,6 +233,7 @@ export function HomeLeadPopup({ autoOpenOnLoad = false }) {
     }
   };
 
+  // Escape key & scroll lock
   useEffect(() => {
     if (!open) return undefined;
     const onEsc = (e) => {
@@ -173,8 +289,6 @@ export function HomeLeadPopup({ autoOpenOnLoad = false }) {
                   animate={{ scale: [1, 1.05, 1] }}
                   transition={{ duration: 15, ease: 'easeInOut', repeat: Infinity }}
                 />
-                
-               
               </div>
 
               <div className="home-lead-popup__form-wrap">
@@ -214,6 +328,8 @@ export function HomeLeadPopup({ autoOpenOnLoad = false }) {
                       {submitSuccess}
                     </div>
                   ) : null}
+                  
+                  
                   <input
                     type="text"
                     name="full_name"
@@ -448,6 +564,16 @@ export function HomeLeadPopup({ autoOpenOnLoad = false }) {
           color: #ffc9c9;
         }
         .home-lead-popup__alert--success {
+          background: rgba(72, 196, 130, 0.14);
+          border: 1px solid rgba(100, 210, 150, 0.45);
+          color: #c8f5dc;
+        }
+        .home-lead-popup__alert--saving {
+          background: rgba(250, 176, 5, 0.12);
+          border: 1px solid rgba(250, 176, 5, 0.35);
+          color: #ffe7a5;
+        }
+        .home-lead-popup__alert--saved {
           background: rgba(72, 196, 130, 0.14);
           border: 1px solid rgba(100, 210, 150, 0.45);
           color: #c8f5dc;

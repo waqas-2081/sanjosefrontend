@@ -1,5 +1,5 @@
-const BRANDING_BRIEF_ENDPOINT = 'http://127.0.0.1:8000/api/branding-brief';
-const BRANDING_BRIEF_AUTOSAVE_ENDPOINT = 'http://127.0.0.1:8000/api/branding-brief/autosave';
+const CONTACT_ENDPOINT = 'http://127.0.0.1:8000/api/contact';
+const CONTACT_AUTOSAVE_ENDPOINT = 'http://127.0.0.1:8000/api/contact/autosave';
 
 function getErrorMessage(data, fallback) {
   if (!data) return fallback;
@@ -27,11 +27,10 @@ async function readJsonResponse(res) {
 }
 
 /**
- * POST /api/branding-brief — Final submit with all fields required
- * body: { full_name, email, phone, message }
+ * POST /api/contact — Final submit with validation
  */
-export async function postBrandingBrief(payload, options = {}) {
-  const res = await fetch(BRANDING_BRIEF_ENDPOINT, {
+export async function postContact(payload, options = {}) {
+  const res = await fetch(CONTACT_ENDPOINT, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -49,14 +48,13 @@ export async function postBrandingBrief(payload, options = {}) {
 }
 
 /**
- * POST /api/branding-brief/autosave — Auto-save draft (partial data allowed)
- * body: { full_name?, email?, phone?, message? }
+ * POST /api/contact/autosave — Auto-save draft (partial data allowed)
  */
-export async function autoSaveBrandingBrief(payload, options = {}) {
-  const res = await fetch(BRANDING_BRIEF_AUTOSAVE_ENDPOINT, {
+export async function autoSaveContact(payload, options = {}) {
+  const res = await fetch(CONTACT_AUTOSAVE_ENDPOINT, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json',   
       Accept: 'application/json',
       'X-Requested-With': 'XMLHttpRequest',
     },
