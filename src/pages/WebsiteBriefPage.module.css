@@ -1,0 +1,258 @@
+.page {
+  --brief-accent: #ff5e2c;
+  --brief-accent-mid: #ff7a4d;
+  --brief-accent-deep: #e04a1a;
+  --brief-card: #ffffff;
+  --brief-muted: #64748b;
+  --brief-border: #e2e8f0;
+}
+
+.intro {
+  max-width: 720px;
+  margin: 0 auto 2.5rem;
+  text-align: center;
+}
+
+.intro h2 {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  letter-spacing: 0.02em;
+  margin-bottom: 0.75rem;
+  color: #0f172a;
+}
+
+.intro p {
+  color: var(--brief-muted);
+  font-size: 1rem;
+  line-height: 1.65;
+  margin: 0;
+}
+
+.formWrap {
+  max-width: 920px;
+  margin: 0 auto;
+}
+
+.card {
+  background: var(--brief-card);
+  border-radius: 16px;
+  border: 1px solid var(--brief-border);
+  box-shadow: 0 10px 40px rgba(15, 23, 42, 0.06);
+  padding: 1.5rem 1.25rem 1.75rem;
+  margin-bottom: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .card {
+    padding: 1.75rem 2rem 2rem;
+  }
+}
+
+.cardTitle {
+  font-size: 1.35rem;
+  letter-spacing: 0.04em;
+  color: #0f172a;
+  margin: 0 0 0.35rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid transparent;
+  border-image: linear-gradient(90deg, var(--brief-accent-deep), var(--brief-accent), transparent) 1;
+}
+
+.cardHint {
+  font-size: 0.875rem;
+  color: var(--brief-muted);
+  margin: 0 0 1.25rem;
+}
+
+.label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 0.35rem;
+}
+
+.optional {
+  font-weight: 400;
+  color: var(--brief-muted);
+}
+
+.field {
+  margin-bottom: 1rem;
+}
+
+.radioRow,
+.checkRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+  align-items: center;
+}
+
+.radioLabel,
+.checkLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  color: #334155;
+  cursor: pointer;
+}
+
+.radioLabel input,
+.checkLabel input {
+  accent-color: var(--brief-accent);
+}
+
+.chipGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.chip {
+  position: relative;
+}
+
+.chip input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.chip span {
+  display: inline-block;
+  padding: 0.45rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid var(--brief-border);
+  font-size: 0.85rem;
+  color: #475569;
+  background: #f8fafc;
+  transition: border-color 0.2s, background 0.2s, color 0.2s;
+  cursor: pointer;
+}
+
+.chip input:focus-visible + span {
+  outline: 2px solid var(--brief-accent-mid);
+  outline-offset: 2px;
+}
+
+.chip input:checked + span {
+  border-color: var(--brief-accent);
+  background: linear-gradient(120deg, rgba(255, 94, 44, 0.16), rgba(255, 122, 77, 0.1));
+  color: #0f172a;
+  font-weight: 600;
+}
+
+.addonGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.5rem 1rem;
+}
+
+@media (min-width: 576px) {
+  .addonGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 992px) {
+  .addonGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.fileZone {
+  border: 2px dashed var(--brief-border);
+  border-radius: 12px;
+  padding: 1.25rem;
+  text-align: center;
+  background: #f8fafc;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.fileZone:hover,
+.fileZone:focus-within {
+  border-color: var(--brief-accent-mid);
+  background: rgba(255, 94, 44, 0.06);
+}
+
+.fileInput {
+  width: 100%;
+  font-size: 0.9rem;
+}
+
+.fileList {
+  margin: 0.75rem 0 0;
+  padding-left: 1.1rem;
+  font-size: 0.85rem;
+  color: var(--brief-muted);
+  text-align: left;
+}
+
+.submitBar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: stretch;
+  margin-top: 0.5rem;
+}
+
+@media (min-width: 576px) {
+  .submitBar {
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+  }
+}
+
+.note {
+  font-size: 0.8rem;
+  color: var(--brief-muted);
+  margin: 0;
+}
+
+.success {
+  margin-top: 1rem;
+  padding: 0.85rem 1rem;
+  border-radius: 10px;
+  background: rgba(255, 94, 44, 0.1);
+  border: 1px solid rgba(255, 94, 44, 0.28);
+  color: #9a3412;
+  font-size: 0.9rem;
+}
+
+.submitBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 14px 28px;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  transition: opacity 0.25s, transform 0.2s;
+  background:
+    radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0) 36%),
+    radial-gradient(circle at 85% 12%, rgba(255, 214, 180, 0.38) 0%, rgba(255, 94, 44, 0) 42%),
+    linear-gradient(118deg, var(--brief-accent-deep) 0%, var(--brief-accent) 48%, var(--brief-accent-mid) 100%);
+}
+
+.submitBtn:hover {
+  opacity: 0.94;
+  color: #fff;
+}
+
+.submitBtn:focus-visible {
+  outline: 2px solid var(--brief-accent-deep);
+  outline-offset: 3px;
+}
+
+@media (min-width: 576px) {
+  .submitBtn {
+    width: auto;
+    min-width: 220px;
+  }
+}

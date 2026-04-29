@@ -1,0 +1,120 @@
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.section-motion-target {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+.section-motion-target.is-revealed {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+.section-motion-target .section-motion-item {
+  opacity: 0;
+  transform: translate3d(0, 20px, 0);
+  transition:
+    opacity 920ms cubic-bezier(0.22, 1, 0.36, 1) var(--item-motion-delay, 0ms),
+    transform 920ms cubic-bezier(0.22, 1, 0.36, 1) var(--item-motion-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+.section-motion-target.is-revealed .section-motion-item {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+.section-motion-target .section-motion-card {
+  opacity: 0;
+  transform: translate3d(0, 24px, 0) scale(0.975);
+  transition:
+    opacity 980ms cubic-bezier(0.22, 1, 0.36, 1) var(--card-motion-delay, 120ms),
+    transform 980ms cubic-bezier(0.22, 1, 0.36, 1) var(--card-motion-delay, 120ms);
+  will-change: opacity, transform;
+}
+
+.section-motion-target.is-revealed .section-motion-card {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+.section-motion-target .section-motion-media {
+  opacity: 0;
+  transform: translate3d(0, 22px, 0) scale(1.035);
+  transition:
+    opacity 1180ms cubic-bezier(0.22, 1, 0.36, 1) var(--media-motion-delay, 180ms),
+    transform 1420ms cubic-bezier(0.22, 1, 0.36, 1) var(--media-motion-delay, 180ms);
+  will-change: opacity, transform;
+}
+
+.section-motion-target.is-revealed .section-motion-media {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+.section-motion-target .section-motion-icon {
+  transition: transform 520ms ease, filter 520ms ease;
+}
+
+.section-motion-target.is-revealed .section-motion-icon {
+  animation: sectionIconFloat 4.4s ease-in-out infinite;
+  animation-delay: 420ms;
+}
+
+.section-motion-target .section-motion-button {
+  transition: transform 460ms ease, box-shadow 520ms ease, filter 520ms ease;
+}
+
+.section-motion-target.is-revealed .section-motion-button:hover {
+  transform: translateY(-2px) scale(1.02);
+  filter: saturate(1.04);
+}
+
+@keyframes sectionIconFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .section-motion-target {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
+  }
+
+  .section-motion-target .section-motion-item {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .section-motion-target .section-motion-card,
+  .section-motion-target .section-motion-media,
+  .section-motion-target .section-motion-button,
+  .section-motion-target .section-motion-icon {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    animation: none !important;
+    filter: none !important;
+  }
+}

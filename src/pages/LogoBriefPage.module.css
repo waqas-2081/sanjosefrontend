@@ -1,0 +1,541 @@
+.page {
+  --brief-accent: #ff5e2c;
+  --brief-accent-mid: #ff7a4d;
+  --brief-accent-deep: #e04a1a;
+  --brief-card: #ffffff;
+  --brief-muted: #64748b;
+  --brief-border: #e2e8f0;
+}
+
+.intro {
+  max-width: 720px;
+  margin: 0 auto 2.5rem;
+  text-align: center;
+}
+
+.intro h2 {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  letter-spacing: 0.02em;
+  margin-bottom: 0.75rem;
+  color: #0f172a;
+}
+
+.intro p {
+  color: var(--brief-muted);
+  font-size: 1rem;
+  line-height: 1.65;
+  margin: 0;
+}
+
+.formWrap {
+  max-width: 920px;
+  margin: 0 auto;
+}
+
+.card {
+  background: var(--brief-card);
+  border-radius: 16px;
+  border: 1px solid var(--brief-border);
+  box-shadow: 0 10px 40px rgba(15, 23, 42, 0.06);
+  padding: 1.5rem 1.25rem 1.75rem;
+  margin-bottom: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .card {
+    padding: 1.75rem 2rem 2rem;
+  }
+}
+
+.cardTitle {
+  font-size: 1.35rem;
+  letter-spacing: 0.04em;
+  color: #0f172a;
+  margin: 0 0 0.35rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid transparent;
+  border-image: linear-gradient(90deg, var(--brief-accent-deep), var(--brief-accent), transparent) 1;
+}
+
+.cardHint {
+  font-size: 0.875rem;
+  color: var(--brief-muted);
+  margin: 0 0 1.25rem;
+}
+
+.pathHint {
+  font-size: 0.78rem;
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  word-break: break-all;
+}
+
+.label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 0.35rem;
+}
+
+.optional {
+  font-weight: 400;
+  color: var(--brief-muted);
+}
+
+.req {
+  color: var(--brief-accent);
+  font-weight: 700;
+}
+
+.field {
+  margin-bottom: 1rem;
+}
+
+.radioRow,
+.checkRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+  align-items: center;
+}
+
+.radioLabel,
+.checkLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  color: #334155;
+  cursor: pointer;
+}
+
+.radioLabel input,
+.checkLabel input {
+  accent-color: var(--brief-accent);
+}
+
+/* Logo type picker — 2-column grid, one wide strip image + caption */
+.typeGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem 1.1rem;
+}
+
+@media (min-width: 576px) {
+  .typeGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.typeCard {
+  position: relative;
+  margin: 0;
+  cursor: pointer;
+  display: block;
+}
+
+.typeCard input {
+  position: absolute;
+  opacity: 0;
+  inset: 0;
+  cursor: pointer;
+  margin: 0;
+  z-index: 2;
+}
+
+.typeCardInner {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  height: 100%;
+  padding: 0.75rem;
+  border-radius: 14px;
+  border: 2px solid var(--brief-accent);
+  background: #ffffff;
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s, color 0.2s;
+}
+
+.typeCard:focus-within .typeCardInner {
+  outline: 2px solid var(--brief-accent-mid);
+  outline-offset: 3px;
+}
+
+.typeStrip {
+  width: 100%;
+  border-radius: 10px;
+  background: #f8fafc;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 96px;
+  padding: 0.45rem 0.35rem;
+}
+
+.typeStripImg {
+  width: 100%;
+  height: auto;
+  max-height: clamp(72px, 22vw, 140px);
+  object-fit: contain;
+  object-position: center;
+  display: block;
+}
+
+.typeCardCaption {
+  display: block;
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #1e293b;
+  letter-spacing: 0.02em;
+  line-height: 1.25;
+}
+
+.typeCard input:checked + .typeCardInner {
+  border-color: var(--brief-accent);
+  background: var(--brief-accent);
+  box-shadow: 0 10px 28px rgba(255, 94, 44, 0.35);
+}
+
+.typeCard input:checked + .typeCardInner .typeCardCaption {
+  color: #ffffff;
+}
+
+.typeCard input:checked + .typeCardInner .typeStrip {
+  background: rgba(255, 255, 255, 0.96);
+  border-color: rgba(255, 255, 255, 0.65);
+}
+
+/* Colour swatches — 6 + 4 layout on wide screens; larger tap targets & previews */
+.colorSwatchGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.85rem 0.75rem;
+}
+
+@media (min-width: 520px) {
+  .colorSwatchGrid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem 0.85rem;
+  }
+}
+
+@media (min-width: 992px) {
+  .colorSwatchGrid {
+    grid-template-columns: repeat(6, 1fr);
+    gap: 1.1rem 0.9rem;
+  }
+}
+
+.colorSwatchCell {
+  position: relative;
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  cursor: pointer;
+  min-width: 0;
+}
+
+.colorSwatchCell input {
+  position: absolute;
+  opacity: 0;
+  inset: 0;
+  margin: 0;
+  z-index: 2;
+  cursor: pointer;
+}
+
+.colorSwatchInner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  min-height: 132px;
+  padding: 0.65rem 0.4rem 0.55rem;
+  border: 2px solid #f0d8cf;
+  border-radius: 12px;
+  background: #fffaf8;
+  overflow: hidden;
+  transition: background 0.2s, box-shadow 0.2s, border-color 0.2s;
+}
+
+@media (min-width: 768px) {
+  .colorSwatchInner {
+    min-height: 148px;
+    padding: 0.75rem 0.55rem 0.6rem;
+  }
+}
+
+.colorSwatchCell:focus-within .colorSwatchInner {
+  outline: 2px solid var(--brief-accent-deep);
+  outline-offset: 2px;
+}
+
+.colorSwatchCell input:checked + .colorSwatchInner {
+  border-color: var(--brief-accent-deep);
+  border-width: 2px;
+  background: rgba(224, 74, 26, 0.1);
+  box-shadow:
+    0 0 0 1px var(--brief-accent-deep),
+    0 6px 18px rgba(224, 74, 26, 0.28);
+}
+
+.colorSwatchImg {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  max-height: clamp(64px, 22vw, 104px);
+  min-height: 56px;
+  object-fit: contain;
+  object-position: center;
+  display: block;
+}
+
+@media (min-width: 768px) {
+  .colorSwatchImg {
+    max-height: clamp(76px, 11vw, 112px);
+    min-height: 68px;
+  }
+}
+
+.colorSwatchCaption {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  font-size: clamp(0.62rem, 2.1vw, 0.78rem);
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: #1e293b;
+  text-align: center;
+  line-height: 1.2;
+  padding: 0 0.2rem;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  hyphens: auto;
+}
+
+.fileZone {
+  border: 2px dashed var(--brief-border);
+  border-radius: 12px;
+  padding: 1.25rem;
+  text-align: center;
+  background: #f8fafc;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.fileZone:hover,
+.fileZone:focus-within {
+  border-color: var(--brief-accent-mid);
+  background: rgba(255, 94, 44, 0.06);
+}
+
+.fileInput {
+  width: 100%;
+  font-size: 0.9rem;
+}
+
+.fileList {
+  margin: 0.75rem 0 0;
+  padding-left: 1.1rem;
+  font-size: 0.85rem;
+  color: var(--brief-muted);
+  text-align: left;
+}
+
+.submitBar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: stretch;
+  margin-top: 0.5rem;
+}
+
+@media (min-width: 576px) {
+  .submitBar {
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+  }
+}
+
+.success {
+  margin-top: 1rem;
+  padding: 0.85rem 1rem;
+  border-radius: 10px;
+  background: rgba(255, 94, 44, 0.1);
+  border: 1px solid rgba(255, 94, 44, 0.28);
+  color: #9a3412;
+  font-size: 0.9rem;
+}
+
+.submitBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 14px 28px;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  transition: opacity 0.25s, transform 0.2s;
+  background:
+    radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0) 36%),
+    radial-gradient(circle at 85% 12%, rgba(255, 214, 180, 0.38) 0%, rgba(255, 94, 44, 0) 42%),
+    linear-gradient(118deg, var(--brief-accent-deep) 0%, var(--brief-accent) 48%, var(--brief-accent-mid) 100%);
+}
+
+.submitBtn:hover {
+  opacity: 0.94;
+  color: #fff;
+}
+
+.submitBtn:focus-visible {
+  outline: 2px solid var(--brief-accent-deep);
+  outline-offset: 3px;
+}
+
+@media (min-width: 576px) {
+  .submitBtn {
+    width: auto;
+    min-width: 220px;
+  }
+}
+
+/* —— Logo font style grid (reference: orange border, orange fill + light text when selected) —— */
+.fontGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.6rem;
+}
+
+@media (min-width: 640px) {
+  .fontGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .fontGrid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+.fontCell {
+  position: relative;
+  margin: 0;
+  cursor: pointer;
+}
+
+.fontCell input {
+  position: absolute;
+  opacity: 0;
+  inset: 0;
+  margin: 0;
+  z-index: 2;
+  cursor: pointer;
+}
+
+.fontCellInner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-height: 92px;
+  padding: 0.5rem 0.35rem 0.45rem;
+  border: 2px solid var(--brief-accent);
+  border-radius: 11px;
+  background: #ffffff;
+  transition: background 0.2s, box-shadow 0.2s, border-color 0.2s;
+}
+
+.fontCell:focus-within .fontCellInner {
+  outline: 2px solid var(--brief-accent-mid);
+  outline-offset: 2px;
+}
+
+.fontCell input:checked + .fontCellInner {
+  background: var(--brief-accent);
+  border-color: var(--brief-accent);
+  box-shadow: 0 6px 18px rgba(255, 94, 44, 0.3);
+}
+
+.fontCellImg {
+  width: 100%;
+  height: auto;
+  max-height: clamp(40px, 10vw, 52px);
+  object-fit: contain;
+  object-position: center;
+  display: block;
+}
+
+.fontCellCaption {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #64748b;
+  text-align: center;
+  line-height: 1.15;
+}
+
+.fontCell input:checked + .fontCellInner .fontCellCaption {
+  color: #e0f2fe;
+}
+
+/* Custom primary / secondary — native colour picker + text */
+.colorPickerRail {
+  border: 2px solid var(--brief-accent-deep);
+  border-radius: 10px;
+  overflow: hidden;
+  height: 48px;
+  background: #f1f5f9;
+}
+
+@media (min-width: 768px) {
+  .colorPickerRail {
+    height: 52px;
+  }
+}
+
+.colorPickerNative {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  cursor: pointer;
+}
+
+.colorPickerNative::-webkit-color-swatch-wrapper {
+  padding: 5px;
+}
+
+.colorPickerNative::-webkit-color-swatch {
+  border: none;
+  border-radius: 6px;
+}
+
+.colorPickerNative::-moz-color-swatch {
+  border: none;
+  border-radius: 6px;
+}
+
+.colorTextInput {
+  margin-top: 0.55rem;
+  font-variant-numeric: tabular-nums;
+}
