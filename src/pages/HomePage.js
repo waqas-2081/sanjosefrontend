@@ -67,7 +67,7 @@ export default function HomePage() {
       <PortfolioSection />
       <CtaProjects />
       <BrandPotential />
-      <SolutionsSection />
+      <SolutionsSection />  
       <AwesomeProjects />
       <Transforming />
       <SuccessStoriesHome />
