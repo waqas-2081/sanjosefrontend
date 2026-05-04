@@ -14,6 +14,8 @@ import LogoDesignPage from './pages/LogoDesignPage';
 import MobileAppsPage from './pages/MobileAppsPage';
 import PaymentInfoPage from './pages/PaymentInfoPage';
 import PortfolioPage from './pages/PortfolioPage';
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
+import TermsConditionsPage from './pages/TermsConditionsPage';
 import SeoPage from './pages/SeoPage';
 import ServicesPage from './pages/ServicesPage';
 import WebsiteBriefPage from './pages/WebsiteBriefPage';
@@ -42,6 +44,8 @@ function App() {
 
           <Route path="services" element={<ServicesPage />} />
           <Route path="portfolio" element={<PortfolioPage />} />
+          <Route path="privacy-policy" element={<PrivacyPolicyPage />} />
+          <Route path="terms-condition" element={<TermsConditionsPage />} />
           <Route path="logo-brief" element={<LogoBriefPage />} />
           <Route path="website-brief" element={<WebsiteBriefPage />} />
           <Route path="payment-info" element={<PaymentInfoPage />} />

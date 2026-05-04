@@ -1,10 +1,68 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { Helmet } from 'react-helmet';
 import { Link, useParams } from 'react-router-dom';
-import { useDocumentTitle } from '../hooks/useDocumentTitle';
 const BLOG_DETAIL_ENDPOINT_BASE = 'http://127.0.0.1:8000/api/v1/blogs';
+
+/** Fixed line under breadcrumbs (not article `short_description`) */
+const BLOG_DETAIL_HERO_TAGLINE =
+  'Copeland Home Services revenue increased by 200% since rebranding';
 
 function hasHtml(content) {
   return typeof content === 'string' && /<\/?[a-z][\s\S]*>/i.test(content);
+}
+
+/** Plain text / simple markdown-style lines: group `- ` / `* ` / `• ` / `1. ` into real lists */
+function parsePlainBlogContent(text) {
+  if (!text || typeof text !== 'string') return [];
+  const lines = text.split(/\n/);
+  const blocks = [];
+  let i = 0;
+
+  while (i < lines.length) {
+    const trimmed = lines[i].trim();
+    if (!trimmed) {
+      i += 1;
+      continue;
+    }
+
+    const bulletMatch = trimmed.match(/^([-*•]|\d+\.)\s+(.+)$/);
+    if (bulletMatch) {
+      const isOrdered = /^\d+\.$/.test(bulletMatch[1]);
+      const items = [];
+      while (i < lines.length) {
+        const t = lines[i].trim();
+        if (!t) break;
+        const m = t.match(/^([-*•]|\d+\.)\s+(.+)$/);
+        if (!m) break;
+        const lineOrdered = /^\d+\.$/.test(m[1]);
+        if (lineOrdered !== isOrdered) break;
+        items.push(m[2]);
+        i += 1;
+      }
+      const ListTag = isOrdered ? 'ol' : 'ul';
+      blocks.push(
+        <ListTag key={`list-${blocks.length}`} className="blog-content-plain-list">
+          {items.map((item, idx) => (
+            <li key={idx}>{item}</li>
+          ))}
+        </ListTag>
+      );
+      continue;
+    }
+
+    const paraLines = [];
+    while (i < lines.length) {
+      const t = lines[i].trim();
+      if (!t) break;
+      if (/^([-*•]|\d+\.)\s+/.test(t)) break;
+      paraLines.push(lines[i].trim());
+      i += 1;
+    }
+    const para = paraLines.join(' ').trim();
+    if (para) blocks.push(<p key={`p-${blocks.length}`}>{para}</p>);
+  }
+
+  return blocks;
 }
 
 function getApiErrorMessage(result) {
@@ -18,11 +76,23 @@ export default function BlogDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  const title = useMemo(
-    () => (blog?.title ? `${blog.title} | San Jose Logo Design` : 'Blog Detail | San Jose Logo Design'),
-    [blog?.title]
-  );
-  useDocumentTitle(title);
+  const head = useMemo(() => {
+    if (!blog) {
+      return {
+        title: 'Blog Detail | San Jose Logo Design',
+        description: '',
+        keywords: '',
+      };
+    }
+    const metaTitle = typeof blog.meta_title === 'string' ? blog.meta_title.trim() : '';
+    const title = metaTitle || `${blog.title} | San Jose Logo Design`;
+    const metaDesc = typeof blog.meta_description === 'string' ? blog.meta_description.trim() : '';
+    const short = typeof blog.short_description === 'string' ? blog.short_description.trim() : '';
+    const description = metaDesc || short || '';
+    const keywords =
+      typeof blog.meta_keywords === 'string' ? blog.meta_keywords.trim() : '';
+    return { title, description, keywords };
+  }, [blog]);
 
   useEffect(() => {
     let cancelled = false;
@@ -30,6 +100,7 @@ export default function BlogDetail() {
     async function loadBlog() {
       setLoading(true);
       setError('');
+      setBlog(null);
 
       try {
         const response = await fetch(`${BLOG_DETAIL_ENDPOINT_BASE}/${encodeURIComponent(slug)}`, {
@@ -69,6 +140,12 @@ export default function BlogDetail() {
 
   return (
     <div className="blog-detail-page blog-detail-page--no-mobile-section-pad">
+      <Helmet>
+        <title>{head.title}</title>
+        {head.description ? <meta name="description" content={head.description} /> : null}
+        {head.keywords ? <meta name="keywords" content={head.keywords} /> : null}
+      </Helmet>
+
       <section className="inner-breadcrumb blog-detail-breadcrumb">
         <div className="container-fluid">
           <div className="inner-breadcrumb-mascot" aria-hidden="true">
@@ -93,7 +170,7 @@ export default function BlogDetail() {
 
           <div className="inner-breadcrumb-bottom">
             <p>
-              {blog?.short_description || 'Read the full article and insights.'}
+              {BLOG_DETAIL_HERO_TAGLINE}
               <span />
               <Link to="/contact-us">Talk to our team</Link>
             </p>
@@ -138,12 +215,9 @@ export default function BlogDetail() {
             {!loading && !error && blog && (
               <section className="blog-article-section" id="content">
                 {hasHtml(blog.content) ? (
-                  <div dangerouslySetInnerHTML={{ __html: blog.content }} />
+                  <div className="blog-content-body" dangerouslySetInnerHTML={{ __html: blog.content }} />
                 ) : (
-                  blog.content
-                    ?.split('\n')
-                    .filter(Boolean)
-                    .map((line, i) => <p key={i}>{line}</p>)
+                  <div className="blog-content-body">{parsePlainBlogContent(blog.content || '')}</div>
                 )}
               </section>
             )}

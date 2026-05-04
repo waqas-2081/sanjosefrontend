@@ -345,12 +345,12 @@
     }
 
     .modern-blog-card .image {
-        height: 210px;
+        height: 160px;
     }
 
     .modern-blog-featured h3,
     .modern-blog-card h3 {
-        font-size: 26px;
+        font-size: 22px;
     }
 }
 

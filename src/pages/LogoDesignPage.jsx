@@ -1,4 +1,5 @@
 import React from 'react';
+import { Helmet } from 'react-helmet';
 import ServicePackagesSection from '../components/sections/ServicePackagesSection';
 import { SuccessStoriesHome } from '../components/sections/SuccessStoriesHome';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
@@ -6,6 +7,50 @@ export default function LogoDesignPage() {
   useDocumentTitle('Logo Design | San Jose Logo Design');
   return (
     <>
+<Helmet>
+    <title>Logo Design Agency San Jose | Logo Designer San Jose</title>
+    <meta
+      name="description"
+      content="As one of the leading Logo Design Agency in San Jose, CA. Our experts can design 3d logo, mascot logo, & illustrated logo design specifically for your business."
+    />
+    <meta name="robots" content="index,follow" />
+    <meta name="googlebot" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1" />
+    <meta name="bingbot" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1" />
+    <meta
+      name="keywords"
+      content="LOGO DESIGN SAN JOSE, CUSTOM LOGO DESIGN SERVICE SAN JOSE, LOGO DESIGN RESOURCE IN SAN JOSE, CUSTOM LOGO DESIGN COMPANY USA, CUSTOM LOGO DESIGN COMPANY IN USA"
+    />
+    <link rel="canonical" href="https://sanjoselogodesign.com/logo-design-services" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Logo Design Agency San Jose | Logo Designer San Jose" />
+    <meta
+      property="og:description"
+      content="As one of the leading Logo Design Agency in San Jose, CA. Our experts can design 3d logo, mascot logo, & illustrated logo design specifically for your business."
+    />
+    <meta property="og:url" content="https://sanjoselogodesign.com/logo-design-services" />
+    <meta property="og:site_name" content="Sanjoselogodesign" />
+    <meta property="og:publish_date" content="2025-12-10" />
+    <meta property="og:image" content="https://sanjoselogodesign.com/images/sanjoseog.png" />
+    <meta property="og:image:width" content="300" />
+    <meta property="og:image:height" content="300" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Logo Design Agency San Jose | Logo Designer San Jose" />
+    <meta
+      name="twitter:description"
+      content="As one of the leading Logo Design Agency in San Jose, CA. Our experts can design 3d logo, mascot logo, & illustrated logo design specifically for your business."
+    />
+    <meta property="twitter:url" content="https://sanjoselogodesign.com/logo-design-services" />
+    <meta name="twitter:image" content="seo_image" />
+    <meta name="twitter:creator" content="@Sanjoselogodesign" />
+    <meta name="twitter:site" content="@Sanjoselogodesign" />
+    <meta name="twitter:label1" content="Written by" />
+    <meta name="twitter:data1" content="Sanjoselogodesign" />
+    <meta name="twitter:label2" content="Est. reading time" />
+    <meta name="twitter:data2" content="4 minutes" />
+    <meta name="p:domain_verify" content="48e81758daba0e0ed130f38f9d6891a0" />
+    <meta name="facebook-domain-verification" content="9vzc2a6cq0sj6fifdg3d9m9609q6d5" />
+</Helmet>
 <section className="inner-breadcrumb">
         <div className="container-fluid">
 

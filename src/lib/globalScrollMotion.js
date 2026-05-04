@@ -81,6 +81,7 @@ export function initGlobalScrollMotion(root = document) {
   const seen = new Set();
   const uniqueTargets = targets.filter((el) => {
     if (el.classList?.contains('main-banner')) return false;
+    if (el.closest('[data-no-motion="true"]')) return false;
     if (seen.has(el)) return false;
     seen.add(el);
     return true;

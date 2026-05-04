@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { Helmet } from 'react-helmet';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 
 const BLOGS_ENDPOINT = 'http://127.0.0.1:8000/api/v1/blogs';
-const BLOGS_PER_PAGE = 12;
+const BLOGS_PER_PAGE = 30;
 
 function getApiErrorMessage(result) {
   if (result?.message && typeof result.message === 'string') return result.message;
@@ -92,6 +93,50 @@ export default function BlogsPage() {
 
   return (
     <>
+<Helmet>
+  <title>Blogs | San Jose Logo Design</title>
+  <meta
+    name="description"
+    content="Visit our website to read helpful blogs, Clients' case studies, & reviews of our Family like clients."
+  />
+  <meta name="robots" content="index,follow" />
+  <meta name="googlebot" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1" />
+  <meta name="bingbot" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1" />
+  <meta
+    name="keywords"
+    content="Fixmywebs offering Branding, Logo Designing, Web Design, Website Development, SEO & SMM Solutions to your business in affordable and friendly packages in USA."
+  />
+  <link rel="canonical" href="https://sanjoselogodesign.com/blog" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Blogs | San Jose Logo Design" />
+  <meta
+    property="og:description"
+    content="Visit our website to read helpful blogs, Clients' case studies, & reviews of our Family like clients."
+  />
+  <meta property="og:url" content="https://sanjoselogodesign.com/blog" />
+  <meta property="og:site_name" content="Sanjoselogodesign" />
+  <meta property="og:publish_date" content="2025-12-10" />
+  <meta property="og:image" content="https://sanjoselogodesign.com/images/sanjoseog.png" />
+  <meta property="og:image:width" content="300" />
+  <meta property="og:image:height" content="300" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Blogs | San Jose Logo Design" />
+  <meta
+    name="twitter:description"
+    content="Visit our website to read helpful blogs, Clients' case studies, & reviews of our Family like clients."
+  />
+  <meta property="twitter:url" content="https://sanjoselogodesign.com/blog" />
+  <meta name="twitter:image" content="seo_image" />
+  <meta name="twitter:creator" content="@Sanjoselogodesign" />
+  <meta name="twitter:site" content="@Sanjoselogodesign" />
+  <meta name="twitter:label1" content="Written by" />
+  <meta name="twitter:data1" content="Sanjoselogodesign" />
+  <meta name="twitter:label2" content="Est. reading time" />
+  <meta name="twitter:data2" content="4 minutes" />
+  <meta name="p:domain_verify" content="48e81758daba0e0ed130f38f9d6891a0" />
+  <meta name="facebook-domain-verification" content="9vzc2a6cq0sj6fifdg3d9m9609q6d5" />
+</Helmet>
 <section className="inner-breadcrumb">
         <div className="container-fluid">
 
@@ -137,9 +182,9 @@ export default function BlogsPage() {
                       <img src={blog.thumbnail || '/assets/images/portfolio/logo/1.png'} alt={blog.title} />
                     </div>
                     <div className="content">
-                      <span className="tag">{blog.is_featured ? 'Featured' : 'Article'}</span>
+                      {/* <span className="tag">{blog.is_featured ? 'Featured' : 'Article'}</span> */}
                       <h3>{blog.title}</h3>
-                      <p>{blog.short_description}</p>
+                      <p className="modern-blog-card__excerpt">{blog.short_description}</p>
                       <Link to={`/blog/${blog.slug}`} className="read-link">
                         Read More <i className="fa-solid fa-arrow-right" />
                       </Link>

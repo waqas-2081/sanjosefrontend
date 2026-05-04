@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { postContact, autoSaveContact } from '../api/contactApi';
@@ -166,6 +167,49 @@ export default function ContactPage() {
 
   return (
     <>
+      <Helmet>
+        <title>Contact Us | San Jose Logo Design</title>
+        <meta
+          name="description"
+          content="Looking to get in touch with San Jose Logo Design? Contact us now to discuss your logo design needs and let us boost your online presence!"
+        />
+        <meta name="googlebot" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1" />
+        <meta name="bingbot" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1" />
+        <meta
+          name="keywords"
+          content="Fixmywebs offering Branding, Logo Designing, Web Design, Website Development, SEO & SMM Solutions to your business in affordable and friendly packages in USA."
+        />
+        <link rel="canonical" href="https://sanjoselogodesign.com/contact-us" />
+        <meta property="og:locale" content="en_US" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Contact Us | San Jose Logo Design" />
+        <meta
+          property="og:description"
+          content="Fixmywebs offering Branding, Logo Designing, Web Design, Website Development, SEO & SMM Solutions to your business in affordable and friendly packages in USA."
+        />
+        <meta property="og:url" content="https://sanjoselogodesign.com/contact-us" />
+        <meta property="og:site_name" content="Sanjoselogodesign" />
+        <meta property="og:publish_date" content="2025-12-10" />
+        <meta property="og:image" content="https://sanjoselogodesign.com/images/sanjoseog.png" />
+        <meta property="og:image:width" content="300" />
+        <meta property="og:image:height" content="300" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Contact Us | San Jose Logo Design" />
+        <meta
+          name="twitter:description"
+          content="Fixmywebs offering Branding, Logo Designing, Web Design, Website Development, SEO & SMM Solutions to your business in affordable and friendly packages in USA."
+        />
+        <meta property="twitter:url" content="https://sanjoselogodesign.com/contact-us" />
+        <meta name="twitter:image" content="seo_image" />
+        <meta name="twitter:creator" content="@Sanjoselogodesign" />
+        <meta name="twitter:site" content="@Sanjoselogodesign" />
+        <meta name="twitter:label1" content="Written by" />
+        <meta name="twitter:data1" content="Sanjoselogodesign" />
+        <meta name="twitter:label2" content="Est. reading time" />
+        <meta name="twitter:data2" content="4 minutes" />
+        <meta name="p:domain_verify" content="48e81758daba0e0ed130f38f9d6891a0" />
+        <meta name="facebook-domain-verification" content="9vzc2a6cq0sj6fifdg3d9m9609q6d5" />
+      </Helmet>
       <section className="inner-breadcrumb">
         <div className="container-fluid">
           <div className="inner-breadcrumb-mascot" aria-hidden="true">

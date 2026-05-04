@@ -123,11 +123,9 @@ export default function Footer() {
         <div className="footer-bottom">
           <p className="copyright">© Copyright 2026 | All Rights Reserved.</p>
           <div className="footer-bottom-links">
-            <a href="#">FAQ</a>
+            <Link to="/privacy-policy">Privacy Policy</Link>
             <span>·</span>
-            <a href="#">Privacy Policy</a>
-            <span>·</span>
-            <a href="#">Users Agreement</a>
+            <Link to="/terms-condition">Terms and Conditions</Link>
           </div>
         </div>
       </div>
