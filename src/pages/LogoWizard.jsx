@@ -11,20 +11,29 @@ const INDUSTRIES = [
 ];
 
 function PanelLogos() {
-  const logoSrc = `${process.env.PUBLIC_URL || ""}/assets/images/form.png`;
+  const logos = [
+    `${process.env.PUBLIC_URL || ""}/assets/images/steplogo1.png`,
+    `${process.env.PUBLIC_URL || ""}/assets/images/steplogo2.png`,
+    `${process.env.PUBLIC_URL || ""}/assets/images/steplogo3.png`,
+    `${process.env.PUBLIC_URL || ""}/assets/images/steplogo4.png`,
+  ];
+
   return (
     <div className="panel-logos" aria-hidden>
       <span className="panel-logo panel-logo--left panel-logo--left-1">
-        <img src={logoSrc} alt="" />
+        <img src={logos[0]} alt="" />
       </span>
+
       <span className="panel-logo panel-logo--left panel-logo--left-2">
-        <img src={logoSrc} alt="" />
+        <img src={logos[1]} alt="" />
       </span>
+
       <span className="panel-logo panel-logo--right panel-logo--right-1">
-        <img src={logoSrc} alt="" />
+        <img src={logos[2]} alt="" />
       </span>
+
       <span className="panel-logo panel-logo--right panel-logo--right-2">
-        <img src={logoSrc} alt="" />
+        <img src={logos[3]} alt="" />
       </span>
     </div>
   );

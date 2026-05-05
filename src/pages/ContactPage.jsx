@@ -257,6 +257,15 @@ export default function ContactPage() {
 
                 <div className="contact-info-item">
                   <span className="contact-info-icon" aria-hidden="true">
+                    <i className="fa-solid fa-phone" />
+                  </span>
+                  <p>
+                    <a href="tel:+12144491305">(214) 449-1305</a>
+                  </p>
+                </div>
+
+                <div className="contact-info-item">
+                  <span className="contact-info-icon" aria-hidden="true">
                     <i className="fa-solid fa-envelope" />
                   </span>
                   <p>
@@ -271,23 +280,8 @@ export default function ContactPage() {
                   <p>14A S 1st St, San Jose, CA 95113, USA</p>
                 </div>
 
-                <div className="contact-info-item">
-                  <span className="contact-info-icon" aria-hidden="true">
-                    <i className="fa-solid fa-phone" />
-                  </span>
-                  <p>
-                    <a href="tel:+12144491305">(214) 449-1305</a>
-                  </p>
-                </div>
+                
 
-                <div className="contact-highlight">
-                  <h5>Why Work With Us</h5>
-                  <ul>
-                    <li>Brand Strategy Experts</li>
-                    <li>Creative Website Design</li>
-                    <li>Conversion Focused Approach</li>
-                  </ul>
-                </div>
               </div>
             </div>
 

@@ -7,6 +7,8 @@ import AnimationsPage from './pages/AnimationsPage';
 import BlogDetail from './pages/BlogDetail';
 import BlogsPage from './pages/BlogsPage';
 import CompletePaymentPage from './pages/CompletePaymentPage';
+import PaymentCompletedPage from './pages/PaymentCompletedPage';
+import InvoicePage from './pages/InvoicePage';
 import ContactPage from './pages/ContactPage';
 import DigitalMarketingPage from './pages/DigitalMarketingPage';
 import LogoBriefPage from './pages/LogoBriefPage';
@@ -28,7 +30,18 @@ function App() {
     <BrowserRouter>
       <ScrollToTop />
       <Routes>
+        {/* Standalone routes — NO site layout (no header/footer) */}
         <Route path="logo-creator" element={<LogoCreatorPage />} />
+
+        {/*
+          "genrate/invoice-65975125488341" — React Router cannot match params
+          embedded mid-segment (invoice-:token won't work). Use a splat instead:
+          path="genrate/*" captures everything after "genrate/" as params['*']
+          e.g. "invoice-65975125488341" → InvoicePage strips the "invoice-" prefix.
+        */}
+        <Route path="genrate/*" element={<InvoicePage />} />
+
+        {/* Main site layout */}
         <Route element={<MainLayout />}>
           <Route index element={<HomePage />} />
           <Route path="about-us" element={<AboutPage />} />
@@ -41,7 +54,6 @@ function App() {
           <Route path="mobile-app-development-services" element={<MobileAppsPage />} />
           <Route path="digital-marketing-services" element={<DigitalMarketingPage />} />
           <Route path="search-engine-optimization-services" element={<SeoPage />} />
-
           <Route path="services" element={<ServicesPage />} />
           <Route path="portfolio" element={<PortfolioPage />} />
           <Route path="privacy-policy" element={<PrivacyPolicyPage />} />
@@ -49,7 +61,8 @@ function App() {
           <Route path="logo-brief" element={<LogoBriefPage />} />
           <Route path="website-brief" element={<WebsiteBriefPage />} />
           <Route path="payment-info" element={<PaymentInfoPage />} />
-          <Route path="complete-payment" element={<CompletePaymentPage />} />
+          <Route path="complete-payment/:token" element={<CompletePaymentPage />} />
+          <Route path="payment-completed/:token" element={<PaymentCompletedPage />} />
           <Route path="*" element={<HomePage />} />
         </Route>
       </Routes>

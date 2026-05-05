@@ -312,10 +312,6 @@ section {
     min-height: 340px;
 }
 
-.modern-blog-card .image {
-    height: 200px;
-}
-
 .modern-blog-featured .content,
 .modern-blog-card .content {
     padding: 24px;
@@ -359,7 +355,7 @@ section {
 }
 
 .modern-blog-sec .read-link {
-    color: #05a45a;
+    color: #ff5e2c;
     font-weight: 700;
     display: inline-flex;
     align-items: center;
@@ -696,7 +692,7 @@ section {
 
 .about-sec .image img {
     width: 100%;
-    height: 500px;
+    /* height: 500px; */
     object-fit: cover;
 }
 
@@ -2349,6 +2345,8 @@ section {
 .package-card ul {
     padding-left: 0;
     margin-bottom: 25px;
+    height: 380px;
+    overflow-y: auto;
 }
 
 .package-card ul li {
@@ -2899,4 +2897,26 @@ section {
         font-size: 13px;
         word-break: break-word;
     }
+}
+
+
+
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #ff5e2c;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #ff5e2c;
 }

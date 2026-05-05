@@ -5,26 +5,30 @@ import { useDocumentTitle } from '../hooks/useDocumentTitle';
 
 const PAYMENT_REQUEST_ENDPOINT = 'http://127.0.0.1:8000/api/payment-requests';
 
+const SALES_AGENTS = ['Jared', 'Luke', 'Robert', 'Shawn', 'Sam', 'Zack'];
+
 const PAYMENT_METHODS = [
-  { id: 'stripe', label: 'Stripe', iconClass: 'fa-brands fa-cc-stripe' },
-  { id: 'paypal', label: 'PayPal', iconClass: 'fa-brands fa-paypal' },
-  { id: 'zelle', label: 'Zelle', iconClass: 'fa-solid fa-building-columns' },
+  { id: 'stripe',  label: 'Stripe',  iconClass: 'fa-brands fa-cc-stripe' },
+  { id: 'paypal',  label: 'PayPal',  iconClass: 'fa-brands fa-paypal' },
+  { id: 'zelle',   label: 'Zelle',   iconClass: 'fa-solid fa-building-columns' },
   { id: 'cashapp', label: 'CashApp', iconClass: 'fa-solid fa-dollar-sign' },
 ];
 
 const initialForm = {
-  profile: 'Robert',
-  customerName: '',
-  email: '',
-  zip: '',
-  reference: '',
-  amount: '',
+  salesAgent:    '',
+  customerName:  '',
+  email:         '',
+  phone:         '',
+  packageName:   '',
+  amount:        '',
   paymentMethod: 'stripe',
 };
 
 function getPaymentRequestApiErrorMessage(result) {
   if (result?.errors && typeof result.errors === 'object') {
-    const firstFieldErrors = Object.values(result.errors).find((value) => Array.isArray(value) && value.length > 0);
+    const firstFieldErrors = Object.values(result.errors).find(
+      (value) => Array.isArray(value) && value.length > 0,
+    );
     if (firstFieldErrors) return firstFieldErrors[0];
   }
   if (result?.message && typeof result.message === 'string') return result.message;
@@ -34,7 +38,7 @@ function getPaymentRequestApiErrorMessage(result) {
 export default function PaymentInfoPage() {
   useDocumentTitle('Payment Info | San Jose Logo Design');
   const navigate = useNavigate();
-  const [form, setForm] = useState(initialForm);
+  const [form, setForm]               = useState(initialForm);
   const [submitError, setSubmitError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -48,10 +52,8 @@ export default function PaymentInfoPage() {
     setSubmitError('');
     setIsSubmitting(true);
 
-    const amountRaw = String(form.amount).trim().replace(/,/g, '');
-    const amountNum = Number.parseFloat(amountRaw);
-    if (!Number.isFinite(amountNum) || amountNum < 0.01) {
-      setSubmitError('Please enter a valid amount (at least 0.01).');
+    if (!form.salesAgent) {
+      setSubmitError('Please select a sales agent.');
       setIsSubmitting(false);
       return;
     }
@@ -61,13 +63,21 @@ export default function PaymentInfoPage() {
       return;
     }
 
+    const amountRaw = String(form.amount).trim().replace(/,/g, '');
+    const amountNum = Number.parseFloat(amountRaw);
+    if (!Number.isFinite(amountNum) || amountNum < 0.01) {
+      setSubmitError('Please enter a valid price (at least 0.01).');
+      setIsSubmitting(false);
+      return;
+    }
+
     const body = {
-      profile: form.profile.trim() || null,
-      customer_name: form.customerName.trim(),
-      email: form.email.trim() || null,
-      zip_code: form.zip.trim() || null,
-      reference_note: form.reference.trim() || null,
-      amount: amountNum,
+      profile:        form.salesAgent,
+      customer_name:  form.customerName.trim(),
+      email:          form.email.trim() || null,
+      phone:          form.phone.trim() || null,
+      package_name:   form.packageName.trim() || null,
+      amount:         amountNum,
       payment_method: form.paymentMethod,
     };
 
@@ -83,8 +93,8 @@ export default function PaymentInfoPage() {
       });
 
       const contentType = response.headers.get('content-type') || '';
-      const isJson = contentType.includes('application/json');
-      const result = isJson ? await response.json().catch(() => null) : null;
+      const isJson      = contentType.includes('application/json');
+      const result      = isJson ? await response.json().catch(() => null) : null;
 
       if (!response.ok) {
         throw new Error(getPaymentRequestApiErrorMessage(result));
@@ -94,17 +104,24 @@ export default function PaymentInfoPage() {
         throw new Error('Invalid response from server.');
       }
 
-      const id = result.data?.id;
-      navigate('/complete-payment', {
+      const id          = result.data?.id;
+      const paymentLink = result.data?.payment_link;
+
+      if (!paymentLink) {
+        throw new Error('No payment link returned from server.');
+      }
+
+      navigate(`/complete-payment/${paymentLink}`, {
         state: {
-          customerName: form.customerName.trim(),
-          email: form.email.trim(),
-          zip: form.zip.trim(),
-          reference: form.reference.trim(),
-          amount: form.amount.trim(),
-          profile: form.profile,
-          paymentMethod: form.paymentMethod,
+          customerName:     form.customerName.trim(),
+          email:            form.email.trim(),
+          phone:            form.phone.trim(),
+          packageName:      form.packageName.trim(),
+          amount:           form.amount.trim(),
+          salesAgent:       form.salesAgent,
+          paymentMethod:    form.paymentMethod,
           paymentRequestId: id,
+          paymentLink,
         },
       });
     } catch (error) {
@@ -129,7 +146,7 @@ export default function PaymentInfoPage() {
             <h1>
               Payment <span>Information</span>
             </h1>
-            <p>Review your payer details, choose how you would like to pay, then continue.</p>
+            <p>Fill in the customer details and choose a payment method to continue.</p>
             <div className="inner-breadcrumb-links">
               <Link to="/">Home</Link>
               <i className="fa-solid fa-angle-right" />
@@ -152,32 +169,36 @@ export default function PaymentInfoPage() {
           <div className={styles.wrap}>
             <header className={styles.pageHeader}>
               <h2 className={styles.formTitle}>Payment details</h2>
-              
             </header>
 
             <div className={styles.formCenter}>
               <div className={styles.mainCard}>
                 <form onSubmit={onSubmit}>
                   <div className={styles.formGrid}>
-                    <div className={styles.field}>
-                      <label className={styles.label} htmlFor="pi-profile">
-                        Profile
+
+                    {/* Sales Agent — full width */}
+                    <div className={`${styles.field} ${styles.fieldFull}`}>
+                      <label className={styles.label} htmlFor="pi-agent">
+                        Sales Agent
                       </label>
                       <select
-                        id="pi-profile"
+                        id="pi-agent"
                         className={`form-control custom-input ${styles.fieldControl}`}
-                        value={form.profile}
-                        onChange={(e) => setField('profile', e.target.value)}
+                        value={form.salesAgent}
+                        onChange={(e) => setField('salesAgent', e.target.value)}
+                        required
                       >
-                        <option value="Robert">Robert</option>
-                        <option value="Jane">Jane</option>
-                        <option value="Business">Business account</option>
+                        <option value="">— Select agent —</option>
+                        {SALES_AGENTS.map((a) => (
+                          <option key={a} value={a}>{a}</option>
+                        ))}
                       </select>
                     </div>
 
+                    {/* Customer Name */}
                     <div className={styles.field}>
                       <label className={styles.label} htmlFor="pi-name">
-                        Customer name
+                        Customer Name
                       </label>
                       <input
                         id="pi-name"
@@ -186,12 +207,14 @@ export default function PaymentInfoPage() {
                         autoComplete="name"
                         value={form.customerName}
                         onChange={(e) => setField('customerName', e.target.value)}
+                        required
                       />
                     </div>
 
+                    {/* Customer Email */}
                     <div className={styles.field}>
                       <label className={styles.label} htmlFor="pi-email">
-                        Email
+                        Customer Email
                       </label>
                       <input
                         id="pi-email"
@@ -203,44 +226,49 @@ export default function PaymentInfoPage() {
                       />
                     </div>
 
+                    {/* Customer Phone */}
                     <div className={styles.field}>
-                      <label className={styles.label} htmlFor="pi-zip">
-                        ZIP code
+                      <label className={styles.label} htmlFor="pi-phone">
+                        Customer Phone
                       </label>
                       <input
-                        id="pi-zip"
-                        type="text"
+                        id="pi-phone"
+                        type="tel"
                         className={`form-control custom-input ${styles.fieldControl}`}
-                        autoComplete="postal-code"
-                        value={form.zip}
-                        onChange={(e) => setField('zip', e.target.value)}
+                        autoComplete="tel"
+                        value={form.phone}
+                        onChange={(e) => setField('phone', e.target.value)}
                       />
                     </div>
 
-                    <div className={`${styles.field} ${styles.fieldFull}`}>
-                      <label className={styles.label} htmlFor="pi-ref">
-                        Reference / note
+                    {/* Package Name */}
+                    <div className={styles.field}>
+                      <label className={styles.label} htmlFor="pi-package">
+                        Package Name
                       </label>
                       <input
-                        id="pi-ref"
+                        id="pi-package"
                         type="text"
                         className={`form-control custom-input ${styles.fieldControl}`}
-                        value={form.reference}
-                        onChange={(e) => setField('reference', e.target.value)}
+                        value={form.packageName}
+                        onChange={(e) => setField('packageName', e.target.value)}
                       />
                     </div>
 
-                    <div className={`${styles.field} ${styles.fieldFull}`}>
+                    {/* Price */}
+                    <div className={styles.field}>
                       <label className={styles.label} htmlFor="pi-amount">
-                        Amount
+                        Price
                       </label>
                       <input
                         id="pi-amount"
                         type="text"
                         inputMode="decimal"
                         className={`form-control custom-input ${styles.fieldControl}`}
+                        placeholder="0.00"
                         value={form.amount}
                         onChange={(e) => setField('amount', e.target.value)}
+                        required
                       />
                     </div>
 

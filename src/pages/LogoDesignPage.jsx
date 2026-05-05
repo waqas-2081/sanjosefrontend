@@ -91,7 +91,7 @@ export default function LogoDesignPage() {
             <div className="row">
                 <div className="col-lg-6">
                     <div className="image">
-                        <img src="/assets/images/about/about.jpg" alt="" />
+                        <img src="/assets/images/logo1service.png" alt="" />
                     </div>
                 </div>
                 <div className="col-lg-6">

@@ -90,18 +90,23 @@ export default function AboutPage() {
             <div className="row">
                 <div className="col-lg-7">
                     <div className="image">
-                        <img src="/assets/images/about/about.jpg" alt="" />
+                        <img src="/assets/images/aboutusmain.png" alt="" />
                     </div>
                 </div>
                 <div className="col-lg-5">
                     <div className="content">
                         <h1>
-                            Innovating
-                            <div>Beyond</div>
-                            Boundaries
+                            What Makes Us The Best <div>Logo Design</div> Company And What Sets Us Apart?
                         </h1>
-                        <p>Watch as we transform brands with cutting-edge design, bringing bold ideas to life. See why
-                            we're the top choice for standout visual branding in today's market.</p>
+                        <p>
+                            We are the United States most famous and leading Logo Design company, mastermind in services focusing on graphic design services, Best SEO Service, Video Animation Services, and much more. Design Services Professional video animation services Best Social Media Marketing Services Search Engine Optimization Services. Our team includes highly skilled creative website developers, digital marketers, programmers, and content writers. Out of this diligent team has emerged America's best graphic design firm.
+                        </p>
+                        <p>
+                            Not a project, not a job this is passion. The aim will be to bring the customer's brand to life with the creativity of our team members.
+                        </p>
+                        <p>
+                            Hearing and Communicating with our clients and providing them with the Best Design Services are our prime goal. As they say, we can bring your vision into reality with a mere flicker.
+                        </p>
                     </div>
                 </div>
             </div>

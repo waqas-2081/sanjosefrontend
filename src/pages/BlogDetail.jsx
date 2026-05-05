@@ -136,7 +136,7 @@ export default function BlogDetail() {
     };
   }, [slug]);
 
-  const heroSrc = blog?.thumbnail || '/assets/images/portfolio/logo/1.png';
+  const heroSrc = blog?.thumbnail || '';
 
   return (
     <div className="blog-detail-page blog-detail-page--no-mobile-section-pad">

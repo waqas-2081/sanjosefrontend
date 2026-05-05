@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 export function BrandPotential() {
   return (
     <section className="brand-potential">
@@ -75,9 +76,9 @@ export function BrandPotential() {
                         <img src="/assets/images/icon/dont-wait.webp" alt="" />
                         <h1>Our Comprehensive Process</h1>
                         <p>Our creative team thinks out of the box and comes up with innovative ideas that boost our creativity for considering a picture or painting in different ways. And integrity is the main reason behind the quality design by our designers. The management takes online issues effectively, and tasks have been accomplished quickly. Teamwork makes us experts in multitasking, revising, and delivering each project on time, so customer satisfaction is guaranteed at every process stage.</p>
-                        <a href="#" className="btn">
-                            <span>Brand Packages</span>
-                        </a>
+                        <Link to="/contact-us" className="btn">
+                            <span>Contact Us Now</span>
+                        </Link>
                     </div>
                 </div>
             </div>
