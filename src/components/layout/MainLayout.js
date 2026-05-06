@@ -7,6 +7,7 @@ import Header from './Header';
 
 export default function MainLayout() {
   const { pathname } = useLocation();
+  const hideSiteFooter = pathname === '/logo-offer';
   const frameRef = useRef(null);
 
   useLayoutEffect(() => {
@@ -25,7 +26,7 @@ export default function MainLayout() {
       <Header />
       <Outlet key={pathname} />
       <HomeLeadPopup autoOpenOnLoad={pathname === '/'} />
-      <Footer />
+      {!hideSiteFooter ? <Footer /> : null}
     </>
   );
 }

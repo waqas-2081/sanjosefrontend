@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import ServicePackagesSection from '../components/sections/ServicePackagesSection';
 import { AwesomeProjects } from '../components/sections/AwesomeProjects';
+import { CtaProjects } from '../components/sections/CtaProjects';
+import { SuccessStoriesHome } from '../components/sections/SuccessStoriesHome';
 
 const benefits = [
   {
@@ -95,7 +97,7 @@ export default function LogoOfferPage() {
           padding: 84px 0;
         }
         .logo-offer-page .lo-kicker {
-          color: var(--lo-accent);
+          color: #ff5e2c;
           letter-spacing: 0.08em;
           font-weight: 700;
           text-transform: uppercase;
@@ -109,7 +111,7 @@ export default function LogoOfferPage() {
           margin-bottom: 14px;
         }
         .logo-offer-page .lo-subtext {
-          color: var(--lo-muted);
+          color: #373b4b;
           max-width: 720px;
         }
         .lo-hero {
@@ -129,6 +131,12 @@ export default function LogoOfferPage() {
           padding: clamp(20px, 4vw, 42px);
           box-shadow: 0 20px 60px rgba(0,0,0,0.4);
           animation: loFloat 5s ease-in-out infinite;
+        }
+        .logo-offer-page .lo-hero-lead {
+          color: #ffffff;
+          max-width: 720px;
+          margin-left: auto;
+          margin-right: auto;
         }
         .lo-trust-row {
           display: flex;
@@ -417,7 +425,7 @@ export default function LogoOfferPage() {
           z-index: 1;
         }
         .logo-offer-page .packages-section .section-pill {
-          color: #3386ff;
+          color: #FF5E2C;
           background: #fff;
           padding: 6px 16px;
           border-radius: 999px;
@@ -697,6 +705,11 @@ export default function LogoOfferPage() {
         .lo-home-portfolio ul.home-portf li:hover .img1 img {
           animation: loScale 3s infinite;
         }
+        @media (hover: none) {
+          .lo-home-portfolio ul.home-portf li:hover .img1 img {
+            animation: none;
+          }
+        }
         .lo-home-portfolio .portf-content {
           padding: 25px;
         }
@@ -763,27 +776,185 @@ export default function LogoOfferPage() {
           letter-spacing: .06em;
           text-transform: uppercase;
         }
-        .lo-process-wrap {
+        .lo-process-section {
           position: relative;
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: 16px;
+          overflow: hidden;
+          padding: 56px 0 72px;
+          background-color: #f6f7fb;
+          background-image:
+            linear-gradient(180deg, rgba(246, 247, 251, 0.94) 0%, rgba(246, 247, 251, 0.88) 100%),
+            url(/assets/images/icon/static-effect-dirty-white.jpg);
+          background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
+        }
+        .lo-process-section .container {
+          position: relative;
+        }
+        .lo-process-watermark {
+          position: absolute;
+          left: 50%;
+          transform: translateX(-50%);
+          top: -50px;
+          font-size: clamp(4rem, 14vw, 12rem);
+          font-weight: 900;
+          text-transform: uppercase;
+          color: rgba(16, 20, 32, 0.06);
+          line-height: 1;
+          letter-spacing: 0.02em;
+          pointer-events: none;
+          user-select: none;
+          z-index: 0;
+        }
+        .lo-process-section .text-center-head {
+          position: relative;
+          z-index: 1;
+          max-width: 640px;
+          margin-bottom: 8px;
+        }
+        .lo-process-section .text-center-head .lo-kicker {
+          color: #FF5E2C;
+        }
+        .lo-process-section .text-center-head .lo-heading {
+          color: #000000;
+        }
+        .lo-process-section .text-center-head .lo-subtext {
+          color: #5c6378;
+        }
+        .lo-process-flow {
+          display: flex;
+          flex-direction: row;
+          align-items: stretch;
+          justify-content: center;
+          gap: 0;
+          margin-top: 28px;
+          position: relative;
+          z-index: 1;
+        }
+        .lo-process-flow::before {
+          content: "";
+          position: absolute;
+          left: 8%;
+          right: 8%;
+          top: 52px;
+          height: 2px;
+          background: linear-gradient(90deg, transparent, rgba(255, 94, 44, 0.35), rgba(247, 208, 70, 0.35), rgba(255, 94, 44, 0.35), transparent);
+          z-index: 0;
+          pointer-events: none;
         }
         .lo-process-item {
-          background: rgba(16, 19, 30, .9);
-          border: 1px solid rgba(255,255,255,.08);
-          border-radius: 14px;
-          padding: 20px;
-          min-height: 190px;
+          flex: 1 1 0;
+          min-width: 0;
+          position: relative;
+          z-index: 1;
+          background: linear-gradient(165deg, rgba(26, 31, 49, 0.98), rgba(12, 14, 22, 0.96));
+          border: 1px solid rgba(255,255,255,.1);
+          border-radius: 18px;
+          padding: 22px 20px 22px;
+          min-height: 220px;
+          box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+          transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+        }
+        .lo-process-item:hover {
+          transform: translateY(-4px);
+          border-color: rgba(255, 94, 44, 0.45);
+          box-shadow: 0 22px 48px rgba(0, 0, 0, 0.42), 0 0 0 1px rgba(255, 94, 44, 0.15);
+        }
+        .lo-process-num {
+          width: 44px;
+          height: 44px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: 800;
+          font-size: 1rem;
+          color: #0d0f14;
+          background: linear-gradient(135deg, #FF5E2C, #ff8a5c);
+          margin-bottom: 14px;
+          box-shadow: 0 8px 20px rgba(255, 94, 44, 0.35);
         }
         .lo-process-step {
           color: var(--lo-accent);
-          font-size: .78rem;
+          font-size: .72rem;
           text-transform: uppercase;
-          letter-spacing: .08em;
-          margin-bottom: 10px;
+          letter-spacing: .12em;
+          margin-bottom: 8px;
           font-weight: 800;
         }
+        .lo-process-item h3 {
+          color: #f5f7ff;
+          font-weight: 800;
+          font-size: 1.15rem;
+          margin-bottom: 10px;
+          letter-spacing: .02em;
+        }
+        .lo-process-item .lo-subtext {
+          font-size: .94rem;
+          line-height: 1.55;
+          color: #ffffff;
+        }
+        .lo-process-arrow {
+          flex: 0 0 auto;
+          width: 36px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          align-self: center;
+          color: rgba(255, 94, 44, 0.85);
+          z-index: 2;
+        }
+        .lo-process-arrow svg {
+          filter: drop-shadow(0 2px 6px rgba(255, 94, 44, 0.35));
+        }
+
+        /* SuccessStoriesHome on logo-offer only: dark text + watermark like stories sections */
+        .logo-offer-page .lo-logo-offer-success-stories {
+          color: #151515;
+        }
+        .logo-offer-page .lo-logo-offer-success-stories .success-stories-react.stories-sec.stories-sec2::before {
+          content: "SUCCESS" !important;
+          position: absolute;
+          top: 35px;
+          left: 50%;
+          transform: translateX(-50%);
+          font-family: "Bebas Neue", "Impact", sans-serif;
+          font-size: clamp(64px, 12vw, 180px);
+          letter-spacing: 6px;
+          text-transform: uppercase;
+          color: #000000;
+          opacity: 0.06;
+          white-space: nowrap;
+          pointer-events: none;
+          z-index: 0;
+        }
+        .logo-offer-page .lo-logo-offer-success-stories .success-stories-react .container-fluid {
+          position: relative;
+          z-index: 1;
+        }
+        .logo-offer-page .lo-logo-offer-success-stories .section-heading {
+          position: relative;
+          z-index: 1;
+        }
+        .logo-offer-page .lo-logo-offer-success-stories .section-heading h2 {
+          color: #000000 !important;
+        }
+        .logo-offer-page .lo-logo-offer-success-stories .section-heading p {
+          color: #5c6378 !important;
+        }
+        .logo-offer-page .lo-logo-offer-success-stories .story-card-header .meta h5 {
+          color: #111324 !important;
+        }
+        .logo-offer-page .lo-logo-offer-success-stories .success-stories-review-text {
+          color: #3d4457 !important;
+        }
+        .logo-offer-page .lo-logo-offer-success-stories .story-card-footer .score {
+          color: #111324 !important;
+        }
+        .logo-offer-page .lo-logo-offer-success-stories .success-stories-footer .stars i {
+          color: #ff9f1c !important;
+        }
+
         .lo-cta-band {
           background: linear-gradient(120deg, #1f2437, #121526);
           border: 1px solid rgba(255,255,255,.08);
@@ -847,13 +1018,118 @@ export default function LogoOfferPage() {
           .logo-offer-page .lo-section {
             padding: 64px 0;
           }
-          .lo-process-wrap {
-            grid-template-columns: repeat(2, 1fr);
+          .lo-process-flow {
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+          }
+          .lo-process-flow::before {
+            display: none;
+          }
+          .lo-process-flow .lo-process-item {
+            flex: none;
+            width: 100%;
+            max-width: 520px;
+            min-height: 0;
+          }
+          .lo-process-flow .lo-process-arrow {
+            width: auto;
+            height: 32px;
+            margin-top: 0;
+            margin-bottom: 0;
+            transform: rotate(90deg);
+          }
+
+          /* Portfolio grid: desktop stagger (-90px even items + 49% cols) breaks tablets — stack cards + reset offsets */
+          .lo-home-portfolio {
+            overflow: visible;
+          }
+          .lo-home-portfolio .bg-txt {
+            font-size: clamp(3rem, 11vw, 5rem);
+            top: 4px;
+          }
+          .lo-home-portfolio .mn-hd3 {
+            font-size: clamp(1.45rem, 4.5vw, 2rem);
+            line-height: 1.12;
+          }
+          .lo-home-portfolio .mn-hd3 br {
+            display: none;
+          }
+          .lo-home-portfolio .spacebr {
+            display: none;
+          }
+          .lo-home-portfolio ul.home-portf > li {
+            width: 100%;
+            display: block;
+            margin-bottom: 26px;
+          }
+          .lo-home-portfolio ul.home-portf > li:nth-child(even) {
+            margin-top: 0 !important;
+          }
+          .lo-home-portfolio ul.home-portf li > div {
+            width: 100%;
+            max-width: 460px;
+            margin-left: auto;
+            margin-right: auto;
+          }
+          .lo-home-portfolio ul.home-portf figure {
+            position: relative;
+            overflow: hidden;
+          }
+          .lo-home-portfolio ul.home-portf .img1 {
+            left: 0 !important;
+            right: 0 !important;
+            top: 0 !important;
+            bottom: 0 !important;
+            margin: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+          .lo-home-portfolio ul.home-portf li.bg-02 .img1,
+          .lo-home-portfolio ul.home-portf li.bg-03 .img1 {
+            top: 0 !important;
+            bottom: 0 !important;
+          }
+          .lo-home-portfolio ul.home-portf li.bg-04 .img1,
+          .lo-home-portfolio ul.home-portf li.bg-05 .img1,
+          .lo-home-portfolio ul.home-portf li.bg-07 .img1,
+          .lo-home-portfolio ul.home-portf li.bg-08 .img1 {
+            left: 0 !important;
+            right: 0 !important;
+            top: 0 !important;
+            bottom: 0 !important;
+          }
+          .lo-home-portfolio ul.home-portf .img1 img {
+            width: min(220px, 58vw);
+            height: auto;
+          }
+          .lo-home-portfolio .portf-content {
+            padding: 22px 14px;
+          }
+          .lo-home-portfolio .portf-content h5 {
+            font-size: clamp(1.5rem, 5vw, 1.9rem);
+          }
+          .lo-home-portfolio .portf-content ul {
+            min-height: 20px;
+          }
+          .lo-home-portfolio .portf-content ul li {
+            font-size: 15px;
           }
         }
         @media (max-width: 575.98px) {
-          .lo-process-wrap {
-            grid-template-columns: 1fr;
+          .logo-offer-page .lo-logo-offer-success-stories .success-stories-react.stories-sec.stories-sec2::before {
+            top: 78px;
+          }
+          .lo-process-watermark {
+            top: -10px;
+            font-size: 4.3rem;
+          }
+          .lo-process-flow .lo-process-item {
+            max-width: 420px;
+          }
+          .lo-process-flow .lo-process-arrow {
+            height: 28px;
           }
           .lo-hero {
             min-height: 76vh;
@@ -893,58 +1169,262 @@ export default function LogoOfferPage() {
             font-size: 4.3rem;
           }
           .lo-home-portfolio .bg-txt {
-            font-size: 5rem;
-            top: 6px;
+            font-size: clamp(2.75rem, 14vw, 4.25rem);
+            top: 2px;
           }
           .lo-home-portfolio .mn-hd3 {
-            font-size: 32px;
-            line-height: 1;
-          }
-          .lo-home-portfolio .mn-hd3 br {
-            display: none;
-          }
-          .lo-home-portfolio .p-rel > p {
-            font-size: 20px;
-            line-height: 24px;
-          }
-          .lo-home-portfolio ul.home-portf > li {
-            width: 100%;
-            display: block;
-            margin-bottom: 24px;
-          }
-          .lo-home-portfolio ul.home-portf > li:nth-child(even) {
-            margin-top: 0;
-          }
-          .lo-home-portfolio ul.home-portf li > div {
-            width: 100%;
-          }
-          .lo-home-portfolio ul.home-portf .img1 {
-            left: 0 !important;
-            right: 0 !important;
-            top: 0 !important;
-            bottom: 0;
-            margin: auto;
-            display: flex;
-            align-items: center;
+            font-size: clamp(1.25rem, 5.5vw, 1.65rem);
           }
           .lo-home-portfolio ul.home-portf .img1 img {
-            width: 210px;
+            width: min(200px, 52vw);
           }
           .lo-home-portfolio .portf-content {
-            padding: 25px 10px;
+            padding: 20px 12px;
           }
-          .lo-home-portfolio .portf-content h5 {
-            font-size: 30px;
+          .logo-offer-page .faq-section .lo-faq-watermark {
+            top: 4px;
+            font-size: clamp(3.25rem, 16vw, 4.5rem);
           }
-          .lo-home-portfolio .portf-content ul {
-            min-height: 20px;
+          .logo-offer-page .lo-offer-footer-social a {
+            width: 32px;
+            height: 32px;
+            font-size: 0.82rem;
           }
-          .lo-home-portfolio .portf-content ul li {
-            font-size: 15px;
+          .logo-offer-page .lo-offer-footer-icon-box {
+            width: 28px;
+            height: 28px;
+            font-size: 0.7rem;
           }
-          .lo-home-portfolio .spacebr {
+        }
+
+        /* FAQ on logo-offer: watermark behind heading (like Benefits / Process) + black headings + full answers */
+        .logo-offer-page .faq-section {
+          position: relative;
+          overflow: hidden;
+          color: #111827;
+        }
+        .logo-offer-page .faq-section > .container {
+          position: relative;
+        }
+        .logo-offer-page .faq-section .lo-faq-watermark {
+          position: absolute;
+          left: 50%;
+          transform: translateX(-50%);
+          top: 8px;
+          font-size: clamp(4rem, 14vw, 11rem);
+          font-weight: 900;
+          text-transform: uppercase;
+          color: rgba(16, 20, 32, 0.06);
+          line-height: 1;
+          letter-spacing: 0.06em;
+          pointer-events: none;
+          user-select: none;
+          z-index: 0;
+          width: max-content;
+          max-width: 100%;
+          text-align: center;
+          white-space: nowrap;
+        }
+        .logo-offer-page .faq-section .faq-header {
+          position: relative;
+          z-index: 1;
+        }
+        .logo-offer-page .faq-section .faq-modern-grid {
+          position: relative;
+          z-index: 1;
+        }
+        .logo-offer-page .faq-section .section-pill {
+          position: relative;
+          z-index: 1;
+          white-space: nowrap;
+        }
+        .logo-offer-page .faq-section .faq-title {
+          color: #000000 !important;
+        }
+        .logo-offer-page .faq-section .faq-subtitle {
+          color: #5b6474 !important;
+        }
+        .logo-offer-page .faq-section .faq-modern-item .faq-question {
+          color: #000000 !important;
+        }
+        .logo-offer-page .faq-section .faq-modern-item[open] {
+          overflow: visible;
+        }
+        .logo-offer-page .faq-section .faq-modern-item .faq-answer {
+          height: auto !important;
+          max-height: none !important;
+          overflow: visible !important;
+          transition: none;
+        }
+
+        /* Logo-offer only: footer (dark grid + brand orange #FF5E2C) */
+        .logo-offer-page .lo-offer-footer {
+          --lo-footer-accent: #ff5e2c;
+          --lo-footer-muted: #c8c8c8;
+          background-color: #09090b;
+          background-image:
+            linear-gradient(rgba(255, 94, 44, 0.06) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 94, 44, 0.06) 1px, transparent 1px);
+          background-size: 26px 26px;
+          padding: clamp(48px, 8vw, 72px) 0 42px;
+          color: var(--lo-footer-muted);
+        }
+        .logo-offer-page .lo-offer-footer-inner {
+          max-width: min(1100px, 100%);
+          margin: 0 auto;
+          text-align: center;
+          padding-left: 12px;
+          padding-right: 12px;
+        }
+        .logo-offer-page .lo-offer-footer-logo-wrap {
+          display: inline-block;
+          margin-bottom: 26px;
+        }
+        .logo-offer-page .lo-offer-footer-logo {
+          display: block;
+          max-width: min(280px, 78vw);
+          height: auto;
+          margin: 0 auto;
+        }
+        .logo-offer-page .lo-offer-footer-social {
+          display: flex;
+          justify-content: center;
+          gap: 10px;
+          flex-wrap: wrap;
+          margin-bottom: 34px;
+        }
+        .logo-offer-page .lo-offer-footer-social a {
+          width: 36px;
+          height: 36px;
+          border-radius: 50%;
+          border: 1px solid var(--lo-footer-accent);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: var(--lo-footer-accent);
+          font-size: 0.92rem;
+          transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+        }
+        .logo-offer-page .lo-offer-footer-social a:hover {
+          background: rgba(255, 94, 44, 0.14);
+          color: #ffb899;
+          border-color: #ffb899;
+        }
+        .logo-offer-page .lo-offer-footer-contact {
+          list-style: none;
+          padding: 0;
+          margin: 0 auto;
+          width: 100%;
+          display: flex;
+          flex-direction: row;
+          flex-wrap: nowrap;
+          justify-content: center;
+          align-items: center;
+          gap: clamp(8px, 2vw, 28px);
+        }
+        .logo-offer-page .lo-offer-footer-contact li {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          margin: 0;
+          flex: 0 1 auto;
+          min-width: 0;
+        }
+        .logo-offer-page .lo-offer-footer-contact li:last-child {
+          margin-bottom: 0;
+        }
+        .logo-offer-page .lo-offer-footer-icon-box {
+          flex-shrink: 0;
+          width: 32px;
+          height: 32px;
+          border-radius: 8px;
+          border: 1px solid var(--lo-footer-accent);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: var(--lo-footer-accent);
+          font-size: 0.78rem;
+        }
+        .logo-offer-page .lo-offer-footer-contact a {
+          flex: 0 1 auto;
+          min-width: 0;
+          text-align: left;
+          color: var(--lo-footer-muted);
+          text-decoration: none;
+          font-size: 0.88rem;
+          line-height: 1.35;
+          white-space: nowrap;
+          transition: color 0.2s ease;
+        }
+        .logo-offer-page .lo-offer-footer-contact a:hover {
+          color: #ffb899;
+        }
+        .logo-offer-page .lo-offer-footer-contact-line {
+          flex: 0 1 auto;
+          min-width: 0;
+          font-size: 0.88rem;
+          line-height: 1.35;
+          color: var(--lo-footer-muted);
+          text-align: left;
+          white-space: nowrap;
+        }
+        .logo-offer-page .lo-offer-footer-rule {
+          height: 1px;
+          margin: 32px 0 22px;
+          background: linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 94, 44, 0.42),
+            transparent
+          );
+        }
+        .logo-offer-page .lo-offer-footer-legal {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 10px;
+          flex-wrap: wrap;
+          font-size: 0.9rem;
+        }
+        .logo-offer-page .lo-offer-footer-legal a {
+          color: var(--lo-footer-muted);
+          text-decoration: none;
+          transition: color 0.2s ease;
+        }
+        .logo-offer-page .lo-offer-footer-legal a:hover {
+          color: var(--lo-footer-accent);
+        }
+        .logo-offer-page .lo-offer-footer-sep {
+          color: var(--lo-footer-accent);
+          font-weight: 700;
+        }
+        @media (max-width: 767.98px) {
+          .logo-offer-page .lo-offer-footer-contact {
+            justify-content: flex-start;
+            gap: 10px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding-bottom: 6px;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+          }
+          .logo-offer-page .lo-offer-footer-contact::-webkit-scrollbar {
             display: none;
           }
+          .logo-offer-page .lo-offer-footer-contact li {
+            flex: 0 0 auto;
+          }
+          .logo-offer-page .lo-offer-footer-contact a,
+          .logo-offer-page .lo-offer-footer-contact-line {
+            font-size: 0.76rem;
+          }
+        }
+        .logo-offer-page .lo-offer-footer-copy {
+          margin: 14px 0 0;
+          font-size: 0.84rem;
+          color: #8a8a8a;
+          line-height: 1.5;
         }
       `}</style>
 
@@ -955,7 +1435,7 @@ export default function LogoOfferPage() {
               <div className="lo-hero-card text-center">
                 <p className="lo-kicker">Custom Logo & Branding Agency</p>
                 <h1 className="lo-heading">Building Brands That Empower Growth</h1>
-                <p className="lo-subtext mx-auto">
+                <p className="lo-hero-lead mx-auto">
                   We design premium logos and visual identities that help your business look credible, convert better,
                   and lead your niche with confidence.
                 </p>
@@ -1052,86 +1532,283 @@ export default function LogoOfferPage() {
       <AwesomeProjects />
       </section>
 
-      <section className="lo-section">
+      <section className="lo-section lo-process-section">
         <div className="container">
-          <p className="lo-kicker">Process</p>
-          <h2 className="lo-heading">How We Craft Winning Identities</h2>
-          <div className="lo-process-wrap mt-4">
+          <span className="lo-process-watermark" aria-hidden="true">Process</span>
+          <div className="text-center mx-auto text-center-head">
+            <p className="lo-kicker">Process</p>
+            <h2 className="lo-heading mx-auto">How We Craft Winning Identities</h2>
+            <p className="lo-subtext mx-auto mb-0">Four clear stages—from discovery to delivery—with your feedback shaping every move.</p>
+          </div>
+          <div className="lo-process-flow">
             {processSteps.map((step, index) => (
-              <article key={step.title} className="lo-process-item">
-                <p className="lo-process-step">Step {index + 1}</p>
-                <h3 className="h5">{step.title}</h3>
-                <p className="mb-0 lo-subtext">{step.text}</p>
-              </article>
+              <React.Fragment key={step.title}>
+                <article className="lo-process-item">
+                  <div className="lo-process-num">{index + 1}</div>
+                  <p className="lo-process-step">Step {index + 1}</p>
+                  <h3>{step.title}</h3>
+                  <p className="mb-0 lo-subtext">{step.text}</p>
+                </article>
+                {index < processSteps.length - 1 ? (
+                  <div className="lo-process-arrow" aria-hidden="true">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M9 6l6 6-6 6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </div>
+                ) : null}
+              </React.Fragment>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="lo-section pt-0">
-        <div className="container">
-          <div className="lo-cta-band">
-            <div>
-              <p className="lo-kicker mb-2">CTA</p>
-              <h2 className="h3 mb-1">Let us shape your next iconic logo</h2>
-              <p className="mb-0 lo-subtext">Talk to our team and get your first concepts quickly.</p>
-            </div>
-            <Link to="/contact-us" className="lo-btn lo-btn-primary">Start Your Project</Link>
-          </div>
-        </div>
-      </section>
 
-      <section className="lo-section">
-        <div className="container">
-          <p className="lo-kicker">Testimonials</p>
-          <h2 className="lo-heading">Clients Love Working With Us</h2>
-          <div className="row g-4 mt-2">
-            <div className="col-lg-4">
-              <div className="lo-review">
-                <div className="lo-stars">★★★★★</div>
-                <p className="mb-2">"They turned our rough idea into a high-end identity that increased trust instantly."</p>
-                <small className="text-light">- Maria, Dental Clinic Owner</small>
-              </div>
-            </div>
-            <div className="col-lg-4">
-              <div className="lo-review">
-                <div className="lo-stars">★★★★★</div>
-                <p className="mb-2">"Fast, creative, and very professional. Our rebrand finally looks like a real brand."</p>
-                <small className="text-light">- Jason, Ecommerce Founder</small>
-              </div>
-            </div>
-            <div className="col-lg-4">
-              <div className="lo-review">
-                <div className="lo-stars">★★★★★</div>
-                <p className="mb-2">"Smooth process from brief to final files. Team communication was excellent."</p>
-                <small className="text-light">- Selena, Startup CEO</small>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      <section className="lo-section pt-0 lo-faq">
+      <CtaProjects />
+
+      <div className="lo-logo-offer-success-stories">
+        <SuccessStoriesHome />
+      </div>
+
+      <section className="faq-section py-5">
         <div className="container">
-          <p className="lo-kicker">FAQs</p>
-          <h2 className="lo-heading">Common Questions</h2>
-          <div className="row mt-3">
-            <div className="col-lg-10">
-              {faqs.map((faq) => (
-                <details key={faq.q}>
-                  <summary>{faq.q}</summary>
-                  <p>{faq.a}</p>
+            <span className="lo-faq-watermark" aria-hidden="true">FAQ</span>
+            <div className="faq-header text-center">
+                <span className="section-pill">FAQ</span>
+                <h2 className="faq-title">Questions Clients Ask Before Starting</h2>
+                <p className="faq-subtitle">
+                    Quick answers about timelines, process, collaboration, and post-launch support.
+                </p>
+            </div>
+
+            <div className="faq-modern-grid">
+
+                <details className="faq-modern-item" open>
+                    <summary>
+                        <span className="faq-index">01</span>
+                        <span className="faq-question">What is a logo design agency?</span>
+                        <i className="fa-solid fa-plus"></i>
+                    </summary>
+                    <div className="faq-answer">
+                        A logo design agency is a company that specializes in creating logos for other businesses or
+                        organizations. As the best logo design agency in San Jose we offer custom design made from
+                        scratch for our clients.
+                    </div>
                 </details>
-              ))}
+
+                <details className="faq-modern-item">
+                    <summary>
+                        <span className="faq-index">02</span>
+                        <span className="faq-question">What is the process of creating a logo design?</span>
+                        <i className="fa-solid fa-plus"></i>
+                    </summary>
+                    <div className="faq-answer">
+                        The process of creating a logo design typically involves research, sketching and
+                        conceptualization, design development, and finalization.
+                    </div>
+                </details>
+
+                <details className="faq-modern-item">
+                    <summary>
+                        <span className="faq-index">03</span>
+                        <span className="faq-question">What makes a good logo design?</span>
+                        <i className="fa-solid fa-plus"></i>
+                    </summary>
+                    <div className="faq-answer">
+                        A good logo design should be simple, memorable, timeless, versatile, and appropriate for the
+                        brand or business it represents.
+                    </div>
+                </details>
+
+                <details className="faq-modern-item">
+                    <summary>
+                        <span className="faq-index">04</span>
+                        <span className="faq-question">What are some logo design agencies in San Jose?</span>
+                        <i className="fa-solid fa-plus"></i>
+                    </summary>
+                    <div className="faq-answer">
+                        San Jose Logo Design is the best local designing agency in San Jose. Our experts know how to
+                        design a logo as per the requirement of our clients.
+                    </div>
+                </details>
+
+                <details className="faq-modern-item">
+                    <summary>
+                        <span className="faq-index">05</span>
+                        <span className="faq-question">How do I get to a logo design agency in San Jose?</span>
+                        <i className="fa-solid fa-plus"></i>
+                    </summary>
+                    <div className="faq-answer">
+                        Call us directly or fill out a contact form for so one of our representative will call you to
+                        assist you.
+                    </div>
+                </details>
+
+                <details className="faq-modern-item">
+                    <summary>
+                        <span className="faq-index">06</span>
+                        <span className="faq-question">What is the website for San Jose Logo Design?</span>
+                        <i className="fa-solid fa-plus"></i>
+                    </summary>
+                    <div className="faq-answer">
+                        The website for San Jose Logo Design is www.sanjoselogodesign.com
+                    </div>
+                </details>
+
+                <details className="faq-modern-item">
+                    <summary>
+                        <span className="faq-index">07</span>
+                        <span className="faq-question">What services does a logo design agency provide?</span>
+                        <i className="fa-solid fa-plus"></i>
+                    </summary>
+                    <div className="faq-answer">
+                        San Jose Logo Design provides all kinds of Designing services. Expertise in logo designing, web
+                        designing as well as branding and identity design, print and packaging design, and many more.
+                    </div>
+                </details>
+
+                <details className="faq-modern-item">
+                    <summary>
+                        <span className="faq-index">08</span>
+                        <span className="faq-question">How much does it cost to hire a logo design agency?</span>
+                        <i className="fa-solid fa-plus"></i>
+                    </summary>
+                    <div className="faq-answer">
+                        The cost of hiring a logo design agency can vary widely depending on the agency's experience,
+                        location, and services offered. Prices may range from a few hundred to several thousand dollars.
+                    </div>
+                </details>
+
+                <details className="faq-modern-item">
+                    <summary>
+                        <span className="faq-index">09</span>
+                        <span className="faq-question">How Long Does It Take To Get A Logo Design From An Agency?</span>
+                        <i className="fa-solid fa-plus"></i>
+                    </summary>
+                    <div className="faq-answer">
+                        The timeline for getting a logo design from an agency can vary, but it generally takes several
+                        days to a few weeks to complete the entire design process.
+                    </div>
+                </details>
+
+                <details className="faq-modern-item">
+                    <summary>
+                        <span className="faq-index">10</span>
+                        <span className="faq-question">How do I hire a logo design agency in San Jose?</span>
+                        <i className="fa-solid fa-plus"></i>
+                    </summary>
+                    <div className="faq-answer">
+                        To hire experts in San Jose, Visit www.sanjoselogodesign.com or directly call at our number or
+                        fill out contact us form.
+                    </div>
+                </details>
+
+                <details className="faq-modern-item">
+                    <summary>
+                        <span className="faq-index">11</span>
+                        <span className="faq-question">What is the process for working with a logo design agency?</span>
+                        <i className="fa-solid fa-plus"></i>
+                    </summary>
+                    <div className="faq-answer">
+                        The process for working with a logo design agency typically involves initial consultation,
+                        contract signing, payment of a deposit, design development, revisions, finalization, and
+                        delivery of final files.
+                    </div>
+                </details>
+
+                <details className="faq-modern-item">
+                    <summary>
+                        <span className="faq-index">12</span>
+                        <span className="faq-question">Can I see examples of work done by a logo design agency?</span>
+                        <i className="fa-solid fa-plus"></i>
+                    </summary>
+                    <div className="faq-answer">
+                        Yes, most logo design agencies have portfolios of their work available on their website, or they
+                        may be able to provide examples upon request.
+                    </div>
+                </details>
+
+            </div>
+        </div>
+    </section>
+
+      <footer className="lo-offer-footer">
+        <div className="container">
+          <div className="lo-offer-footer-inner">
+            <Link to="/" className="lo-offer-footer-logo-wrap">
+              <img
+                className="lo-offer-footer-logo"
+                src="/assets/images/logo/logo-white.png"
+                alt="San Jose Logo Design"
+              />
+            </Link>
+
+            <div className="lo-offer-footer-social" role="navigation" aria-label="Social media">
+              <a
+                href="https://www.facebook.com/SanJoselogodesign"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Facebook"
+              >
+                <i className="fa-brands fa-facebook-f" aria-hidden="true" />
+              </a>
+              <a href="https://wa.me/12144491305" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+                <i className="fa-brands fa-whatsapp" aria-hidden="true" />
+              </a>
+              <a
+                href="https://www.instagram.com/sanjoselogodesign/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram"
+              >
+                <i className="fa-brands fa-instagram" aria-hidden="true" />
+              </a>
+              <a
+                href="https://www.linkedin.com/company/san-jose-logo-design"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="LinkedIn"
+              >
+                <i className="fa-brands fa-linkedin-in" aria-hidden="true" />
+              </a>
+            </div>
+
+            <ul className="lo-offer-footer-contact">
+              <li>
+                <span className="lo-offer-footer-icon-box" aria-hidden="true">
+                  <i className="fa-solid fa-phone" />
+                </span>
+                <a href="tel:+12144491305">(214) 449-1305</a>
+              </li>
+              <li>
+                <span className="lo-offer-footer-icon-box" aria-hidden="true">
+                  <i className="fa-solid fa-envelope" />
+                </span>
+                <a href="mailto:info@sanjoselogodesign.com">info@sanjoselogodesign.com</a>
+              </li>
+              <li>
+                <span className="lo-offer-footer-icon-box" aria-hidden="true">
+                  <i className="fa-solid fa-location-dot" />
+                </span>
+                <span className="lo-offer-footer-contact-line">14A S 1st St, San Jose, CA 95113, USA</span>
+              </li>
+            </ul>
+
+            <div className="lo-offer-footer-rule" aria-hidden="true" />
+
+            <div className="lo-offer-footer-bottom">
+              <div className="lo-offer-footer-legal">
+                <Link to="/privacy-policy">Privacy Policy</Link>
+                <span className="lo-offer-footer-sep" aria-hidden="true">
+                  •
+                </span>
+                <Link to="/terms-condition">Terms &amp; Conditions</Link>
+              </div>
+              <p className="lo-offer-footer-copy">
+                © {new Date().getFullYear()} San Jose Logo Design. All rights reserved.
+              </p>
             </div>
           </div>
-        </div>
-      </section>
-
-      <footer className="lo-footer">
-        <div className="container d-flex flex-wrap justify-content-between gap-3">
-          <p className="mb-0">Footer - San Jose Logo Design</p>
-          <p className="mb-0">Email: support@sanjoselogodesign.com | Phone: (872) 266-2866</p>
         </div>
       </footer>
     </div>
