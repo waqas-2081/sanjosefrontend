@@ -20,9 +20,11 @@ import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
 import TermsConditionsPage from './pages/TermsConditionsPage';
 import SeoPage from './pages/SeoPage';
 import ServicesPage from './pages/ServicesPage';
+import ThankYouPage from './pages/ThankYouPage';
 import WebsiteBriefPage from './pages/WebsiteBriefPage';
 import WebsitePage from './pages/WebsitePage';
 import HomePage from './pages/HomePage';
+import NotFoundPage from './pages/NotFoundPage';
 import LogoCreatorPage from './pages/logo-creator';
 import LogoOfferPage from './pages/logo-offer';
 
@@ -65,7 +67,8 @@ function App() {
           <Route path="complete-payment/:token" element={<CompletePaymentPage />} />
           <Route path="payment-completed/:token" element={<PaymentCompletedPage />} />
           <Route path="logo-offer" element={<LogoOfferPage />} />
-          <Route path="*" element={<HomePage />} />
+          <Route path="thankyou" element={<ThankYouPage />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

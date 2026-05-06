@@ -46,7 +46,7 @@ export default function ServicePackagesSection({ serviceType, title, subtitle, p
   }, [serviceType]);
 
   return (
-    <section className="packages-section py-5">
+    <section className="packages-section py-5" data-no-motion="true">
       <div className="container">
         <div className="packages-header text-center">
           {pill ? <span className="section-pill">{pill}</span> : null}
@@ -85,7 +85,7 @@ export default function ServicePackagesSection({ serviceType, title, subtitle, p
                       ))}
                     </ul>
                   ) : null}
-                  <Link to={`/contact?package=${pkg.id}`} className="package-btn">
+                  <Link to="/contact-us" data-popup-trigger="quote" className="package-btn quote-trigger">
                     {pkg.button_text || 'Get Started'}
                   </Link>
                 </article>

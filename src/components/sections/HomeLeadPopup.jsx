@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState, useRef, useCallback } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { postBrandingBrief, autoSaveBrandingBrief } from '../../api/brandingBriefApi';
 
 const OPEN_DELAY_MS = 3500;
@@ -49,6 +50,7 @@ function FloatingOrbs() {
 }
 
 export function HomeLeadPopup({ autoOpenOnLoad = false }) {
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState(emptyForm);
   const [submitting, setSubmitting] = useState(false);
@@ -225,7 +227,8 @@ export function HomeLeadPopup({ autoOpenOnLoad = false }) {
       });
       setSubmitSuccess(data.message || 'Thank you! Your request has been submitted.');
       setForm(emptyForm);
-      window.setTimeout(() => setOpen(false), 2800);
+      setOpen(false);
+      navigate('/thankyou');
     } catch (err) {
       setSubmitError(err?.message || 'Something went wrong. Please try again.');
     } finally {

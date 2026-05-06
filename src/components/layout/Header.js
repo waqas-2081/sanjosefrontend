@@ -157,9 +157,7 @@ export default function Header() {
                       <StarIcon />
                     </div>
                   ))}
-                  <div className="star">
-                    <span>316</span>
-                  </div>
+                  
                 </div>
                 <p>Customer Satisfaction</p>
               </div>

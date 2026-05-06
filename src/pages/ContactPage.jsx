@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Helmet } from 'react-helmet';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { postContact, autoSaveContact } from '../api/contactApi';
 
@@ -16,6 +16,7 @@ const initialForm = {
 
 export default function ContactPage() {
   useDocumentTitle('Contact Us | San Jose Logo Design');
+  const navigate = useNavigate();
   
   const [form, setForm] = useState(initialForm);
   const [submitted, setSubmitted] = useState(false);
@@ -158,6 +159,7 @@ export default function ContactPage() {
       setSubmitted(true);
       setSubmittedId(data.data?.id ?? null);
       setForm(initialForm);
+      navigate('/thankyou');
     } catch (error) {
       setSubmitError(error.message || 'Unable to send your message. Please try again.');
     } finally {

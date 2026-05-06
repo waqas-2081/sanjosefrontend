@@ -424,6 +424,9 @@ export default function LogoWizard() {
         phone: formData.phone?.trim() || "",
       });
       setStep(4);
+      window.setTimeout(() => {
+        navigate('/thankyou');
+      }, 900);
     } catch (e) {
       setApiError(e?.message || "Could not submit.");
     } finally {

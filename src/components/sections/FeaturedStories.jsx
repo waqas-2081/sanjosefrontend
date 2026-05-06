@@ -32,7 +32,7 @@ export function FeaturedStories() {
                                 </ul>
                                 <span className="score">5/5</span>
                             </div>
-                            <a href="#" className="social-link">Google</a>
+                      
                         </div>
                     </div>
                 </div>
@@ -61,7 +61,7 @@ export function FeaturedStories() {
                                 </ul>
                                 <span className="score">5/5</span>
                             </div>
-                            <a href="#" className="social-link">Google</a>
+                    
                         </div>
                     </div>
                 </div>
@@ -90,7 +90,7 @@ export function FeaturedStories() {
                                 </ul>
                                 <span className="score">5/5</span>
                             </div>
-                            <a href="#" className="social-link">facebook</a>
+                      
                         </div>
                     </div>
                 </div>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styles from './LogoBriefPage.module.css';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 
@@ -214,6 +214,7 @@ function LogoTypeStrip({ typeId }) {
 
 export default function LogoBriefPage() {
   useDocumentTitle('Logo Brief | San Jose Logo Design');
+  const navigate = useNavigate();
   const [form, setForm] = useState(initialForm);
   const [files, setFiles] = useState([]);
   const [submitted, setSubmitted] = useState(false);
@@ -272,6 +273,7 @@ export default function LogoBriefPage() {
       setForm({ ...initialForm });
       setFiles([]);
       setFileInputKey((k) => k + 1);
+      navigate('/thankyou');
     } catch (error) {
       setSubmitError(error.message || 'Unable to submit logo brief. Please try again.');
     } finally {

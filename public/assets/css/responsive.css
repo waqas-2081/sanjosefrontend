@@ -64,7 +64,7 @@
     }
 
     .main-header .contact-info .btn span {
-        font-size: 23px;
+        font-size: 16px;
     }
 
     .footer-cta .cta-content h1 {
@@ -93,7 +93,7 @@
 
 @media (max-width: 1282px) {
     .main-header .contact-info .btn {
-        padding: 10px 17px;
+        padding: 10px 8px;
     }
 
     .main-header .contact-info .btn span {
@@ -210,7 +210,7 @@
         position: sticky;
         top: 0;
         z-index: 100;
-        background-color: #151728;
+        background-color: #ffffff;
     }
 
     .main-header .container-fluid {

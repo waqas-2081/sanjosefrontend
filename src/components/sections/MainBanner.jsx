@@ -35,22 +35,8 @@ export function MainBanner() {
                 >
                     <i className="fa-brands fa-instagram"></i>
                 </a>
-                <a
-                  href="https://x.com/SJLogoDesigns"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="X (Twitter)"
-                >
-                    <i className="fa-brands fa-x-twitter"></i>
-                </a>
-                <a
-                  href="https://www.linkedin.com/company/san-jose-logo-design"
-                  target="_blank"
                
-                  aria-label="LinkedIn"
-                >
-                    <i className="fa-brands fa-linkedin-in"></i>
-                </a>
+                
             </div>
         </div>
         <div className="bottom-area">

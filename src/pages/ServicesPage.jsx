@@ -108,7 +108,7 @@ export default function ServicesPage() {
         </div>
     </section>
 
-    <section className="packages-section py-5">
+    <section className="packages-section py-5" data-no-motion="true">
         <div className="container">
             <div className="packages-header text-center">
                 <span className="section-pill">Pricing</span>

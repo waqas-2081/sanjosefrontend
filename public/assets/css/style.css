@@ -1967,7 +1967,7 @@ section {
 
 /* LEFT SIDE */
 .contact-info-box {
-    background: radial-gradient(circle at 12% 22%, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0) 36%), radial-gradient(circle at 88% 8%, rgba(255, 214, 180, 0.45) 0%, rgba(255, 94, 44, 0) 42%), linear-gradient(118deg, #e04a1a 0%, #ff5e2c 48%, #ff7a45 100%);
+    background: #05081b;
     padding: 40px;
     border-radius: 16px;
     color: #fff;

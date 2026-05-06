@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styles from './WebsiteBriefPage.module.css';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 
@@ -180,6 +180,7 @@ function getApiErrorMessage(result) {
 
 export default function WebsiteBriefPage() {
   useDocumentTitle('Website Brief | San Jose Logo Design');
+  const navigate = useNavigate();
   const [form, setForm] = useState(initialForm);
   const [files, setFiles] = useState([]);
   const [submitted, setSubmitted] = useState(false);
@@ -267,6 +268,7 @@ export default function WebsiteBriefPage() {
       setForm({ ...initialForm, addons: { ...initialForm.addons } });
       setFiles([]);
       setFileInputKey((k) => k + 1);
+      navigate('/thankyou');
     } catch (error) {
       setSubmitError(error.message || 'Unable to submit website brief. Please try again.');
     } finally {
