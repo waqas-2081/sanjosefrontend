@@ -1,5 +1,5 @@
-const BRANDING_BRIEF_ENDPOINT = 'http://127.0.0.1:8000/api/branding-brief';
-const BRANDING_BRIEF_AUTOSAVE_ENDPOINT = 'http://127.0.0.1:8000/api/branding-brief/autosave';
+const BRANDING_BRIEF_ENDPOINT = 'https://admin.sanjoselogodesign.com/api/branding-brief';
+const BRANDING_BRIEF_AUTOSAVE_ENDPOINT = 'https://admin.sanjoselogodesign.com/api/branding-brief/autosave';
 
 function getErrorMessage(data, fallback) {
   if (!data) return fallback;

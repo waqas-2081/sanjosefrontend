@@ -4,7 +4,7 @@ import styles from './CompletePaymentPage.module.css';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 
 // ── ENV / CONFIG ─────────────────────────────────────────────────────────────
-const API_BASE      = 'http://127.0.0.1:8000/api';
+const API_BASE      = 'https://admin.sanjoselogodesign.com/api';
 const STRIPE_PK     = process.env.REACT_APP_STRIPE_KEY      || '';
 const PAYPAL_CLIENT = process.env.REACT_APP_PAYPAL_CLIENT_ID || '';
 

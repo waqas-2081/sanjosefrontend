@@ -1,4 +1,4 @@
-const PACKAGES_API_BASE = 'http://127.0.0.1:8000/api/v1';
+const PACKAGES_API_BASE = 'https://admin.sanjoselogodesign.com/api/v1';
 
 /**
  * @param {string} serviceType Laravel Package::service_type (e.g. logo, website, animation, digital_marketing, seo)

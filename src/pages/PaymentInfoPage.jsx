@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import styles from './PaymentInfoPage.module.css';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 
-const PAYMENT_REQUEST_ENDPOINT = 'http://127.0.0.1:8000/api/payment-requests';
+const PAYMENT_REQUEST_ENDPOINT = 'https://admin.sanjoselogodesign.com/api/payment-requests';
 
 const SALES_AGENTS = ['Jared', 'Luke', 'Robert', 'Shawn', 'Sam', 'Zack'];
 

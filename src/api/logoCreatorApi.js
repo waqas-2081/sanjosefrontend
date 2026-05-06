@@ -1,4 +1,4 @@
-const LOGO_CREATOR_API_BASE = 'http://127.0.0.1:8000/api/logo-creator';
+const LOGO_CREATOR_API_BASE = 'https://admin.sanjoselogodesign.com/api/logo-creator';
 
 function getErrorMessage(data, fallback) {
   if (!data) return fallback;

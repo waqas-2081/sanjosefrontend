@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { Link, useParams } from 'react-router-dom';
-const BLOG_DETAIL_ENDPOINT_BASE = 'http://127.0.0.1:8000/api/v1/blogs';
+const BLOG_DETAIL_ENDPOINT_BASE = 'https://admin.sanjoselogodesign.com/api/v1/blogs';
 
 /** Fixed line under breadcrumbs (not article `short_description`) */
 const BLOG_DETAIL_HERO_TAGLINE =

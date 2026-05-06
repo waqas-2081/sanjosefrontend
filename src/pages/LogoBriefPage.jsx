@@ -52,7 +52,7 @@ const LOGO_TYPE_MAP = {
   emblem: 'emblem',
 };
 
-const LOGO_BRIEF_ENDPOINT = 'http://127.0.0.1:8000/api/logo-brief';
+const LOGO_BRIEF_ENDPOINT = 'https://admin.sanjoselogodesign.com/api/logo-brief';
 
 const initialForm = {
   contactName: '',

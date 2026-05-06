@@ -4,7 +4,7 @@ import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import styles from './PaymentCompletedPage.module.css';
 import { color } from 'framer-motion';
 
-const API_BASE = 'http://127.0.0.1:8000/api';
+const API_BASE = 'https://admin.sanjoselogodesign.com/api';
 
 export default function PaymentCompletedPage() {
   useDocumentTitle('Payment Completed | San Jose Logo Design');

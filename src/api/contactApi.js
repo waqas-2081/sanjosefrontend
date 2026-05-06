@@ -1,5 +1,5 @@
-const CONTACT_ENDPOINT = 'http://127.0.0.1:8000/api/contact';
-const CONTACT_AUTOSAVE_ENDPOINT = 'http://127.0.0.1:8000/api/contact/autosave';
+const CONTACT_ENDPOINT = 'https://admin.sanjoselogodesign.com/api/contact';
+const CONTACT_AUTOSAVE_ENDPOINT = 'https://admin.sanjoselogodesign.com/api/contact/autosave';
 
 function getErrorMessage(data, fallback) {
   if (!data) return fallback;

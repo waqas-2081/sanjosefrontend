@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 
-const BLOGS_ENDPOINT = 'http://127.0.0.1:8000/api/v1/blogs';
+const BLOGS_ENDPOINT = 'https://admin.sanjoselogodesign.com/api/v1/blogs';
 const BLOGS_PER_PAGE = 30;
 
 function getApiErrorMessage(result) {

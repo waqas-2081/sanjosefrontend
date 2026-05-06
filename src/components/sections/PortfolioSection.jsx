@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { GalleryLightboxPortal } from '../ui/GalleryLightbox';
 
-const PORTFOLIOS_ENDPOINT = 'http://127.0.0.1:8000/api/v1/portfolios';
-const PORTFOLIO_CATEGORIES_ENDPOINT = 'http://127.0.0.1:8000/api/v1/portfolio-categories';
+const PORTFOLIOS_ENDPOINT = 'https://admin.sanjoselogodesign.com/api/v1/portfolios';
+const PORTFOLIO_CATEGORIES_ENDPOINT = 'https://admin.sanjoselogodesign.com/api/v1/portfolio-categories';
 
 function getApiErrorMessage(result) {
   if (result?.message && typeof result.message === 'string') return result.message;

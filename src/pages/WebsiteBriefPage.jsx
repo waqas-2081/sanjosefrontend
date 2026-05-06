@@ -69,8 +69,8 @@ const FEEL_VALUE_MAP = {
   Light: 'light',
 };
 
-// Laravel local app (your admin panel is http://127.0.0.1:8000/admin — this form posts to the API route instead).
-const WEBSITE_BRIEF_ENDPOINT = 'http://127.0.0.1:8000/api/website-briefs';
+// Laravel local app (your admin panel is https://admin.sanjoselogodesign.com/admin — this form posts to the API route instead).
+const WEBSITE_BRIEF_ENDPOINT = 'https://admin.sanjoselogodesign.com/api/website-briefs';
 
 const initialForm = {
   fullName: '',
