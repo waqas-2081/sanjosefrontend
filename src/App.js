@@ -24,6 +24,7 @@ import WebsiteBriefPage from './pages/WebsiteBriefPage';
 import WebsitePage from './pages/WebsitePage';
 import HomePage from './pages/HomePage';
 import LogoCreatorPage from './pages/logo-creator';
+import LogoOfferPage from './pages/logo-offer';
 
 function App() {
   return (
@@ -63,6 +64,7 @@ function App() {
           <Route path="payment-info" element={<PaymentInfoPage />} />
           <Route path="complete-payment/:token" element={<CompletePaymentPage />} />
           <Route path="payment-completed/:token" element={<PaymentCompletedPage />} />
+          <Route path="logo-offer" element={<LogoOfferPage />} />
           <Route path="*" element={<HomePage />} />
         </Route>
       </Routes>
