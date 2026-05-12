@@ -131,7 +131,7 @@ export function CtaProjects() {
           whileHover={{ scale: 1.03 }}
           whileTap={{ scale: 0.97 }}
         >
-          <span>Get in Touch</span>
+          <span>GET A QUOTE</span>
           <motion.i
             className="fa-solid fa-arrow-right"
             aria-hidden
@@ -146,10 +146,7 @@ export function CtaProjects() {
           position: relative;
           overflow: hidden;
           padding: 82px 18px;
-          background:
-            radial-gradient(900px circle at -10% -20%, rgba(255, 138, 40, 0.17), transparent 55%),
-            radial-gradient(760px circle at 110% 120%, rgba(43, 160, 110, 0.18), transparent 58%),
-            linear-gradient(150deg, #07131f 0%, #092329 60%, #0b1f2e 100%);
+          background: #151728;
         }
 
         .cta-projects__ambient {
@@ -159,10 +156,10 @@ export function CtaProjects() {
           pointer-events: none;
           background: linear-gradient(
             120deg,
-            rgba(255, 107, 26, 0.08),
-            rgba(255, 255, 255, 0.03),
-            rgba(32, 157, 98, 0.09),
-            rgba(255, 107, 26, 0.08)
+            rgba(8, 9, 16, 0.95),
+            rgba(15, 17, 30, 0.85),
+            rgba(26, 31, 52, 0.6),
+            rgba(8, 9, 16, 0.95)
           );
           background-size: 250% 250%;
           filter: blur(24px);
@@ -196,7 +193,7 @@ export function CtaProjects() {
 
         .cta-projects__eyebrow {
           margin: 0 0 12px;
-          color: #ffab66;
+          color: #FF5E2C;
           font-size: 0.82rem;
           font-weight: 600;
           letter-spacing: 0.16em;
@@ -253,8 +250,8 @@ export function CtaProjects() {
         }
 
         .cta-projects__contact-item.is-chat {
-          border-color: rgba(68, 192, 128, 0.42);
-          background: rgba(68, 192, 128, 0.1);
+          border-color: rgba(255, 255, 255, 0.12);
+          background: rgba(255, 255, 255, 0.04);
         }
 
         .cta-projects__contact-icon {
@@ -270,8 +267,8 @@ export function CtaProjects() {
         }
 
         .cta-projects__contact-item.is-chat .cta-projects__contact-icon {
-          color: #4fe0a2;
-          background: rgba(79, 224, 162, 0.18);
+          color: #ff7d2c;
+          background: rgba(255, 125, 44, 0.18);
         }
 
         .cta-projects__contact-copy {

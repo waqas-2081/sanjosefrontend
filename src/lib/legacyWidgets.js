@@ -127,7 +127,8 @@ function initMarquee() {
 
     const setDuration = () => {
       const totalWidth = track.scrollWidth;
-      const speed = 120;
+      const parsed = Number.parseFloat(wrapper.dataset.marqueeSpeed ?? '', 10);
+      const speed = Number.isFinite(parsed) && parsed > 0 ? parsed : 120;
       const duration = totalWidth / speed;
       wrapper.style.setProperty('--marquee-duration', `${duration}s`);
     };

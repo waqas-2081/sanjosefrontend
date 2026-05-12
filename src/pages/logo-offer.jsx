@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import ServicePackagesSection from '../components/sections/ServicePackagesSection';
 import { AwesomeProjects } from '../components/sections/AwesomeProjects';
@@ -70,6 +70,21 @@ const faqs = [
 export default function LogoOfferPage() {
   const navigate = useNavigate();
   const [heroBusinessName, setHeroBusinessName] = useState('');
+  const [portfolioPreview, setPortfolioPreview] = useState(null);
+
+  useEffect(() => {
+    if (!portfolioPreview) return undefined;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const onKeyDown = (e) => {
+      if (e.key === 'Escape') setPortfolioPreview(null);
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      window.removeEventListener('keydown', onKeyDown);
+    };
+  }, [portfolioPreview]);
 
   const handleHeroStart = (event) => {
     event.preventDefault();
@@ -664,9 +679,28 @@ export default function LogoOfferPage() {
           margin: 0;
           position: relative;
         }
-        .lo-home-portfolio ul.home-portf figure > img {
+        .lo-home-portfolio ul.home-portf .lo-portfolio-visual-trigger {
+          display: block;
+          width: 100%;
+          padding: 0;
+          margin: 0;
+          border: 0;
+          background: transparent;
+          cursor: zoom-in;
+          font: inherit;
+          color: inherit;
+          text-align: left;
+          position: relative;
+          -webkit-tap-highlight-color: transparent;
+        }
+        .lo-home-portfolio ul.home-portf .lo-portfolio-visual-trigger:focus-visible {
+          outline: 3px solid #ff5e2c;
+          outline-offset: 2px;
+        }
+        .lo-home-portfolio ul.home-portf .lo-portfolio-bg {
           width: 100%;
           display: block;
+          vertical-align: top;
         }
         .lo-home-portfolio ul.home-portf .img1 {
           position: absolute;
@@ -702,12 +736,22 @@ export default function LogoOfferPage() {
           left: auto;
           top: -40px;
         }
-        .lo-home-portfolio ul.home-portf li:hover .img1 img {
-          animation: loScale 3s infinite;
+        .lo-home-portfolio ul.home-portf .img1 img {
+          transition: transform 0.35s ease;
+          transform: scale(1);
+          transform-origin: center center;
         }
-        @media (hover: none) {
+        @media (hover: hover) and (pointer: fine) {
           .lo-home-portfolio ul.home-portf li:hover .img1 img {
-            animation: none;
+            transform: scale(1.06);
+          }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .lo-home-portfolio ul.home-portf .img1 img {
+            transition: none;
+          }
+          .lo-home-portfolio ul.home-portf li:hover .img1 img {
+            transform: none;
           }
         }
         .lo-home-portfolio .portf-content {
@@ -762,6 +806,116 @@ export default function LogoOfferPage() {
         .lo-home-portfolio .portf-btn:hover {
           color: #20edc1;
         }
+
+        .logo-offer-page .lo-portfolio-lightbox {
+          position: fixed;
+          inset: 0;
+          z-index: 10050;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 20px;
+        }
+        .logo-offer-page .lo-portfolio-lightbox-scrim {
+          position: absolute;
+          inset: 0;
+          border: 0;
+          padding: 0;
+          margin: 0;
+          cursor: pointer;
+          background: rgba(8, 9, 14, 0.82);
+          backdrop-filter: blur(6px);
+          -webkit-backdrop-filter: blur(6px);
+        }
+        .logo-offer-page .lo-portfolio-lightbox-dialog {
+          position: relative;
+          z-index: 1;
+          width: min(560px, 100%);
+          max-height: min(90vh, 820px);
+          border-radius: 16px;
+          overflow: hidden;
+          background: #101218;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          box-shadow: 0 28px 80px rgba(0, 0, 0, 0.55);
+          animation: loPortfolioPop 0.28s ease-out;
+        }
+        @keyframes loPortfolioPop {
+          from {
+            opacity: 0;
+            transform: scale(0.96) translateY(8px);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+          }
+        }
+        .logo-offer-page .lo-portfolio-lightbox-close {
+          position: absolute;
+          top: 10px;
+          right: 10px;
+          z-index: 3;
+          width: 40px;
+          height: 40px;
+          border: 0;
+          border-radius: 999px;
+          cursor: pointer;
+          font-size: 26px;
+          line-height: 1;
+          color: #fff;
+          background: rgba(0, 0, 0, 0.45);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .logo-offer-page .lo-portfolio-lightbox-close:hover {
+          background: rgba(255, 94, 44, 0.95);
+        }
+        .logo-offer-page .lo-portfolio-lightbox-stage {
+          position: relative;
+          aspect-ratio: 4 / 3;
+          background: #1a1d26;
+          overflow: hidden;
+        }
+        .logo-offer-page .lo-portfolio-lightbox-bg {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          opacity: 0.38;
+          filter: blur(1px);
+        }
+        .logo-offer-page .lo-portfolio-lightbox-fg {
+          position: absolute;
+          inset: 0;
+          margin: auto;
+          max-width: 88%;
+          max-height: 88%;
+          width: auto;
+          height: auto;
+          object-fit: contain;
+          z-index: 2;
+          filter: drop-shadow(0 12px 28px rgba(0, 0, 0, 0.45));
+        }
+        .logo-offer-page .lo-portfolio-lightbox-title {
+          margin: 0;
+          padding: 14px 44px 18px 18px;
+          font-size: 1.05rem;
+          font-weight: 700;
+          color: #f4f5fb;
+          text-align: center;
+          border-top: 1px solid rgba(255, 255, 255, 0.08);
+          background: linear-gradient(180deg, #151821, #101218);
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .logo-offer-page .lo-portfolio-lightbox-dialog {
+            animation: none;
+          }
+          .logo-offer-page .awesome-projects--logo-offer .awesome-marquee-inner {
+            animation: none !important;
+          }
+        }
+
         .lo-logo-box {
           height: 140px;
           border-radius: 14px;
@@ -1182,8 +1336,12 @@ export default function LogoOfferPage() {
             padding: 20px 12px;
           }
           .logo-offer-page .faq-section .lo-faq-watermark {
-            top: 4px;
+            top: 100px;
             font-size: clamp(3.25rem, 16vw, 4.5rem);
+          }
+          .logo-offer-page .faq-section .faq-title {
+            font-size: clamp(1.2rem, 5.2vw, 1.55rem) !important;
+            line-height: 1.18;
           }
           .logo-offer-page .lo-offer-footer-social a {
             width: 32px;
@@ -1401,23 +1559,25 @@ export default function LogoOfferPage() {
         }
         @media (max-width: 767.98px) {
           .logo-offer-page .lo-offer-footer-contact {
-            justify-content: flex-start;
-            gap: 10px;
-            overflow-x: auto;
-            overflow-y: hidden;
-            padding-bottom: 6px;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-          }
-          .logo-offer-page .lo-offer-footer-contact::-webkit-scrollbar {
-            display: none;
+            flex-direction: column;
+            flex-wrap: nowrap;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            overflow: visible;
+            padding-bottom: 0;
+            max-width: 420px;
           }
           .logo-offer-page .lo-offer-footer-contact li {
-            flex: 0 0 auto;
+            flex: none;
+            width: 100%;
+            justify-content: center;
           }
           .logo-offer-page .lo-offer-footer-contact a,
           .logo-offer-page .lo-offer-footer-contact-line {
-            font-size: 0.76rem;
+            font-size: 0.8rem;
+            white-space: normal;
+            text-align: center;
           }
         }
         .logo-offer-page .lo-offer-footer-copy {
@@ -1503,12 +1663,17 @@ export default function LogoOfferPage() {
                   <li className={item.wrapperClass} key={item.id}>
                     <div>
                       <figure>
-                        <img loading="lazy" src={item.bg} alt={item.title} />
-                        <figcaption>
+                        <button
+                          type="button"
+                          className="lo-portfolio-visual-trigger"
+                          aria-label={`Open preview: ${item.title}`}
+                          onClick={() => setPortfolioPreview(item)}
+                        >
+                          <img loading="lazy" src={item.bg} alt="" className="lo-portfolio-bg" />
                           <div className="img1">
                             <img loading="lazy" src={item.fg} alt={item.title} />
                           </div>
-                        </figcaption>
+                        </button>
                       </figure>
                       <div className="portf-content">
                         <h5>{item.title}</h5>
@@ -1529,7 +1694,7 @@ export default function LogoOfferPage() {
             </div>
           </div>
         </div>
-      <AwesomeProjects />
+      <AwesomeProjects variant="logo-offer" />
       </section>
 
       <section className="lo-section lo-process-section">
@@ -1731,6 +1896,43 @@ export default function LogoOfferPage() {
             </div>
         </div>
     </section>
+
+      {portfolioPreview ? (
+        <div
+          className="lo-portfolio-lightbox"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="lo-portfolio-lightbox-title"
+        >
+          <button
+            type="button"
+            className="lo-portfolio-lightbox-scrim"
+            aria-label="Close preview"
+            onClick={() => setPortfolioPreview(null)}
+          />
+          <div className="lo-portfolio-lightbox-dialog">
+            <button
+              type="button"
+              className="lo-portfolio-lightbox-close"
+              aria-label="Close preview"
+              onClick={() => setPortfolioPreview(null)}
+            >
+              ×
+            </button>
+            <div className="lo-portfolio-lightbox-stage">
+              <img src={portfolioPreview.bg} alt="" className="lo-portfolio-lightbox-bg" />
+              <img
+                src={portfolioPreview.fg}
+                alt={portfolioPreview.title}
+                className="lo-portfolio-lightbox-fg"
+              />
+            </div>
+            <p id="lo-portfolio-lightbox-title" className="lo-portfolio-lightbox-title">
+              {portfolioPreview.title}
+            </p>
+          </div>
+        </div>
+      ) : null}
 
       <footer className="lo-offer-footer">
         <div className="container">

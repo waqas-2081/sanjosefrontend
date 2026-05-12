@@ -1048,18 +1048,39 @@ export default function LogoWizard() {
           appearance: none;
         }
 
-        /* Progress Bar */
-        .progress-track {
-          display: flex; gap: 6px;
-          position: absolute; top: 20px; right: 24px;
+        /* Close (X) button — solid orange square */
+        .modal-close-btn {
+          position: absolute;
+          top: 12px;
+          right: 22px;
+          z-index: 5;
+          width: 36px;
+          height: 36px;
+          border-radius: 9px;
+          border: 0;
+          background: linear-gradient(135deg, #ff7d2c 0%, #ff6b1a 100%);
+          color: #ffffff;
+          font-size: 20px;
+          font-weight: 700;
+          line-height: 1;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          padding: 0;
+          box-shadow: 0 6px 16px rgba(255, 107, 26, 0.45);
+          transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
         }
-        .progress-dot {
-          width: 8px; height: 8px; border-radius: 50%;
-          background: rgba(255,255,255,0.15);
-          transition: background 0.3s, transform 0.3s;
+        .modal-close-btn:hover,
+        .modal-close-btn:focus-visible {
+          transform: scale(1.06);
+          box-shadow: 0 10px 22px rgba(255, 107, 26, 0.55);
+          filter: brightness(1.05);
+          outline: none;
         }
-        .progress-dot.active { background: #FF6B1A; transform: scale(1.3); }
-        .progress-dot.done { background: rgba(255,107,26,0.4); }
+        .modal-close-btn:active {
+          transform: scale(0.98);
+        }
 
         /* Animations */
         @keyframes fadeDown {
@@ -1158,12 +1179,18 @@ export default function LogoWizard() {
             padding: 3px 10px;
             margin-bottom: 14px;
           }
-          .progress-track {
-            top: 14px;
-            right: 14px;
-            gap: 5px;
+          .modal-close-btn {
+            top: 10px;
+            right: 10px;
+            width: 30px;
+            height: 30px;
+            font-size: 17px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(255, 107, 26, 0.4);
           }
-          .progress-dot { width: 7px; height: 7px; }
+          .step-badge {
+            margin-right: 42px;
+          }
 
           .field-group { margin-bottom: 14px; }
           .panel-logos { display: none; }
@@ -1261,13 +1288,14 @@ export default function LogoWizard() {
                   {apiError}
                 </div>
               ) : null}
-              {step < 4 && (
-                <div className="progress-track">
-                  {[1, 2, 3].map(s => (
-                    <div key={s} className={`progress-dot ${step === s ? "active" : step > s ? "done" : ""}`} />
-                  ))}
-                </div>
-              )}
+              <button
+                type="button"
+                className="modal-close-btn"
+                aria-label="Close and go home"
+                onClick={() => navigate('/')}
+              >
+                ×
+              </button>
 
               {step === 1 && (
                 <Step2

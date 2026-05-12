@@ -1,7 +1,9 @@
 import React from 'react';
-export function AwesomeProjects() {
+
+export function AwesomeProjects({ variant } = {}) {
+  const logoOffer = variant === 'logo-offer';
   return (
-    <section className="awesome-projects">
+    <section className={`awesome-projects${logoOffer ? ' awesome-projects--logo-offer' : ''}`}>
         <div className="container">
             <div className="awesome-header text-center">
                 <img src="/assets/images/icon/unique-brands.png" alt="" />
@@ -11,7 +13,11 @@ export function AwesomeProjects() {
             </div>
         </div>
         <div className="awesome-marquee">
-            <div className="awesome-marquee-inner" data-marquee>
+            <div
+              className="awesome-marquee-inner"
+              data-marquee
+              data-marquee-speed={logoOffer ? '200' : undefined}
+            >
                 <div className="awesome-marquee-track">
                     <div className="awesome-project-card">
                         <img src="/assets/images/portfolio/logo/1.png" alt="Nacho Business project" />
