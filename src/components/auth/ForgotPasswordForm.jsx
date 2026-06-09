@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import styles from './AuthPanel.module.css';
+import styles from './LoginForm.module.css';
 import TextField from './TextField';
 import { requestPasswordReset } from '../../api/authApi';
 
@@ -32,13 +32,22 @@ function validateEmail(email) {
 }
 
 const formVariants = {
-  hidden: { opacity: 0, x: -16 },
-  visible: { opacity: 1, x: 0, transition: { duration: 0.3 } },
-  exit: { opacity: 0, x: 16, transition: { duration: 0.2 } },
+  hidden: { opacity: 0, y: 12 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.35 } },
+  exit: { opacity: 0, y: -8, transition: { duration: 0.2 } },
 };
 
-export default function ForgotPasswordForm({ onSubmit, disabled = false }) {
+export default function ForgotPasswordForm({ onSubmit, onBackToLogin, disabled = false }) {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
+
+  const handleBackToLogin = () => {
+    if (onBackToLogin) {
+      onBackToLogin();
+      return;
+    }
+    navigate('/login');
+  };
   const [error, setError] = useState(undefined);
   const [isLoading, setIsLoading] = useState(false);
   const [status, setStatus] = useState(null);
@@ -82,51 +91,49 @@ export default function ForgotPasswordForm({ onSubmit, disabled = false }) {
   if (sent) {
     return (
       <motion.div
-        className={styles.formPane}
+        className={styles.loginForm}
         variants={formVariants}
         initial="hidden"
         animate="visible"
         exit="exit"
       >
-        <div className={styles.successPane}>
-          <div className={styles.successIcon} aria-hidden="true">
-            <CheckIcon />
-          </div>
-          <h2 className={styles.formTitle}>Check your inbox</h2>
-          <p className={styles.formLead}>
-            If an account exists for <strong>{email.trim()}</strong>, we sent a password reset link.
-            The email may take a few minutes to arrive — check spam if you do not see it.
-          </p>
-          <button
-            type="button"
-            className={styles.submit}
-            onClick={() => {
-              setSent(false);
-              setEmail('');
-            }}
-          >
-            <span className={styles.submitContent}>Send again</span>
-          </button>
-          <p className={styles.footerNote}>
-            <Link to="/login" className={styles.linkBtn}>
-              Back to sign in
-            </Link>
-          </p>
+        <div className={styles.successIcon} aria-hidden="true">
+          <CheckIcon />
         </div>
+        <h1 className={styles.title}>Check your inbox</h1>
+        <p className={styles.lead}>
+          If an account exists for <strong>{email.trim()}</strong>, we sent a password reset link.
+          The email may take a few minutes to arrive — check spam if you do not see it.
+        </p>
+        <button
+          type="button"
+          className={styles.loginSubmit}
+          onClick={() => {
+            setSent(false);
+            setEmail('');
+          }}
+        >
+          <span className={styles.loginSubmitText}>Send again</span>
+        </button>
+        <p className={styles.footerNote}>
+          <button type="button" className={styles.linkBtn} onClick={handleBackToLogin}>
+            Back to sign in
+          </button>
+        </p>
       </motion.div>
     );
   }
 
   return (
     <motion.div
-      className={styles.formPane}
+      className={styles.loginForm}
       variants={formVariants}
       initial="hidden"
       animate="visible"
       exit="exit"
     >
-      <h2 className={styles.formTitle}>Forgot password?</h2>
-      <p className={styles.formLead}>
+      <h1 className={styles.title}>Forgot password?</h1>
+      <p className={styles.lead}>
         Enter the email linked to your account and we will send you a link to reset your password.
       </p>
 
@@ -152,10 +159,11 @@ export default function ForgotPasswordForm({ onSubmit, disabled = false }) {
           error={error}
           disabled={busy}
           icon={<MailIcon />}
+          formStyles={styles}
         />
 
-        <button type="submit" className={styles.submit} disabled={busy} aria-busy={isLoading}>
-          <span className={styles.submitContent}>
+        <button type="submit" className={styles.loginSubmit} disabled={busy} aria-busy={isLoading}>
+          <span className={styles.loginSubmitText}>
             {isLoading ? (
               <>
                 <span className={styles.spinner} aria-hidden="true" />
@@ -170,9 +178,9 @@ export default function ForgotPasswordForm({ onSubmit, disabled = false }) {
 
       <p className={styles.footerNote}>
         Remember your password?{' '}
-        <Link to="/login" className={styles.linkBtn}>
+        <button type="button" className={styles.linkBtn} onClick={handleBackToLogin}>
           Back to sign in
-        </Link>
+        </button>
       </p>
     </motion.div>
   );

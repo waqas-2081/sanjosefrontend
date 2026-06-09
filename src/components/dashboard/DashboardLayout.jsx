@@ -2,7 +2,7 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { DASHBOARD_NAV, PAGE_META } from './dashboardNav';
 import { useAuth } from '../../context/AuthContext';
-import { IconMenu } from './icons';
+import { IconHome, IconMenu } from './icons';
 import styles from './DashboardLayout.module.css';
 
 const MOTION_CLASSES = [
@@ -96,13 +96,13 @@ export default function DashboardLayout() {
 
       <div className={styles.shell}>
         <aside className={`${styles.sidebar} ${sidebarOpen ? styles.sidebarOpen : ''}`}>
-          <div className={styles.sidebarBrand}>
-            <span className={styles.brandMark}>SJ</span>
-            <div>
-              <span className={styles.brandText}>Client Portal</span>
-              <span className={styles.brandSub}>San Jose Logo Design</span>
-            </div>
-          </div>
+          <Link to="/" className={styles.sidebarBrand} onClick={closeSidebar}>
+            <img
+              src="/assets/images/logo/logo-white.png"
+              alt="San Jose Logo Design"
+              className={styles.brandLogo}
+            />
+          </Link>
 
           <nav className={styles.nav} aria-label="Dashboard">
             {DASHBOARD_NAV.map((item, i) => {
@@ -134,6 +134,12 @@ export default function DashboardLayout() {
           </nav>
 
           <div className={styles.sidebarFooter}>
+            <Link to="/" className={styles.sidebarHomeBtn} onClick={closeSidebar}>
+              <span className={styles.sidebarHomeIcon}>
+                <IconHome />
+              </span>
+              Home
+            </Link>
             <button
               type="button"
               className={styles.logoutBtn}
@@ -146,33 +152,42 @@ export default function DashboardLayout() {
 
         <div className={styles.main}>
           <header className={styles.topbar}>
-            <div className={styles.topbarLeft}>
-              <button
-                type="button"
-                className={styles.menuBtn}
-                aria-label="Open menu"
-                onClick={() => setSidebarOpen(true)}
+            <button
+              type="button"
+              className={styles.menuBtn}
+              aria-label="Open menu"
+              onClick={() => setSidebarOpen(true)}
+            >
+              <IconMenu />
+            </button>
+            <h1 className={styles.pageTitle}>{meta.title}</h1>
+            {meta.subtitle ? <p className={styles.pageSubtitle}>{meta.subtitle}</p> : null}
+            <div className={styles.topbarRight}>
+              <Link
+                to="/"
+                className={styles.homeBtn}
+                onClick={closeSidebar}
+                aria-label="Back to Home"
               >
-                <IconMenu />
-              </button>
-              <div>
-                <h1 className={styles.pageTitle}>{meta.title}</h1>
-                {meta.subtitle ? <p className={styles.pageSubtitle}>{meta.subtitle}</p> : null}
-              </div>
+                <span className={styles.homeBtnIcon}>
+                  <IconHome />
+                </span>
+                <span className={styles.homeBtnText}>Back to Home</span>
+              </Link>
+              <Link to="/dashboard/profile" className={styles.userChip} onClick={closeSidebar}>
+                {avatarUrl ? (
+                  <img
+                    src={avatarUrl}
+                    alt={displayName}
+                    className={styles.userAvatar}
+                    style={{ objectFit: 'cover' }}
+                  />
+                ) : (
+                  <span className={styles.userAvatar}>{avatarInitials}</span>
+                )}
+                <span className={styles.userName}>{displayName}</span>
+              </Link>
             </div>
-            <Link to="/dashboard/profile" className={styles.userChip} onClick={closeSidebar}>
-              {avatarUrl ? (
-                <img
-                  src={avatarUrl}
-                  alt={displayName}
-                  className={styles.userAvatar}
-                  style={{ objectFit: 'cover' }}
-                />
-              ) : (
-                <span className={styles.userAvatar}>{avatarInitials}</span>
-              )}
-              <span className={styles.userName}>{displayName}</span>
-            </Link>
           </header>
 
           <main className={styles.content}>

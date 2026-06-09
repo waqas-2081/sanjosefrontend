@@ -53,6 +53,43 @@ export function getLogoProjects() {
   return logoProjects;
 }
 
+export const PROJECT_REVISIONS = {
+  'WEB-1024': [
+    { id: 'REV-W-1024-1', ref: 'Revision 1', title: 'Homepage hero update', status: 'completed', date: 'Feb 18, 2026', notes: 'Updated hero banner and CTA placement.', images: [] },
+    { id: 'REV-W-1024-2', ref: 'Revision 2', title: 'Services section layout', status: 'in_progress', date: 'Mar 05, 2026', notes: 'Adjusting grid and icon spacing.', images: [] },
+  ],
+  'WEB-1018': [
+    { id: 'REV-W-1018-1', ref: 'Revision 1', title: 'Product card styling', status: 'review', date: 'Mar 10, 2026', notes: 'Awaiting approval on checkout flow.', images: [] },
+  ],
+  'WEB-1009': [
+    { id: 'REV-W-1009-1', ref: 'Revision 1', title: 'Final copy tweaks', status: 'completed', date: 'Dec 15, 2025', notes: 'Headline and footer links updated.', images: [] },
+  ],
+  'LOGO-881': [
+    { id: 'REV-L-881-1', ref: 'Revision 1', title: 'Icon mark refinement', status: 'in_progress', date: 'Mar 08, 2026', notes: 'Softer corners on the primary mark.', images: [] },
+    { id: 'REV-L-881-2', ref: 'Revision 2', title: 'Color palette options', status: 'review', date: 'Mar 14, 2026', notes: 'Two alternate orange tones provided.', images: [] },
+  ],
+  'LOGO-875': [
+    { id: 'REV-L-875-1', ref: 'Revision 1', title: 'Typography pairing', status: 'review', date: 'Feb 22, 2026', notes: 'Sans + serif lockup variations.', images: [] },
+  ],
+  'LOGO-860': [
+    { id: 'REV-L-860-1', ref: 'Revision 1', title: 'Badge proportions', status: 'completed', date: 'Jan 22, 2026', notes: 'Final print-ready files delivered.', images: [] },
+  ],
+};
+
+export function cloneProjectRevisions() {
+  return Object.fromEntries(
+    Object.entries(PROJECT_REVISIONS).map(([key, list]) => [key, list.map((item) => ({ ...item, images: [...(item.images || [])] }))])
+  );
+}
+
+export function getProjectsByType(type) {
+  return type === 'website' ? websiteProjects : logoProjects;
+}
+
+export function getRevisionsForProject(projectId) {
+  return PROJECT_REVISIONS[projectId] || [];
+}
+
 export const STATUS_LABELS = {
   paid: 'Paid',
   pending: 'Pending',

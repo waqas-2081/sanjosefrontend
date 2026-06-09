@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import styles from './AuthPanel.module.css';
+import defaultStyles from './AuthPanel.module.css';
 
 const EyeIcon = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -48,7 +48,10 @@ export default function PasswordField({
   autoComplete = 'current-password',
   error,
   disabled = false,
+  formStyles = defaultStyles,
+  showLockIcon = true,
 }) {
+  const styles = formStyles;
   const [visible, setVisible] = useState(false);
   const errorId = error ? `${id}-error` : undefined;
 
@@ -58,14 +61,16 @@ export default function PasswordField({
         {label}
       </label>
       <div className={styles.inputWrap}>
-        <span className={styles.inputIcon}>
-          <LockIcon />
-        </span>
+        {showLockIcon ? (
+          <span className={styles.inputIcon}>
+            <LockIcon />
+          </span>
+        ) : null}
         <input
           id={id}
           name={name}
           type={visible ? 'text' : 'password'}
-          className={`${styles.input} ${styles.inputPassword} ${error ? styles.inputError : ''}`}
+          className={`${styles.input} ${!showLockIcon ? styles.inputNoIcon : ''} ${styles.inputPassword} ${error ? styles.inputError : ''}`}
           value={value}
           onChange={onChange}
           placeholder={placeholder}

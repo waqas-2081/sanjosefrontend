@@ -23,12 +23,14 @@ function StatusBadge({ status }) {
 export default function ResourceListPage({
   title,
   newLink,
+  onNewClick,
   newLabel = 'New',
   searchPlaceholder = 'Search…',
   items = [],
   variant = 'payments',
   loading = false,
   error = '',
+  emptyMessage,
   onViewDetail,
 }) {
   const [query,  setQuery]  = useState('');
@@ -43,6 +45,8 @@ export default function ResourceListPage({
         (i) =>
           i.title?.toLowerCase().includes(q) ||
           i.id?.toString().toLowerCase().includes(q) ||
+          (i.project && i.project.toLowerCase().includes(q)) ||
+          (i.projectMeta && i.projectMeta.toLowerCase().includes(q)) ||
           (i.package && i.package.toLowerCase().includes(q))
       );
     }
@@ -50,6 +54,7 @@ export default function ResourceListPage({
   }, [items, query, filter]);
 
   const isPayments = variant === 'payments';
+  const isRevisions = variant === 'revisions';
 
   return (
     <div className={styles.page}>
@@ -77,7 +82,11 @@ export default function ResourceListPage({
               <option value="review">In review</option>
               <option value="completed">Completed</option>
             </select>
-            {newLink ? (
+            {onNewClick ? (
+              <button type="button" className={styles.btnPrimary} onClick={onNewClick}>
+                {newLabel}
+              </button>
+            ) : newLink ? (
               <Link to={newLink} className={styles.btnPrimary}>
                 {newLabel}
               </Link>
@@ -98,7 +107,9 @@ export default function ResourceListPage({
           </div>
         ) : filtered.length === 0 ? (
           <div style={{ padding: '2.5rem 1.25rem', color: '#7b7f90', fontSize: '0.9rem', textAlign: 'center' }}>
-            {query || filter !== 'all' ? 'No results match your search.' : `No ${isPayments ? 'payments' : 'projects'} found yet.`}
+            {query || filter !== 'all'
+              ? 'No results match your search.'
+              : emptyMessage || `No ${isPayments ? 'payments' : isRevisions ? 'revisions' : 'projects'} found yet.`}
           </div>
         ) : (
           <>
@@ -106,8 +117,11 @@ export default function ResourceListPage({
               <table className={styles.table}>
                 <thead>
                   <tr>
-                    <th>{isPayments ? 'Invoice' : 'Project'}</th>
-                    <th>{isPayments ? 'Amount' : 'Package'}</th>
+                    <th>{isPayments ? 'Invoice' : isRevisions ? 'Revision' : 'Project'}</th>
+                    <th>
+                      {isPayments ? 'Amount' : isRevisions ? 'Project' : 'Package'}
+                    </th>
+                    {isRevisions ? <th>Images</th> : null}
                     <th>Status</th>
                     <th>Date</th>
                     <th>Action</th>
@@ -120,7 +134,19 @@ export default function ResourceListPage({
                         <span className={styles.rowTitle}>{row.title}</span>
                         <span className={styles.rowMeta}>{row.ref || row.id}</span>
                       </td>
-                      <td>{isPayments ? row.amount : row.package}</td>
+                      <td>
+                        {isPayments ? (
+                          row.amount
+                        ) : isRevisions ? (
+                          <>
+                            <span className={styles.rowTitle}>{row.project}</span>
+                            <span className={styles.rowMeta}>{row.projectMeta}</span>
+                          </>
+                        ) : (
+                          row.package
+                        )}
+                      </td>
+                      {isRevisions ? <td>{row.package}</td> : null}
                       <td>
                         <StatusBadge status={row.status} />
                       </td>
@@ -151,7 +177,11 @@ export default function ResourceListPage({
                     <StatusBadge status={row.status} />
                   </div>
                   <p className={styles.rowMeta}>
-                    {isPayments ? `${row.amount} · ${row.date}` : `${row.package} · ${row.date}`}
+                    {isPayments
+                      ? `${row.amount} · ${row.date}`
+                      : isRevisions
+                        ? `${row.project} · ${row.package} · ${row.date}`
+                        : `${row.package} · ${row.date}`}
                   </p>
                   <button
                     type="button"

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import styles from './AuthPanel.module.css';
+import styles from './LoginForm.module.css';
 import TextField from './TextField';
 import PasswordField from './PasswordField';
 
@@ -24,12 +24,12 @@ function validate({ email, password }) {
 }
 
 const formVariants = {
-  hidden: { opacity: 0, x: -16 },
-  visible: { opacity: 1, x: 0, transition: { duration: 0.3 } },
-  exit: { opacity: 0, x: 16, transition: { duration: 0.2 } },
+  hidden: { opacity: 0, y: 12 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.35 } },
+  exit: { opacity: 0, y: -8, transition: { duration: 0.2 } },
 };
 
-export default function LoginForm({ onSubmit, disabled = false }) {
+export default function LoginForm({ onSubmit, onForgotClick, disabled = false }) {
   const [form, setForm] = useState(initialForm);
   const [errors, setErrors] = useState({});
   const [remember, setRemember] = useState(false);
@@ -71,14 +71,14 @@ export default function LoginForm({ onSubmit, disabled = false }) {
 
   return (
     <motion.div
-      className={styles.formPane}
+      className={styles.loginForm}
       variants={formVariants}
       initial="hidden"
       animate="visible"
       exit="exit"
     >
-      <h2 className={styles.formTitle}>Welcome back</h2>
-      <p className={styles.formLead}>Sign in to your account.</p>
+      <h1 className={styles.title}>Login your account</h1>
+      <p className={styles.lead}>Enter your credentials to access your client dashboard.</p>
 
       {status ? (
         <div
@@ -102,6 +102,7 @@ export default function LoginForm({ onSubmit, disabled = false }) {
           error={errors.email}
           disabled={busy}
           icon={<MailIcon />}
+          formStyles={styles}
         />
 
         <PasswordField
@@ -114,6 +115,8 @@ export default function LoginForm({ onSubmit, disabled = false }) {
           autoComplete="current-password"
           error={errors.password}
           disabled={busy}
+          formStyles={styles}
+          showLockIcon
         />
 
         <div className={styles.row}>
@@ -127,23 +130,31 @@ export default function LoginForm({ onSubmit, disabled = false }) {
             />
             Remember me
           </label>
-          <Link to="/forgot-password" className={styles.linkBtn}>
-            Forgot password?
-          </Link>
+          <button type="button" className={styles.forgotLink} onClick={onForgotClick}>
+            Forgot Password?
+          </button>
         </div>
 
-        <button type="submit" className={styles.submit} disabled={busy} aria-busy={isLoading}>
-          <span className={styles.submitContent}>
+        <button type="submit" className={styles.loginSubmit} disabled={busy} aria-busy={isLoading}>
+          <span className={styles.loginSubmitText}>
             {isLoading ? (
               <>
                 <span className={styles.spinner} aria-hidden="true" />
                 Signing in…
               </>
             ) : (
-              'Sign in'
+              'Login'
             )}
           </span>
         </button>
+
+        <p className={styles.footerNote}>
+          Need help?{' '}
+          <Link to="/contact-us" className={styles.linkBtn}>
+            Contact support
+          </Link>
+        </p>
+
       </form>
     </motion.div>
   );

@@ -36,6 +36,7 @@ import ProtectedRoute from './components/dashboard/ProtectedRoute';
 import DashboardPaymentsPage from './pages/dashboard/DashboardPaymentsPage';
 import DashboardWebsiteProjectsPage from './pages/dashboard/DashboardWebsiteProjectsPage';
 import DashboardLogoProjectsPage from './pages/dashboard/DashboardLogoProjectsPage';
+import DashboardRevisionsPage from './pages/dashboard/DashboardRevisionsPage';
 import DashboardLogoBriefPage from './pages/dashboard/DashboardLogoBriefPage';
 import DashboardWebsiteBriefPage from './pages/dashboard/DashboardWebsiteBriefPage';
 import DashboardProfilePage from './pages/dashboard/DashboardProfilePage';
@@ -49,6 +50,7 @@ function App() {
         <Routes>
           {/* Standalone routes — NO site layout (no header/footer) */}
           <Route path="logo-creator" element={<LogoCreatorPage />} />
+          <Route path="login" element={<AuthPage />} />
 
           {/*
             "genrate/invoice-65975125488341" — React Router cannot match params
@@ -58,28 +60,29 @@ function App() {
           */}
           <Route path="genrate/*" element={<InvoicePage />} />
 
+          <Route
+            path="dashboard"
+            element={
+              <ProtectedRoute>
+                <DashboardLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<Navigate to="payments" replace />} />
+            <Route path="payments" element={<DashboardPaymentsPage />} />
+            <Route path="website-projects" element={<DashboardWebsiteProjectsPage />} />
+            <Route path="logo-projects" element={<DashboardLogoProjectsPage />} />
+            <Route path="revisions" element={<DashboardRevisionsPage />} />
+            <Route path="logo-brief" element={<DashboardLogoBriefPage />} />
+            <Route path="website-brief" element={<DashboardWebsiteBriefPage />} />
+            <Route path="profile" element={<DashboardProfilePage />} />
+          </Route>
+
           {/* Main site layout */}
           <Route element={<MainLayout />}>
-            <Route path="login" element={<AuthPage />} />
             <Route path="forgot-password" element={<ForgotPasswordPage />} />
             <Route path="reset-password/:token?" element={<ResetPasswordPage />} />
             <Route path="signup" element={<Navigate to="/login" replace />} />
-            <Route
-              path="dashboard"
-              element={
-                <ProtectedRoute>
-                  <DashboardLayout />
-                </ProtectedRoute>
-              }
-            >
-              <Route index element={<Navigate to="payments" replace />} />
-              <Route path="payments" element={<DashboardPaymentsPage />} />
-              <Route path="website-projects" element={<DashboardWebsiteProjectsPage />} />
-              <Route path="logo-projects" element={<DashboardLogoProjectsPage />} />
-              <Route path="logo-brief" element={<DashboardLogoBriefPage />} />
-              <Route path="website-brief" element={<DashboardWebsiteBriefPage />} />
-              <Route path="profile" element={<DashboardProfilePage />} />
-            </Route>
             <Route index element={<HomePage />} />
             <Route path="about-us" element={<AboutPage />} />
             <Route path="contact-us" element={<ContactPage />} />

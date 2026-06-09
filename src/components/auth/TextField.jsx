@@ -1,4 +1,4 @@
-import styles from './AuthPanel.module.css';
+import defaultStyles from './AuthPanel.module.css';
 
 export default function TextField({
   id,
@@ -12,7 +12,9 @@ export default function TextField({
   error,
   disabled = false,
   icon,
+  formStyles = defaultStyles,
 }) {
+  const styles = formStyles;
   const errorId = error ? `${id}-error` : undefined;
 
   return (

@@ -21,6 +21,24 @@ export const IconGlobe = () => (
   </svg>
 );
 
+export const IconRefresh = () => (
+  <svg className="dash-nav-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <path
+      d="M21 12a9 9 0 1 1-2.64-6.36"
+      stroke="currentColor"
+      strokeWidth="1.75"
+      strokeLinecap="round"
+    />
+    <path
+      d="M21 3v6h-6"
+      stroke="currentColor"
+      strokeWidth="1.75"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
 export const IconPalette = () => (
   <svg className="dash-nav-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
     <path
@@ -45,6 +63,17 @@ export const IconUser = () => (
   <svg className="dash-nav-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
     <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="1.75" />
     <path d="M5 20c0-3.3 3.1-6 7-6s7 2.7 7 6" stroke="currentColor" strokeWidth="1.75" />
+  </svg>
+);
+
+export const IconHome = () => (
+  <svg className="dash-nav-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <path
+      d="m4 10.5 8-5.5 8 5.5V19a1.5 1.5 0 0 1-1.5 1.5H15v-5.5h-6V20.5H5.5A1.5 1.5 0 0 1 4 19v-8.5Z"
+      stroke="currentColor"
+      strokeWidth="1.75"
+      strokeLinejoin="round"
+    />
   </svg>
 );
 
