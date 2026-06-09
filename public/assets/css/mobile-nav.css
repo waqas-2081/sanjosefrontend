@@ -1,0 +1,151 @@
+/**
+ * Mobile / tablet navigation only (max-width: 991.98px).
+ * Desktop header styles in style.css are unchanged.
+ */
+
+.mobile-nav-backdrop {
+  display: none;
+}
+
+@media (max-width: 991.98px) {
+  .mobile-nav-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 98;
+    background: rgba(5, 8, 27, 0.62);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition:
+      opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+      visibility 0.35s;
+    will-change: opacity;
+  }
+
+  .main-header.nav-open .mobile-nav-backdrop {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .main-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: #ffffff;
+  }
+
+  .main-header .header-toggle {
+    z-index: 101;
+    transition: transform 0.25s ease, background-color 0.25s ease;
+  }
+
+  .main-header.nav-open .header-toggle {
+    background-color: #e04a1a !important;
+  }
+
+  .main-header.nav-open .header-toggle i::before {
+    content: '\f00d';
+  }
+
+  .main-header .nav {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: auto;
+    width: min(300px, 100vw);
+    max-width: 100%;
+    margin: 0;
+    padding: calc(72px + 20px) 22px 32px;
+    background: linear-gradient(165deg, #0a0f24 0%, #05081b 48%, #0d1228 100%);
+    border-left: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: -16px 0 48px rgba(0, 0, 0, 0.35);
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    opacity: 1;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translate3d(105%, 0, 0);
+    transition: transform 0.42s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.42s;
+    will-change: transform;
+    z-index: 99;
+  }
+
+  .main-header.nav-open .nav {
+    visibility: visible;
+    pointer-events: auto;
+    transform: translate3d(0, 0, 0);
+  }
+
+  .main-header .nav ul {
+    flex-direction: column;
+    gap: 6px;
+    padding: 0;
+    margin: 0;
+  }
+
+  .main-header .nav ul > li {
+    width: 100%;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .main-header .nav ul > li:last-child {
+    border-bottom: none;
+  }
+
+  .main-header .nav ul li a {
+    display: block;
+    width: 100%;
+    padding: 14px 4px;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    transition: color 0.2s ease, padding-left 0.2s ease;
+  }
+
+  .main-header .nav ul li a:active {
+    color: var(--accent-orange, #ff5e2c);
+    padding-left: 8px;
+  }
+
+  .main-header .nav .has-mega-menu {
+    position: static;
+    width: 100%;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .main-header .nav .has-mega-menu .mega-menu-trigger {
+    width: 100%;
+    justify-content: space-between;
+    padding: 14px 4px;
+    color: #fff !important;
+    font-size: 15px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  body.nav-open {
+    overflow: hidden !important;
+  }
+
+  .main-header .services-mega-swiper {
+    touch-action: pan-x;
+    overscroll-behavior: contain;
+  }
+}
+
+@media (max-width: 991.98px) and (prefers-reduced-motion: reduce) {
+  .main-header .nav,
+  .mobile-nav-backdrop {
+    transition: none;
+  }
+}
