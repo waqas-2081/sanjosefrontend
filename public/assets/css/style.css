@@ -375,7 +375,7 @@ section {
 }
 
 .main-header .container-fluid {
-    padding: 0 80px;
+    padding: 0 40px;
 }
 
 .main-header .row {
@@ -642,7 +642,7 @@ section {
 
 .main-banner .banner-content {
     position: absolute;
-    top: 50%;
+    top: 55%;
     left: 50%;
     transform: translate(-50%, -50%);
     width: 100%;

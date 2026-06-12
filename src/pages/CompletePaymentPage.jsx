@@ -331,7 +331,23 @@ function CashAppPanel({ paymentRequestId, amount, onSuccess, onError }) {
 }
 
 // ── ZELLE PANEL ───────────────────────────────────────────────────────────────
-function ZellePanel({ amount }) {
+function ZellePanel({ paymentRequestId, amount, onSuccess, onError }) {
+  const [approving, setApproving] = useState(false);
+
+  const handleApprove = async () => {
+    if (approving) return;
+    setApproving(true);
+    onError('');
+
+    try {
+      const data = await apiPost(`/payment-requests/${paymentRequestId}/zelle/approve`, {});
+      onSuccess(data?.login_token || null);
+    } catch (err) {
+      onError(err.message || 'Could not approve payment.');
+      setApproving(false);
+    }
+  };
+
   return (
     <div className={styles.payPanel}>
       <div className={styles.panelIcon}>
@@ -353,10 +369,17 @@ function ZellePanel({ amount }) {
       <div className={styles.zelleAmount}>
         Send: <strong>${Number(amount).toFixed(2)}</strong>
       </div>
-      <div className={styles.zellePending}>
-        <i className="fa-solid fa-clock" />
-        <span>Awaiting admin approval after your transfer</span>
-      </div>
+      <button
+        type="button"
+        className={styles.payBtn}
+        onClick={handleApprove}
+        disabled={approving}
+      >
+        {approving
+          ? <><span className={styles.spinner} /> Approving…</>
+          : <><i className="fa-solid fa-circle-check" /> Approved</>
+        }
+      </button>
     </div>
   );
 }
@@ -585,7 +608,12 @@ export default function CompletePaymentPage() {
                     onError={handleError}
                   />
                 ) : (
-                  <ZellePanel amount={amount} />
+                  <ZellePanel
+                    paymentRequestId={paymentRequestId}
+                    amount={amount}
+                    onSuccess={handleSuccess}
+                    onError={handleError}
+                  />
                 )}
               </div>
 

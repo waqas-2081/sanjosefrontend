@@ -97,7 +97,7 @@ function LogoOfferHeaderBar({ closeAll }) {
 export default function Header() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const { isLoggedIn, user, logout } = useAuth();
+  const { isLoggedIn } = useAuth();
   const isLogoOfferPage = pathname === '/logo-offer';
   const [navOpen, setNavOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
@@ -231,12 +231,12 @@ export default function Header() {
                 to={isLoggedIn ? '/dashboard/payments' : '/login'}
                 className="header-user-btn"
                 onClick={closeAll}
-                aria-label={isLoggedIn ? `My account — ${user?.name || 'Dashboard'}` : 'Sign in'}
-                title={isLoggedIn ? (user?.name || 'My Account') : 'Sign in'}
+                aria-label={isLoggedIn ? 'User Portal' : 'Sign in'}
+                title={isLoggedIn ? 'User Portal' : 'Sign in'}
               >
                 <UserIcon />
-                {isLoggedIn && user?.name ? (
-                  <span className="header-user-btn__name">{user.name.split(' ')[0]}</span>
+                {isLoggedIn ? (
+                  <span className="header-user-btn__name">User Portal</span>
                 ) : null}
               </Link>
               <a

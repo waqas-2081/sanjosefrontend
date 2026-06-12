@@ -2,80 +2,24 @@ import React, { useEffect, useRef } from 'react';
 import { motion, useAnimationControls, useInView } from 'framer-motion';
 import { onScrollTopReplay } from '../../lib/scrollMotionReplay';
 
-const containerVariants = {
+const CONTACTS = [
+  { icon: 'fa-phone', label: '24/7 Support', value: '(214) 449-1305', href: 'tel:+12144491305' },
+  { icon: 'fa-comments', label: 'Talk to Us', value: 'Live Chat', href: '/contact-us' },
+  { icon: 'fa-envelope', label: 'Email us at', value: 'info@sanjoselogodesign.com', href: 'mailto:info@sanjoselogodesign.com' },
+];
+
+const stagger = {
   hidden: {},
-  visible: {
-    transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.06,
-    },
-  },
+  visible: { transition: { staggerChildren: 0.06, delayChildren: 0.05 } },
 };
 
-const itemVariants = {
+const rise = {
   hidden: { opacity: 0, y: 14 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.55,
-      ease: [0.22, 1, 0.36, 1],
-    },
-  },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
 };
 
-const iconVariants = {
-  rest: { y: 0, scale: 1 },
-  hover: {
-    y: -2,
-    scale: 1.05,
-    transition: { type: 'spring', stiffness: 380, damping: 20 },
-  },
-};
-
-function ContactItem({ icon, label, value, href, accentClass }) {
-  const content = (
-    <motion.div
-      className={`cta-projects__contact-item ${accentClass || ''}`}
-      initial="rest"
-      whileHover="hover"
-      animate={{
-        boxShadow: [
-          '0 0 0 rgba(0, 0, 0, 0)',
-          '0 0 0 rgba(0, 0, 0, 0)',
-          '0 0 0 rgba(0, 0, 0, 0)',
-        ],
-      }}
-      transition={{ duration: 1.8, repeat: Infinity, repeatType: 'loop' }}
-    >
-      <motion.span
-        className="cta-projects__contact-icon"
-        variants={iconVariants}
-        animate={{ y: [0, -1.5, 0] }}
-        transition={{ duration: 2.2, repeat: Infinity, repeatType: 'mirror', ease: 'easeInOut' }}
-      >
-        {icon}
-      </motion.span>
-      <span className="cta-projects__contact-copy">
-        <small>{label}</small>
-        <strong>{value}</strong>
-      </span>
-    </motion.div>
-  );
-
-  if (!href) return content;
-
-  return (
-    <a className="cta-projects__contact-link" href={href}>
-      {content}
-    </a>
-  );
-}
-
-export function CtaProjects() {
-  const sectionRef = useRef(null);
-  const inView = useInView(sectionRef, { amount: 0.12, margin: '0px 0px -6% 0px' });
-  const controls = useAnimationControls();
+function useSectionReplay(sectionRef, controls) {
+  const inView = useInView(sectionRef, { amount: 0.2, margin: '0px 0px -4% 0px' });
 
   useEffect(() => {
     if (inView) controls.start('visible');
@@ -89,317 +33,376 @@ export function CtaProjects() {
         if (!el) return;
         const rect = el.getBoundingClientRect();
         const vh = window.innerHeight || document.documentElement.clientHeight;
-        if (rect.top < vh * 0.9 && rect.bottom > vh * 0.1) {
-          controls.start('visible');
-        }
+        if (rect.top < vh * 0.92 && rect.bottom > vh * 0.08) controls.start('visible');
       });
     });
-  }, [controls]);
+  }, [controls, sectionRef]);
+}
+
+function ContactItem({ icon, label, value, href }) {
+  return (
+    <a href={href} className="cta-projects__contact">
+      <span className="cta-projects__contact-icon">
+        <i className={`fa-solid ${icon}`} aria-hidden />
+      </span>
+      <span className="cta-projects__contact-text">
+        <small>{label}</small>
+        <strong>{value}</strong>
+      </span>
+    </a>
+  );
+}
+
+export function CtaProjects() {
+  const sectionRef = useRef(null);
+  const controls = useAnimationControls();
+  useSectionReplay(sectionRef, controls);
 
   return (
-    <section
-      className="cta-projects"
-      ref={sectionRef}
-      aria-label="Call to action"
-      data-no-motion="true"
-    >
+    <section className="cta-projects" ref={sectionRef} aria-label="Call to action" data-no-motion="true">
       <motion.div
-        className="cta-projects__ambient"
+        className="cta-projects__glow cta-projects__glow--left"
         aria-hidden
-        animate={{ backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'] }}
-        transition={{ duration: 14, repeat: Infinity, ease: 'linear' }}
+        animate={{ opacity: [0.3, 0.55, 0.3], scale: [1, 1.06, 1] }}
+        transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
+      />
+      <motion.div
+        className="cta-projects__glow cta-projects__glow--right"
+        aria-hidden
+        animate={{ opacity: [0.25, 0.5, 0.25], scale: [1, 1.08, 1] }}
+        transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
       />
 
       <motion.div
-        className="cta-projects__shell"
-        variants={containerVariants}
+        className="cta-projects__wrap"
+        variants={stagger}
         initial="hidden"
         animate={controls}
       >
-        <motion.p className="cta-projects__eyebrow" variants={itemVariants}>
-          Premium Growth Partner
-        </motion.p>
-        <motion.h2 className="cta-projects__title" variants={itemVariants}>
-          Take the First Step Toward Success
-        </motion.h2>
+        <motion.div className="cta-projects__card" variants={rise}>
+          <div className="cta-projects__head">
+            <motion.div className="cta-projects__copy" variants={rise}>
+              <p className="cta-projects__eyebrow">Award-Winning Logo Design</p>
+              <h2 className="cta-projects__title">
+                Let&apos;s create a brand <span>YOU ARE PROUD OF</span>
+              </h2>
+              <p className="cta-projects__text">
+                Share your vision with our expert designers we&apos;ll craft a custom logo
+                and visual identity that builds trust, turns heads, and grows with your business.
+              </p>
+            </motion.div>
 
-        <motion.div className="cta-projects__contact-list" variants={itemVariants}>
-          <ContactItem
-            icon={<i className="fa-solid fa-phone" aria-hidden />}
-            label="Phone Number"
-            value="(214) 449-1305"
-            href="tel:+214449-1305"
-          />
-          <ContactItem
-            icon={<i className="fa-solid fa-envelope" aria-hidden />}
-            label="Email Address"
-            value="info@sanjoselogodesign.com"
-            href="mailto:info@sanjoselogodesign.com"
-          />
-          <ContactItem
-            icon={<i className="fa-solid fa-comments" aria-hidden />}
-            label="Live Chat"
-            value="Talk to us now"
-              href="/contact-us"
-            accentClass="is-chat"
-          />
+            <a href="/contact-us" className="cta-projects__btn">
+              <span className="cta-projects__btn-label">Let&apos;s Get Started</span>
+              <span className="cta-projects__btn-icon">
+                <i className="fa-solid fa-arrow-right" aria-hidden />
+              </span>
+            </a>
+          </div>
+
+          <motion.div className="cta-projects__bar" variants={rise}>
+            {CONTACTS.map((item) => (
+              <ContactItem key={item.href} {...item} />
+            ))}
+          </motion.div>
         </motion.div>
-
-        <motion.a
-          href="/contact-us"
-          className="cta-projects__button"
-          variants={itemVariants}
-          whileHover={{ scale: 1.03 }}
-          whileTap={{ scale: 0.97 }}
-        >
-          <span>GET A QUOTE</span>
-          <motion.i
-            className="fa-solid fa-arrow-right"
-            aria-hidden
-            animate={{ x: [0, 5, 0] }}
-            transition={{ duration: 1.05, repeat: Infinity, ease: 'easeInOut' }}
-          />
-        </motion.a>
       </motion.div>
 
       <style>{`
         .cta-projects {
           position: relative;
+          z-index: 10;
+          isolation: isolate;
           overflow: hidden;
-          padding: 82px 18px;
-          background: #151728;
+          padding: 40px clamp(16px, 4vw, 40px) !important;
+          background: linear-gradient(180deg, #0c0e18 0%, #101322 100%);
         }
 
-        .cta-projects__ambient {
+        .cta-projects__glow {
           position: absolute;
-          inset: -35%;
-          z-index: 0;
+          border-radius: 50%;
           pointer-events: none;
-          background: linear-gradient(
-            120deg,
-            rgba(8, 9, 16, 0.95),
-            rgba(15, 17, 30, 0.85),
-            rgba(26, 31, 52, 0.6),
-            rgba(8, 9, 16, 0.95)
-          );
-          background-size: 250% 250%;
-          filter: blur(24px);
+          filter: blur(70px);
         }
 
-        .cta-projects__shell {
+        .cta-projects__glow--left {
+          width: 360px;
+          height: 360px;
+          top: -40%;
+          left: -5%;
+          background: rgba(255, 107, 26, 0.22);
+        }
+
+        .cta-projects__glow--right {
+          width: 320px;
+          height: 320px;
+          bottom: -50%;
+          right: -3%;
+          background: rgba(70, 100, 220, 0.15);
+        }
+
+        .cta-projects__wrap {
           position: relative;
-          z-index: 1;
+          max-width: 1280px;
           margin: 0 auto;
-          max-width: 1180px;
-          border-radius: 28px;
-          padding: 44px;
-          display: grid;
-          gap: 14px;
-          align-items: center;
-          justify-items: center;
-          text-align: center;
-          border: 1px solid rgba(255, 255, 255, 0.18);
-          background: linear-gradient(
-            130deg,
-            rgba(255, 255, 255, 0.08),
-            rgba(255, 255, 255, 0.03)
-          );
-          backdrop-filter: blur(14px);
-          -webkit-backdrop-filter: blur(14px);
-          box-shadow:
-            0 28px 70px rgba(0, 0, 0, 0.38),
-            inset 0 1px 0 rgba(255, 255, 255, 0.24);
+        }
+
+        .cta-projects__card {
+          border-radius: 20px;
+          overflow: hidden;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          background: rgba(18, 20, 34, 0.75);
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+          box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
           font-family: Inter, Poppins, 'Segoe UI', Arial, sans-serif;
         }
 
+        .cta-projects__head {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: clamp(20px, 4vw, 40px);
+          padding: 28px clamp(22px, 4vw, 36px) 24px;
+        }
+
+        .cta-projects__copy {
+          min-width: 0;
+          flex: 1;
+        }
+
         .cta-projects__eyebrow {
-          margin: 0 0 12px;
-          color: #FF5E2C;
-          font-size: 0.82rem;
-          font-weight: 600;
-          letter-spacing: 0.16em;
+          margin: 0 0 6px;
+          color: #ff8c3a;
+          font-size: 0.72rem;
+          font-weight: 700;
+          letter-spacing: 0.18em;
           text-transform: uppercase;
         }
 
         .cta-projects__title {
-          margin: 0 0 12px;
-          color: #ffffff;
-          font-size: clamp(2rem, 4vw, 3.2rem);
-          line-height: 1.12;
-          font-weight: 700;
-          max-width: 30ch;
+          margin: 0 0 8px;
+          color: #fff;
+          font-size: clamp(1.2rem, 2.4vw, 2.5rem);
+          font-weight: 800;
+          line-height: 1.2;
+          letter-spacing: -0.02em;
+        }
+
+        .cta-projects__title span {
+          color: #ff8c3a;
         }
 
         .cta-projects__text {
           margin: 0;
-          max-width: 72ch;
-          color: rgba(255, 255, 255, 0.85);
-          font-size: 1rem;
-          line-height: 1.72;
+          color: rgba(255, 255, 255, 0.6);
+          font-size: clamp(0.84rem, 1.4vw, 0.95rem);
+          line-height: 1.6;
+          max-width: 62ch;
         }
 
-        .cta-projects__contact-list {
-          margin-top: 0px;
-          width: 100%;
-          display: grid;
-          grid-template-columns: repeat(3, minmax(0, 1fr));
-          gap: 12px;
-        }
-
-        .cta-projects__contact-link {
-          color: inherit;
+        .cta-projects__btn {
+          position: relative;
+          flex: 0 0 auto;
+          display: inline-flex;
+          align-items: center;
+          gap: 18px;
+          padding: 15px 18px 15px 28px;
+          border-radius: 999px;
           text-decoration: none;
-          display: block;
+          color: #fff;
+          font-size: 0.84rem;
+          font-weight: 800;
+          letter-spacing: 0.07em;
+          text-transform: uppercase;
+          white-space: nowrap;
+          background: linear-gradient(180deg, #ff9a57 0%, #ff6b1a 48%, #e85510 100%);
+          border: 1px solid rgba(255, 180, 120, 0.35);
+          box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.42),
+            inset 0 -1px 0 rgba(180, 60, 0, 0.25),
+            0 14px 32px rgba(255, 107, 26, 0.42),
+            0 5px 0 #c44a08;
+          transition: box-shadow 0.25s ease, filter 0.25s ease;
         }
 
-        .cta-projects__contact-item {
-          width: 100%;
+        .cta-projects__btn::before {
+          content: '';
+          position: absolute;
+          inset: -8px -12px;
+          border-radius: inherit;
+          background: radial-gradient(ellipse at center, rgba(255, 107, 26, 0.35) 0%, transparent 70%);
+          z-index: -1;
+          opacity: 0.7;
+          pointer-events: none;
+        }
+
+        .cta-projects__btn:hover {
+          filter: brightness(1.06);
+          box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.48),
+            inset 0 -1px 0 rgba(180, 60, 0, 0.25),
+            0 18px 40px rgba(255, 107, 26, 0.5),
+            0 5px 0 #c44a08;
+        }
+
+        .cta-projects__btn-label {
+          position: relative;
+          z-index: 1;
+        }
+
+        .cta-projects__btn-icon {
+          position: relative;
+          z-index: 1;
+          width: 36px;
+          height: 36px;
+          border-radius: 50%;
+          display: grid;
+          place-items: center;
+          background: rgba(0, 0, 0, 0.14);
+          font-size: 0.78rem;
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+          transition: transform 0.25s ease, background 0.25s ease;
+        }
+
+        .cta-projects__btn:hover .cta-projects__btn-icon {
+          background: rgba(0, 0, 0, 0.2);
+          transform: translateX(3px);
+        }
+
+        .cta-projects__bar {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          border-top: 1px solid rgba(255, 255, 255, 0.08);
+          background: rgba(0, 0, 0, 0.2);
+        }
+
+        .cta-projects__contact {
           display: flex;
           align-items: center;
           gap: 12px;
-          padding: 12px 14px;
-          border-radius: 14px;
-          border: 1px solid rgba(255, 255, 255, 0.12);
-          background: rgba(255, 255, 255, 0.04);
-          transition: border-color 0.25s ease, background-color 0.25s ease, transform 0.25s ease;
+          padding: 16px clamp(16px, 3vw, 28px);
+          text-decoration: none;
+          color: inherit;
+          border-right: 1px solid rgba(255, 255, 255, 0.08);
+          transition: background-color 0.25s ease, border-color 0.25s ease;
         }
 
-        .cta-projects__contact-link:hover .cta-projects__contact-item {
-          border-color: rgba(255, 145, 62, 0.55);
-          background: rgba(255, 255, 255, 0.08);
-          transform: translateY(-2px);
+        .cta-projects__contact:last-child {
+          border-right: none;
         }
 
-        .cta-projects__contact-item.is-chat {
-          border-color: rgba(255, 255, 255, 0.12);
-          background: rgba(255, 255, 255, 0.04);
+        .cta-projects__contact:hover {
+          background: rgba(255, 107, 26, 0.08);
         }
 
         .cta-projects__contact-icon {
-          width: 40px;
-          height: 40px;
-          border-radius: 12px;
+          width: 36px;
+          height: 36px;
+          border-radius: 10px;
           display: grid;
           place-items: center;
-          color: #ff7d2c;
-          background: rgba(255, 125, 44, 0.18);
-          font-size: 0.95rem;
           flex: 0 0 auto;
+          color: #ff8c3a;
+          background: rgba(255, 107, 26, 0.12);
+          font-size: 0.82rem;
         }
 
-        .cta-projects__contact-item.is-chat .cta-projects__contact-icon {
-          color: #ff7d2c;
-          background: rgba(255, 125, 44, 0.18);
-        }
-
-        .cta-projects__contact-copy {
+        .cta-projects__contact-text {
           display: grid;
-          gap: 3px;
+          gap: 2px;
           min-width: 0;
-          text-align: left;
         }
 
-        .cta-projects__contact-copy small {
-          color: rgba(255, 255, 255, 0.6);
-          font-size: 0.72rem;
+        .cta-projects__contact-text small {
+          color: rgba(255, 255, 255, 0.45);
+          font-size: 0.65rem;
           text-transform: uppercase;
-          letter-spacing: 0.12em;
+          letter-spacing: 0.1em;
+          font-weight: 600;
         }
 
-        .cta-projects__contact-copy strong {
+        .cta-projects__contact-text strong {
           color: #fff;
-          font-size: 0.95rem;
+          font-size: 0.84rem;
+          font-weight: 600;
           overflow-wrap: anywhere;
         }
 
-        .cta-projects__button {
-          margin-top: 14px;
-          position: relative;
-          isolation: isolate;
-          display: inline-flex;
-          align-items: center;
-          gap: 12px;
-          text-decoration: none;
-          color: #ffffff;
-          font-size: 1.02rem;
-          font-weight: 700;
-          letter-spacing: 0.02em;
-          border-radius: 999px;
-          padding: 14px 28px;
-          border: 1px solid rgba(255, 255, 255, 0.25);
-          background: linear-gradient(135deg, #ff6b1a, #ff8c3a 55%, #f36f1f);
-          box-shadow:
-            0 15px 34px rgba(255, 107, 26, 0.4),
-            0 0 34px rgba(255, 107, 26, 0.25);
-          transition: box-shadow 0.3s ease, transform 0.3s ease;
-          min-height: 52px;
-        }
-
-        .cta-projects__button::before {
-          content: '';
-          position: absolute;
-          inset: -3px;
-          border-radius: inherit;
-          z-index: -1;
-          background: linear-gradient(120deg, rgba(255, 107, 26, 0.45), rgba(255, 188, 132, 0.2));
-          filter: blur(12px);
-          opacity: 0;
-          transition: opacity 0.35s ease;
-        }
-
-        .cta-projects__button:hover {
-          box-shadow:
-            0 18px 40px rgba(255, 107, 26, 0.48),
-            0 0 42px rgba(255, 132, 62, 0.34);
-        }
-
-        .cta-projects__button:hover::before {
-          opacity: 1;
-        }
-
-        .cta-projects__button i {
-          font-size: 0.95rem;
-        }
-
-        @media (max-width: 991px) {
+        @media (max-width: 900px) {
           .cta-projects {
-            padding: 64px 16px;
+            padding: 32px 16px !important;
           }
 
-          .cta-projects__shell {
-            padding: 32px 24px;
-            gap: 24px;
+          .cta-projects__head {
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 22px 20px 20px;
+            gap: 18px;
           }
 
-          .cta-projects__contact-list {
+          .cta-projects__btn {
+            width: auto;
+            max-width: 100%;
+            align-self: center;
+            gap: 12px;
+            padding: 11px 14px 11px 20px;
+            font-size: 0.72rem;
+            letter-spacing: 0.05em;
+            box-shadow:
+              inset 0 1px 0 rgba(255, 255, 255, 0.42),
+              inset 0 -1px 0 rgba(180, 60, 0, 0.25),
+              0 10px 22px rgba(255, 107, 26, 0.35),
+              0 3px 0 #c44a08;
+          }
+
+          .cta-projects__btn::before {
+            inset: -6px -8px;
+          }
+
+          .cta-projects__btn-icon {
+            width: 28px;
+            height: 28px;
+            font-size: 0.65rem;
+          }
+
+          .cta-projects__bar {
             grid-template-columns: 1fr;
           }
+
+          .cta-projects__contact {
+            border-right: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+          }
+
+          .cta-projects__contact:last-child {
+            border-bottom: none;
+          }
         }
 
-        @media (max-width: 640px) {
-          .cta-projects {
-            padding: 50px 12px;
+        @media (max-width: 480px) {
+          .cta-projects__btn {
+            gap: 10px;
+            padding: 10px 12px 10px 16px;
+            font-size: 0.66rem;
           }
 
-          .cta-projects__shell {
-            border-radius: 20px;
-            padding: 24px 16px;
-            gap: 20px;
+          .cta-projects__btn-icon {
+            width: 26px;
+            height: 26px;
+            font-size: 0.6rem;
           }
+        }
 
-          .cta-projects__title {
-            font-size: clamp(1.6rem, 8vw, 2.1rem);
+        @media (prefers-reduced-motion: reduce) {
+          .cta-projects__glow {
+            animation: none !important;
           }
+        }
 
-          .cta-projects__text {
-            font-size: 0.94rem;
-            line-height: 1.6;
-          }
-
-          .cta-projects__button {
-            width: 100%;
-            justify-content: center;
-          }
+        .cta-projects + .brand-potential > .section_top_shape {
+          top: 0;
+          z-index: 1;
         }
       `}</style>
     </section>

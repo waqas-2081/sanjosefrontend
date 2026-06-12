@@ -10,13 +10,59 @@ const INDUSTRIES = [
   "Automotive", "Sports", "Photography", "Music", "Other"
 ];
 
-function PanelLogos() {
-  const logos = [
-    `${process.env.PUBLIC_URL || ""}/assets/images/steplogo1.png`,
-    `${process.env.PUBLIC_URL || ""}/assets/images/steplogo2.png`,
-    `${process.env.PUBLIC_URL || ""}/assets/images/steplogo3.png`,
-    `${process.env.PUBLIC_URL || ""}/assets/images/steplogo4.png`,
+const HERO_LOGO_BASE = `${process.env.PUBLIC_URL || ""}/assets/images/hero-logos`;
+const HERO_LOGO_IMAGES = Array.from({ length: 16 }, (_, i) => `${HERO_LOGO_BASE}/${i + 1}.png`);
+
+function HeroLogoColumn({ logos, direction = "up", duration = 28 }) {
+  const loop = [...logos, ...logos];
+
+  return (
+    <div className="hero-logo-column">
+      <div
+        className={`hero-logo-track hero-logo-track--${direction}`}
+        style={{ animationDuration: `${duration}s` }}
+      >
+        {loop.map((src, i) => (
+          <div key={`${src}-${i}`} className="hero-logo-item">
+            <img src={src} alt="" loading="lazy" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function HeroLogoColumns() {
+  const columns = [
+    { logos: [0, 4, 8, 12, 0, 4, 8, 12].map((i) => HERO_LOGO_IMAGES[i]), direction: "up", duration: 26 },
+    { logos: [1, 5, 9, 13, 1, 5, 9, 13].map((i) => HERO_LOGO_IMAGES[i]), direction: "down", duration: 30 },
+    { logos: [2, 6, 10, 14, 2, 6, 10, 14].map((i) => HERO_LOGO_IMAGES[i]), direction: "down", duration: 28 },
+    { logos: [3, 7, 11, 15, 3, 7, 11, 15].map((i) => HERO_LOGO_IMAGES[i]), direction: "up", duration: 32 },
   ];
+
+  return (
+    <div className="hero-logo-columns" aria-hidden>
+      <div className="hero-logo-side hero-logo-side--left">
+        <HeroLogoColumn {...columns[0]} />
+        <HeroLogoColumn {...columns[1]} />
+      </div>
+      <div className="hero-logo-side hero-logo-side--right">
+        <HeroLogoColumn {...columns[2]} />
+        <HeroLogoColumn {...columns[3]} />
+      </div>
+    </div>
+  );
+}
+
+const PANEL_LOGO_IMAGES = [
+  `${process.env.PUBLIC_URL || ""}/assets/images/steplogo1.png`,
+  `${process.env.PUBLIC_URL || ""}/assets/images/steplogo2.png`,
+  `${process.env.PUBLIC_URL || ""}/assets/images/steplogo3.png`,
+  `${process.env.PUBLIC_URL || ""}/assets/images/steplogo4.png`,
+];
+
+function PanelLogos() {
+  const logos = PANEL_LOGO_IMAGES;
 
   return (
     <div className="panel-logos" aria-hidden>
@@ -545,6 +591,71 @@ export default function LogoWizard() {
           10% { opacity: 0.15; }
           90% { opacity: 0.15; }
           100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+        }
+
+        /* Hero side logo columns */
+        .hero-logo-columns {
+          position: absolute;
+          inset: 0;
+          z-index: 1;
+          pointer-events: none;
+          display: flex;
+          justify-content: space-between;
+          align-items: stretch;
+          padding: 0 clamp(10px, 2.5vw, 36px);
+        }
+        .hero-logo-side {
+          display: flex;
+          gap: 16px;
+          height: 100%;
+        }
+        .hero-logo-column {
+          width: 152px;
+          overflow: hidden;
+          -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 10%, #000 90%, transparent 100%);
+          mask-image: linear-gradient(to bottom, transparent 0%, #000 10%, #000 90%, transparent 100%);
+        }
+        .hero-logo-track {
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+          will-change: transform;
+        }
+        .hero-logo-track--up {
+          animation: heroLogoUp linear infinite;
+        }
+        .hero-logo-track--down {
+          animation: heroLogoDown linear infinite;
+        }
+        .hero-logo-item {
+          width: 152px;
+          height: 152px;
+          flex-shrink: 0;
+          border-radius: 17px;
+          overflow: hidden;
+          border: 1px solid rgba(255, 170, 116, 0.28);
+          background: rgba(22, 14, 12, 0.45);
+          box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+        }
+        .hero-logo-item img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+        }
+        @keyframes heroLogoUp {
+          from { transform: translateY(0); }
+          to { transform: translateY(-50%); }
+        }
+        @keyframes heroLogoDown {
+          from { transform: translateY(-50%); }
+          to { transform: translateY(0); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .hero-logo-track--up,
+          .hero-logo-track--down {
+            animation: none;
+          }
         }
 
         /* Hero CTA */
@@ -1107,6 +1218,75 @@ export default function LogoWizard() {
           text-transform: uppercase;
         }
 
+        @media (min-width: 1101px) and (max-width: 1680px) {
+          .lw-root {
+            padding-top: 48px;
+            padding-bottom: 48px;
+          }
+
+          .hero-logo-columns {
+            padding: 0 clamp(8px, 1.2vw, 20px);
+          }
+
+          .hero-logo-side {
+            gap: clamp(8px, 0.9vw, 12px);
+          }
+
+          .hero-logo-column {
+            width: clamp(88px, 6.8vw, 132px);
+          }
+
+          .hero-logo-item {
+            width: clamp(88px, 6.8vw, 132px);
+            height: clamp(88px, 6.8vw, 132px);
+            border-radius: 15px;
+          }
+
+          .hero-section {
+            max-width: min(820px, calc(100% - clamp(320px, 26vw, 440px)));
+            padding: 0 clamp(12px, 2vw, 28px);
+          }
+
+          .hero-text {
+            margin-bottom: clamp(24px, 3vw, 36px);
+          }
+
+          .hero-title {
+            font-size: clamp(2.6rem, 4.5vw, 5rem);
+          }
+
+          .hero-sub {
+            font-size: clamp(0.92rem, 1.2vw, 1.05rem);
+            margin-top: 8px;
+          }
+
+          .input-row {
+            max-width: min(680px, 100%);
+          }
+
+          .main-input {
+            height: 58px;
+            padding: 0 20px;
+            font-size: 0.92rem;
+          }
+
+          .cta-btn {
+            height: 58px;
+            padding: 0 26px;
+            font-size: 1.28rem;
+          }
+        }
+
+        @media (min-width: 1681px) {
+          .hero-section {
+            max-width: 900px;
+          }
+        }
+
+        @media (max-width: 1100px) {
+          .hero-logo-columns { display: none; }
+        }
+
         @media (max-width: 768px) {
           .logo-wizard-section { padding-top: 0 !important; padding-bottom: 0px !important; }
           .logo-wizard-section--creator { padding-top: 24px !important; padding-bottom: 24px !important; }
@@ -1264,6 +1444,7 @@ export default function LogoWizard() {
         <div className={`lw-root${isLogoCreatorPage ? " lw-root--creator" : ""}`}>
           {!isLogoCreatorPage && <BgSlides />}
           {!isLogoCreatorPage && <Particles />}
+          {!isLogoCreatorPage && <HeroLogoColumns />}
 
           {!(isLogoCreatorPage && showModal) && (
             <div className="hero-section">

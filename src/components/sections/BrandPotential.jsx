@@ -3,12 +3,11 @@ import { Link } from 'react-router-dom';
 export function BrandPotential() {
   return (
     <section className="brand-potential">
-        <img src="/assets/images/icon/section_bottom_shape_black.svg" alt="" className="section_top_shape" />
         <div className="container">
             <div className="row">
                 <div className="col-lg-6">
                     <div className="content">
-                        <h1>Where<span>Bold Design</span>Meets Real Growth                        </h1>
+                        <h1>Where <span>Bold Design</span> Meets Real Growth</h1>
                         <p>We don’t just create visuals, we build brands that perform. Through strategic design and digital expertise, we help businesses capture attention, increase conversions and lead their markets.
 
                         </p>
