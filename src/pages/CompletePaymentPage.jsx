@@ -331,8 +331,58 @@ function CashAppPanel({ paymentRequestId, amount, onSuccess, onError }) {
 }
 
 // ── ZELLE PANEL ───────────────────────────────────────────────────────────────
+const ZELLE_RECEIPT_TYPES = ['image/png', 'image/jpeg', 'image/webp', 'image/avif'];
+const ZELLE_RECEIPT_ACCEPT = '.png,.jpg,.jpeg,.webp,.avif';
+
 function ZellePanel({ paymentRequestId, amount, onSuccess, onError }) {
+  const fileInputRef = useRef(null);
   const [approving, setApproving] = useState(false);
+  const [receiptFile, setReceiptFile] = useState(null);
+  const [receiptPreview, setReceiptPreview] = useState('');
+  const [receiptError, setReceiptError] = useState('');
+
+  useEffect(() => {
+    return () => {
+      if (receiptPreview) URL.revokeObjectURL(receiptPreview);
+    };
+  }, [receiptPreview]);
+
+  const clearReceipt = () => {
+    if (receiptPreview) URL.revokeObjectURL(receiptPreview);
+    setReceiptFile(null);
+    setReceiptPreview('');
+    setReceiptError('');
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
+  const handleReceiptSelect = (file) => {
+    if (!file) return;
+
+    const ext = file.name.split('.').pop()?.toLowerCase();
+    const allowedExt = ['png', 'jpg', 'jpeg', 'webp', 'avif'];
+    const typeOk = ZELLE_RECEIPT_TYPES.includes(file.type)
+      || allowedExt.includes(ext || '');
+
+    if (!typeOk) {
+      setReceiptError('Only PNG, JPG, JPEG, WEBP, and AVIF images are allowed.');
+      return;
+    }
+
+    if (receiptPreview) URL.revokeObjectURL(receiptPreview);
+    setReceiptFile(file);
+    setReceiptPreview(URL.createObjectURL(file));
+    setReceiptError('');
+  };
+
+  const onFileChange = (e) => {
+    handleReceiptSelect(e.target.files?.[0]);
+  };
+
+  const onDrop = (e) => {
+    e.preventDefault();
+    e.currentTarget.classList.remove(styles.zelleReceiptDropActive);
+    handleReceiptSelect(e.dataTransfer.files?.[0]);
+  };
 
   const handleApprove = async () => {
     if (approving) return;
@@ -349,26 +399,98 @@ function ZellePanel({ paymentRequestId, amount, onSuccess, onError }) {
   };
 
   return (
-    <div className={styles.payPanel}>
+    <div className={`${styles.payPanel} ${styles.payPanelZelle}`}>
       <div className={styles.panelIcon}>
         <i className="fa-solid fa-building-columns" />
         <span>Zelle Payment</span>
       </div>
       <div className={styles.zelleInfo}>
-        {[
-          'Open your bank app and send the amount below via Zelle.',
-          'Use the Zelle email or phone number provided by your account manager.',
-          'Once sent, your account manager will verify and mark it as approved.',
-        ].map((text, i) => (
-          <div key={i} className={styles.zelleStep}>
-            <span className={styles.zelleNum}>{i + 1}</span>
-            <p>{text}</p>
-          </div>
-        ))}
+        <ul className={styles.zelleInstruction}>
+          <li>
+            Please make the payment via Zelle using{' '}
+            <strong>info@sanjoselogodesign.com</strong>, then attach the payment
+            screenshot below and click the &apos;Submit Receipt&apos; button.
+          </li>
+        </ul>
       </div>
       <div className={styles.zelleAmount}>
         Send: <strong>${Number(amount).toFixed(2)}</strong>
       </div>
+
+      <div className={styles.zelleReceipt}>
+        <div className={styles.zelleReceiptHead}>
+          <i className="fa-solid fa-receipt" />
+          <div>
+            <h4>Upload Receipt</h4>
+            <p>Attach your Zelle transfer screenshot or receipt</p>
+          </div>
+        </div>
+
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept={ZELLE_RECEIPT_ACCEPT}
+          className={styles.zelleReceiptInput}
+          onChange={onFileChange}
+        />
+
+        {!receiptPreview ? (
+          <button
+            type="button"
+            className={styles.zelleReceiptDrop}
+            onClick={() => fileInputRef.current?.click()}
+            onDragOver={(e) => {
+              e.preventDefault();
+              e.currentTarget.classList.add(styles.zelleReceiptDropActive);
+            }}
+            onDragLeave={(e) => {
+              e.currentTarget.classList.remove(styles.zelleReceiptDropActive);
+            }}
+            onDrop={onDrop}
+          >
+            <span className={styles.zelleReceiptIcon}>
+              <i className="fa-solid fa-cloud-arrow-up" />
+            </span>
+            <span className={styles.zelleReceiptTitle}>Click to upload receipt</span>
+            <span className={styles.zelleReceiptHint}>or drag and drop your image here</span>
+            <span className={styles.zelleReceiptFormats}>PNG · JPG · JPEG · WEBP · AVIF</span>
+          </button>
+        ) : (
+          <div className={styles.zelleReceiptPreview}>
+            <img src={receiptPreview} alt="Receipt preview" />
+            <div className={styles.zelleReceiptMeta}>
+              <span className={styles.zelleReceiptName} title={receiptFile?.name}>
+                <i className="fa-solid fa-image" />
+                {receiptFile?.name}
+              </span>
+              <div className={styles.zelleReceiptActions}>
+                <button
+                  type="button"
+                  className={styles.zelleReceiptChange}
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  <i className="fa-solid fa-rotate" /> Change
+                </button>
+                <button
+                  type="button"
+                  className={styles.zelleReceiptRemove}
+                  onClick={clearReceipt}
+                >
+                  <i className="fa-solid fa-trash-can" /> Remove
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {receiptError && (
+          <p className={styles.zelleReceiptError} role="alert">
+            <i className="fa-solid fa-circle-exclamation" />
+            {receiptError}
+          </p>
+        )}
+      </div>
+
       <button
         type="button"
         className={styles.payBtn}
@@ -376,8 +498,8 @@ function ZellePanel({ paymentRequestId, amount, onSuccess, onError }) {
         disabled={approving}
       >
         {approving
-          ? <><span className={styles.spinner} /> Approving…</>
-          : <><i className="fa-solid fa-circle-check" /> Approved</>
+          ? <><span className={styles.spinner} /> Submitting…</>
+          : <><i className="fa-solid fa-paper-plane" /> Submit Receipt</>
         }
       </button>
     </div>
@@ -524,6 +646,13 @@ export default function CompletePaymentPage() {
 
   const { customerName, email, phone, packageName, amount, paymentMethod, paymentRequestId } = info;
 
+  const paymentMethodLabel = {
+    stripe:  'Card (Stripe)',
+    paypal:  'PayPal',
+    cashapp: 'Cash App Pay',
+    zelle:   'Zelle',
+  }[paymentMethod] || paymentMethod;
+
   return (
     <>
       <section className="inner-breadcrumb">
@@ -545,31 +674,7 @@ export default function CompletePaymentPage() {
           <div className={styles.wrap}>
             <div className={styles.grid}>
 
-              {/* ── Left: Order Summary ── */}
-              <div className={styles.summaryCard}>
-                <h3 className={styles.summaryTitle}>Order Summary</h3>
-
-                <div className={styles.summaryRows}>
-                  {[
-                    { label: 'Customer',  value: customerName },
-                    { label: 'Email',     value: email || '—' },
-                    { label: 'Phone',     value: phone || '—' },
-                    { label: 'Package',   value: packageName || '—' },
-                  ].map(({ label, value }) => (
-                    <div key={label} className={styles.summaryRow}>
-                      <span className={styles.summaryLabel}>{label}</span>
-                      <span className={styles.summaryValue}>{value}</span>
-                    </div>
-                  ))}
-                </div>
-
-                <div className={styles.summaryTotal}>
-                  <span className={styles.summaryTotalLabel}>Total</span>
-                  <span className={styles.summaryAmount}>${Number(amount).toFixed(2)}</span>
-                </div>
-              </div>
-
-              {/* ── Right: Payment Panel ── */}
+              {/* ── Left: Payment Panel ── */}
               <div className={styles.paymentCard}>
                 <div className={styles.paymentCardHead}>
                   <i className="fa-solid fa-lock" />
@@ -615,6 +720,36 @@ export default function CompletePaymentPage() {
                     onError={handleError}
                   />
                 )}
+              </div>
+
+              {/* ── Right: Order Summary ── */}
+              <div className={styles.summaryCard}>
+                <h3 className={styles.summaryTitle}>Order Summary</h3>
+
+                <div className={styles.summaryRows}>
+                  {[
+                    { label: 'Customer', value: customerName },
+                    { label: 'Email',    value: email || '—' },
+                    { label: 'Phone',    value: phone || '—' },
+                    { label: 'Package',  value: packageName || '—' },
+                    { label: 'Payment',  value: paymentMethodLabel || '—' },
+                  ].map(({ label, value }) => (
+                    <div key={label} className={styles.summaryRow}>
+                      <span className={styles.summaryLabel}>{label}</span>
+                      <span className={styles.summaryValue}>{value}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className={styles.summaryTotal}>
+                  <span className={styles.summaryTotalLabel}>Total</span>
+                  <span className={styles.summaryAmount}>${Number(amount).toFixed(2)}</span>
+                </div>
+
+                <p className={styles.summarySecure}>
+                  <i className="fa-solid fa-shield-halved" />
+                  Secure encrypted checkout
+                </p>
               </div>
 
             </div>
