@@ -8,6 +8,12 @@ const API_BASE      = 'https://admin.sanjoselogodesign.com/api';
 const STRIPE_PK     = process.env.REACT_APP_STRIPE_KEY      || '';
 const PAYPAL_CLIENT = process.env.REACT_APP_PAYPAL_CLIENT_ID || '';
 
+// PayPal SDK URL shared by both PayPal and Venmo panels.
+// enable-funding=venmo makes the Venmo funding source available in the SDK;
+// Venmo buttons only render when the user is in a supported environment
+// (US, mobile with the Venmo app installed).
+const PAYPAL_SDK_SRC = `https://www.paypal.com/sdk/js?client-id=${PAYPAL_CLIENT}&currency=USD&intent=capture&enable-funding=venmo`;
+
 // ── HELPERS ───────────────────────────────────────────────────────────────────
 async function apiPost(path, body) {
   const res = await fetch(`${API_BASE}${path}`, {
@@ -158,10 +164,7 @@ function PayPalPanel({ paymentRequestId, amount, onSuccess, onError }) {
 
     (async () => {
       try {
-        await loadScript(
-          `https://www.paypal.com/sdk/js?client-id=${PAYPAL_CLIENT}&currency=USD&intent=capture`,
-          'paypal-js',
-        );
+        await loadScript(PAYPAL_SDK_SRC, 'paypal-js');
 
         window.paypal.Buttons({
           style: { layout: 'vertical', color: 'gold', shape: 'rect', label: 'paypal' },
@@ -204,6 +207,93 @@ function PayPalPanel({ paymentRequestId, amount, onSuccess, onError }) {
         Click below to complete your <strong>${Number(amount).toFixed(2)}</strong> payment securely via PayPal.
       </p>
       <div ref={containerRef} className={styles.paypalContainer} />
+    </div>
+  );
+}
+
+// ── VENMO PANEL ───────────────────────────────────────────────────────────────
+// Venmo is surfaced as a separate funding source through the PayPal SDK.
+// The backend uses the same paypal/create-order and paypal/capture endpoints —
+// the capture response is COMPLETED just like a regular PayPal payment.
+//
+// NOTE: The Venmo button only renders when the customer is on a US mobile device
+// with the Venmo app installed. If PayPal determines the environment is not
+// eligible, the button is hidden automatically by the SDK (this is expected
+// behaviour, not a bug).
+function VenmoPanel({ paymentRequestId, amount, onSuccess, onError }) {
+  const containerRef = useRef(null);
+  const rendered     = useRef(false);
+  const [eligible, setEligible] = useState(true); // optimistic — SDK hides if ineligible
+
+  useEffect(() => {
+    if (rendered.current) return;
+    rendered.current = true;
+
+    (async () => {
+      try {
+        await loadScript(PAYPAL_SDK_SRC, 'paypal-js');
+
+        const button = window.paypal.Buttons({
+          style: { layout: 'vertical', color: 'blue', shape: 'rect', label: 'pay' },
+          fundingSource: window.paypal.FUNDING.VENMO,
+
+          createOrder: async () => {
+            const data = await apiPost(
+              `/payment-requests/${paymentRequestId}/paypal/create-order`, {},
+            );
+            return data.order_id;
+          },
+
+          onApprove: async (data) => {
+            try {
+              const captureData = await apiPost(`/payment-requests/${paymentRequestId}/paypal/capture`, {
+                order_id: data.orderID,
+              });
+              onSuccess(captureData?.login_token || null);
+            } catch (err) {
+              onError(err.message);
+            }
+          },
+
+          onError:  () => onError('Venmo encountered an error. Please try again.'),
+          onCancel: () => onError('Payment cancelled.'),
+        });
+
+        // isEligible() returns false outside supported environments
+        if (button.isEligible()) {
+          button.render(containerRef.current);
+        } else {
+          setEligible(false);
+        }
+      } catch (err) {
+        onError(err.message || 'Failed to load Venmo.');
+      }
+    })();
+  }, []);
+
+  return (
+    <div className={styles.payPanel}>
+      <div className={styles.panelIcon}>
+        {/* Use fa-brands fa-venmo if your Font Awesome kit includes it;
+            otherwise fa-brands fa-vimeo-v is a safe visual fallback */}
+        <i className="fa-brands fa-vimeo-v" />
+        <span>Pay with Venmo</span>
+      </div>
+      <p className={styles.panelHint}>
+        Complete your <strong>${Number(amount).toFixed(2)}</strong> payment securely through Venmo.
+      </p>
+
+      {/* Venmo button rendered by PayPal SDK */}
+      <div ref={containerRef} className={styles.paypalContainer} />
+
+      {/* Shown if PayPal SDK deems the environment ineligible for Venmo */}
+      {!eligible && (
+        <div className={styles.errorBanner} role="alert">
+          <i className="fa-solid fa-circle-exclamation" />
+          Venmo is only available on US mobile devices with the Venmo app installed.
+          Please choose a different payment method.
+        </div>
+      )}
     </div>
   );
 }
@@ -649,6 +739,7 @@ export default function CompletePaymentPage() {
   const paymentMethodLabel = {
     stripe:  'Card (Stripe)',
     paypal:  'PayPal',
+    venmo:   'Venmo',
     cashapp: 'Cash App Pay',
     zelle:   'Zelle',
   }[paymentMethod] || paymentMethod;
@@ -700,6 +791,13 @@ export default function CompletePaymentPage() {
                   />
                 ) : paymentMethod === 'paypal' ? (
                   <PayPalPanel
+                    paymentRequestId={paymentRequestId}
+                    amount={amount}
+                    onSuccess={handleSuccess}
+                    onError={handleError}
+                  />
+                ) : paymentMethod === 'venmo' ? (
+                  <VenmoPanel
                     paymentRequestId={paymentRequestId}
                     amount={amount}
                     onSuccess={handleSuccess}

@@ -7,15 +7,22 @@ const PAYMENT_REQUEST_ENDPOINT = 'https://admin.sanjoselogodesign.com/api/paymen
 
 const SALES_AGENTS = ['Jared', 'Luke', 'Robert', 'Shawn', 'Sam', 'Zack'];
 
+const PAYMENT_TYPES = [
+  { id: 'front',  label: 'Front' },
+  { id: 'upsell', label: 'Upsell' },
+];
+
 const PAYMENT_METHODS = [
   { id: 'stripe',  label: 'Stripe',  iconClass: 'fa-brands fa-cc-stripe' },
   { id: 'paypal',  label: 'PayPal',  iconClass: 'fa-brands fa-paypal' },
+  { id: 'venmo',   label: 'Venmo',   iconClass: 'fa-brands fa-vimeo-v' },   // fa-brands fa-venmo if available in your FA kit
   { id: 'zelle',   label: 'Zelle',   iconClass: 'fa-solid fa-building-columns' },
   { id: 'cashapp', label: 'CashApp', iconClass: 'fa-solid fa-dollar-sign' },
 ];
 
 const initialForm = {
   salesAgent:    '',
+  paymentType:   '',
   customerName:  '',
   email:         '',
   phone:         '',
@@ -73,6 +80,7 @@ export default function PaymentInfoPage() {
 
     const body = {
       profile:        form.salesAgent,
+      payment_type:   form.paymentType   || null,   // admin-only, not shown to customer
       customer_name:  form.customerName.trim(),
       email:          form.email.trim() || null,
       phone:          form.phone.trim() || null,
@@ -176,8 +184,8 @@ export default function PaymentInfoPage() {
                 <form onSubmit={onSubmit}>
                   <div className={styles.formGrid}>
 
-                    {/* Sales Agent — full width */}
-                    <div className={`${styles.field} ${styles.fieldFull}`}>
+                    {/* ── Admin-only row: Sales Agent + Payment Type ── */}
+                    <div className={styles.field}>
                       <label className={styles.label} htmlFor="pi-agent">
                         Sales Agent
                       </label>
@@ -191,6 +199,24 @@ export default function PaymentInfoPage() {
                         <option value="">— Select agent —</option>
                         {SALES_AGENTS.map((a) => (
                           <option key={a} value={a}>{a}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className={styles.field}>
+                      <label className={styles.label} htmlFor="pi-payment-type">
+                        Payment Type
+                      </label>
+                      <select
+                        id="pi-payment-type"
+                        className={`form-control custom-input ${styles.fieldControl}`}
+                        value={form.paymentType}
+                        onChange={(e) => setField('paymentType', e.target.value)}
+                        required
+                      >
+                        <option value="">— Select type —</option>
+                        {PAYMENT_TYPES.map((t) => (
+                          <option key={t.id} value={t.id}>{t.label}</option>
                         ))}
                       </select>
                     </div>
@@ -256,7 +282,7 @@ export default function PaymentInfoPage() {
                     </div>
 
                     {/* Price */}
-                    <div className={styles.field}>
+                    <div className={`${styles.field} ${styles.fieldFull}`}>
                       <label className={styles.label} htmlFor="pi-amount">
                         Price
                       </label>
