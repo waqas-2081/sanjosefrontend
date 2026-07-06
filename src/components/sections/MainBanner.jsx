@@ -12,7 +12,7 @@ export function MainBanner() {
         </div>
         <div className="banner-content">
             <div className="top-area">
-                <h1>Best Logo<span>Agency</span> <br /> <span>in </span> Silicon Valley</h1>
+                <h1>AWARD-WINNING<span> SAN JOSE  <br /> LOGO DESIGN </span>AGENCY</h1>
             </div>
         </div>
         <div className="right-side">

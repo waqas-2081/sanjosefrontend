@@ -1,6 +1,7 @@
 import React from 'react';
-export function HomeAbout() {
-  return (
+import { Link } from 'react-router-dom';
+
+export function HomeAbout() {  return (
     <section className="about-sec home-about-sec">
         <img src="/assets/images/icon/section_bottom_shape.svg" alt="" className="section_top_shape" />
         <div className="container-fluid">
@@ -19,12 +20,18 @@ export function HomeAbout() {
                 </div>
                 <div className="col-lg-5">
                     <div className="content">
-                        <h1>
-                        Expert Brand Strategy & Creative Agency
-                               <div>San Jose</div>
-                        </h1>
-                        <p>Our creative agency in San Jose also offers comprehensive brand development services. We understand the importance of a strong brand presence, and our expert team works closely with you to develop a brand strategy that aligns with your business goals. Whether you need a new logo, website design, or overall brand strategy in San Jose, we are here to help.</p>
-                        <p className="home-about-hide-sm">Speaking of websites, our web agency in San Jose excels in creating visually appealing and user-friendly websites. We understand that a well-designed website is crucial for capturing the attention of your target audience and driving conversions. Our team combines creativity and technical expertise to deliver exceptional website design and development solutions tailored to your specific needs.</p>
+                        <h2 className="home-about-title">
+                        EXPERT LOGO AND BRANDING AGENCY SAN JOSE,
+                               <div>CALIFORNIA</div>
+                        </h2>
+                        <p>
+                            San Jose Logo Design helps businesses build identities people actually remember. We pair{' '}
+                            <Link to="/logo-design-services">logo design</Link> with{' '}
+                            <Link to="/logo-design-services">strategic branding</Link> to give your company a visual presence that holds up in competitive markets. Starting from scratch or rebuilding a brand that&apos;s lost its edge? Our designers work directly with clients, not through layers of account managers, so every logo reflects the business behind it.
+                        </p>
+                        <p className="home-about-hide-sm">
+                        We're also a working web design and digital marketing agency, not just a logo design shop. We build websites that look sharp and convert, sites designed to turn visitors into leads and leads into paying customers. If your brand needs both a strong identity and a site that actually performs, that's exactly the gap we fill.
+                        </p>
                     </div>
                 </div>
             </div>

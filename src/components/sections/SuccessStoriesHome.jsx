@@ -175,11 +175,12 @@ export function SuccessStoriesHome() {
       <div className="container-fluid px-3 px-md-4">
         <div className="section-heading text-center">
           <img src="/assets/images/icon/your-industry-peers.webp" alt="" className="success-stories-heading-img" />
-          <h2>SUCCESS STORIES</h2>
+          <h2>PROVEN RESULTS</h2>
+          <div className="stories-bottom text-center">
           <p>
-            Mastering the art of design and marketing services, SanJose Logo Design is a digital agency providing a
-            vast range of other services as well.
+          Numbers don't lie. Here's what happens when design and marketing actually work together, real businesses, real growth, powered by San Jose Logo Design.
           </p>
+          </div>
         </div>
 
         <div className="success-stories-viewport-outer">

@@ -10,12 +10,12 @@ export default function Footer() {
             <img src="/assets/images/cta.png" alt="" />
           </div>
           <div className="cta-content">
-            <h1>
-            TURN IDEAS INTO <span>PROFITABLE</span> RESULTS
-            </h1>
+            <h2>
+            THIS IS WHERE<span> YOUR BRAND</span> STOPS BEING INVISIBLE
+            </h2>
             <p>
            
-            We craft high-performing digital solutions backed by strategy, creativity, and data to grow your business faster.
+            Strategy. Design. Data. Combined, they don't just make you look good, they make you impossible to ignore.
 
             </p>
             <div className="footer-cta-actions">

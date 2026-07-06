@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-
+import { Link } from 'react-router-dom';
 function CompareSlider() {
   const containerRef = useRef(null);
   const rafRef = useRef(null);
@@ -78,21 +78,18 @@ export function Transforming() {
         <div className="row">
           <div className="col-lg-7">
             <div className="content">
-              <h1>
-                Top Brand <span>Development</span> & SEO Company<span> San Jose</span>
-              </h1>
+              <h2>
+              TOP BRAND <span>DEVELOPMENT</span> & SEO COMPANY<span> SAN JOSE</span>
+              </h2>
               <p>
-                As a leading branding and digital marketing agency in San Jose, we offer a wide range of services to
-                help your business thrive. Our team of professionals specializes in social media marketing, brand
-                marketing, and digital advertising. We develop customized strategies to enhance your online presence
-                and effectively engage with your target audience.
+                Most businesses don&apos;t fail because the product is wrong. They fail because nobody remembers them long enough to buy.
               </p>
               <p>
-                Partner with our top creative marketing agency in San Jose, and you'll have the support of a
-                professional logo design agency that understands the intricacies of the digital landscape. Our dedicated
-                team is committed to delivering outstanding results, and we take pride in being a trusted design
-                company in San Jose. We combine our expertise, creativity, and brand strategy to provide you with a
-                comprehensive solution that drives your business forward.
+                That&apos;s the gap we close. As a branding agency in San Jose, we build the identity, the logo, the voice, the visual language that makes a business impossible to forget. Then, as a digital marketing agency in San Jose, we make sure that identity actually gets seen: through our{' '}
+                <Link to="/search-engine-optimization-services">SEO services</Link> that puts you in front of people already searching for what you do, and advertising services that turn attention into action.
+              </p>
+              <p>
+                We&apos;ve watched too many companies invest in one half of this equation. A beautiful brand nobody finds. Or heavy ad spend propping up an identity that doesn&apos;t stick. San Jose Logo Design exists for the businesses who want both, a brand worth remembering, and SEO and marketing strategy that gets it in front of the right people, consistently.
               </p>
             </div>
           </div>

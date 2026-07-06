@@ -7,8 +7,8 @@ export function BrandPotential() {
             <div className="row">
                 <div className="col-lg-6">
                     <div className="content">
-                        <h1>Where <span>Bold Design</span> Meets Real Growth</h1>
-                        <p>We don’t just create visuals, we build brands that perform. Through strategic design and digital expertise, we help businesses capture attention, increase conversions and lead their markets.
+                        <h2>WHERE <span>DESIGN,</span> DEVELOPMENT, AND MARKETING MEET</h2>
+                        <p>Logo design and branding are just the start. We build complete digital systems, create website designs, conduct SEO, create landing pages, and curate marketing funnels, engineered to do one thing: turn traffic into customers and customers into revenue.
 
                         </p>
                         <div className="row">
@@ -19,7 +19,7 @@ export function BrandPotential() {
                                     </div>
                                     <div className="brand-text">
                                     <h3>TNT PIZZA</h3>
-                                        <p>Rebranding TNT Pizza with a fresh, mouthwatering identity that stands out. Our design approach didn’t just attract attention it helped fuel a 190% boost in revenue.
+                                        <p>A full rebrand gave TNT Pizza a fresh, appetite-driving identity. The new design and advertising strategy helped fuel a 190% increase in revenue.
                                         </p>
                                     </div>
                                 </div>
@@ -31,7 +31,7 @@ export function BrandPotential() {
                                     </div>
                                     <div className="brand-text">
                                     <h3>PREMIER MOBILE DETAILING</h3>
-                                        <p>Transforming Premier Mobile Detailing with a sleek, premium brand identity built to command attention. The result? An impressive 174% increase in revenue driven by powerful logo design and strategic branding.
+                                        <p>A sleek, premium identity repositioned Premier Mobile Detailing as a top tier option in its market, driving a 174% increase in revenue.
                                         </p>
                                     </div>
                                 </div>
@@ -47,8 +47,8 @@ export function BrandPotential() {
                                     <img src="/assets/images/3.png" alt="" />
                                 </div>
                                 <div className="brand-text">
-                                <h3>2 SONS OF GUNS PRESSURE WASHING                                        </h3>
-                                        <p>Revitalizing 2 Sons of Guns Pressure Washing with a bold brand refresh. From logo to visual identity, our designs didn’t just enhance their image, they drove a powerful 215% increase in revenue.
+                                <h3>2 SONS OF GUNS PRESSURE WASHING</h3>
+                                        <p>From a new logo to custom vehicle wraps, this brand refresh gave 2 Sons of Guns Pressure Washing a bolder presence on the road and a 215% jump in revenue.
                                         </p>
                                 </div>
                             </div>
@@ -60,7 +60,7 @@ export function BrandPotential() {
                                 </div>
                                 <div className="brand-text">
                                 <h3>LOADMASTER</h3>
-                                    <p>Elevating LoadMaster with a bold, high-impact brand presence designed to dominate the hauling industry. The result? A remarkable 255% revenue increase powered by strategic branding and standout logo design.
+                                    <p>A high impact rebrand positioned LoadMaster as a serious player in the hauling industry, contributing to a 255% increase in revenue.
                                     </p>
                                 </div>
                             </div>
@@ -73,8 +73,11 @@ export function BrandPotential() {
                     <div className="bottom-content">
                         <img src="/assets/images/icon/action-arrow.png" alt="" className="side-img" />
                         <img src="/assets/images/icon/dont-wait.webp" alt="" />
-                        <h1>Our Comprehensive Process</h1>
-                        <p>Our creative team thinks out of the box and comes up with innovative ideas that boost our creativity for considering a picture or painting in different ways. And integrity is the main reason behind the quality design by our designers. The management takes online issues effectively, and tasks have been accomplished quickly. Teamwork makes us experts in multitasking, revising, and delivering each project on time, so customer satisfaction is guaranteed at every process stage.</p>
+                        <h3>HERE&apos;S HOW WE GET YOU THERE</h3>
+                        <p>
+                            Strong brands don&apos;t happen by accident, they follow a process. We start with logo design and brand strategy, then build out into{' '}
+                            <Link to="/website-design-development-services">website design</Link>, SEO, and digital marketing, backed by data at every step. Our team stays transparent, hits deadlines, and refines the details that matter, so the end result isn&apos;t just a brand you like, it&apos;s one that brings in customers and drives long term growth.
+                        </p>
                         <Link to="/contact-us" className="btn">
                             <span>Contact Us Now</span>
                         </Link>

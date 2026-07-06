@@ -107,8 +107,8 @@ function Step1({ data, onChange, onNext, pending, error }) {
   return (
     <div className="step-content animate-in">
       <div className="hero-text">
-        <h1 className="hero-title">Create Your <span className="accent">Dream Logo</span></h1>
-        <p className="hero-sub">Professional logos crafted for your brand identity</p>
+        <h2 className="hero-title">Create Your <span className="accent">CUSTOM LOGO DESIGN</span></h2>
+        <p className="hero-sub">Start your branding journey here.</p>
       </div>
       {error ? <p className="hero-inline-error" role="alert">{error}</p> : null}
 
@@ -667,8 +667,8 @@ export default function LogoWizard() {
         }
         .hero-text { margin-bottom: 40px; }
         .hero-title {
-          font-family: 'Bebas Neue', cursive;
-          font-size: clamp(3rem, 8vw, 6rem);
+          font-family: 'Bebas Neue', sans-serif;
+          font-size: clamp(3rem, 8vw, 4rem);
           color: #fff;
           letter-spacing: 0.04em;
           line-height: 1;
@@ -688,7 +688,7 @@ export default function LogoWizard() {
           text-align: center;
           line-height: 1.45;
         }
-        .accent { color: #FF6B1A; }
+        .accent { color: #FF6B1A; font-family: inherit; }
 
         .input-row {
           display: flex; gap: 0;
@@ -1252,7 +1252,7 @@ export default function LogoWizard() {
           }
 
           .hero-title {
-            font-size: clamp(2.6rem, 4.5vw, 5rem);
+            font-size: clamp(2.6rem, 2.5vw, 5rem);
           }
 
           .hero-sub {
@@ -1293,7 +1293,7 @@ export default function LogoWizard() {
           .lw-root { padding-top: 40px; padding-bottom: 40px; }
           .hero-section { padding: 0 16px; }
           .hero-text { margin-bottom: 28px; }
-          .hero-title { font-size: clamp(2.25rem, 10vw, 4rem); }
+          .hero-title { font-size: 22px; }
           .hero-sub { font-size: 1rem; }
         }
 

@@ -83,8 +83,8 @@ export function SolutionsSection({ hideOnMobile = false }) {
         <img src="/assets/images/icon/section_bottom_shape.svg" alt="" className="section_top_shape" />
         <div className="container-fluid">
             <div className="solutions-header">
-                <h1>Our <span>Solutions</span></h1>
-                <p>We are your full-stack, five-star creative design agency ready to tackle any job you have for us.</p>
+                <h3>Our <span>Solutions</span></h3>
+                <p>Logo design. Branding. Merchandising. Web design. Mobile App Design and Development. Digital marketing. SEO and Content. Whatever your business needs to stand out, our San Jose creative team delivers.</p>
             </div>
 
             <div className="solutions-accordion" data-react-accordion="true">
@@ -96,10 +96,10 @@ export function SolutionsSection({ hideOnMobile = false }) {
                         onClick={() => toggleSolution('branding')}
                     >
                         <div className="solution-accordion-title">
-                            <h3>Branding/Logo</h3>
+                            <h2>Logo and Branding</h2>
                         </div>
                         <div className="solution-accordion-summary">
-                            <span>Your logo is the heart of your brand and the face of your business.</span>
+                            <span>As a leading San Jose Logo Design agency, we craft custom logos and branding that give your business an identity people remember and trust.</span>
                             <span className="solution-toggle-icon" aria-hidden="true">
                                 <span className="line horizontal"></span>
                                 <span className="line vertical"></span>
@@ -217,7 +217,7 @@ export function SolutionsSection({ hideOnMobile = false }) {
                         onClick={() => toggleSolution('vehicle')}
                     >
                         <div className="solution-accordion-title">
-                            <h3>Vehicle Wrap Design</h3>
+                            <h2>Vehicle Wrap Design</h2>
                         </div>
                         <div className="solution-accordion-summary">
                             <span>Our unique vehicle wrap designs turn your fleet into mobile billboards, ensuring your
@@ -331,10 +331,10 @@ export function SolutionsSection({ hideOnMobile = false }) {
                         onClick={() => toggleSolution('website')}
                     >
                         <div className="solution-accordion-title">
-                            <h3>Website Design</h3>
+                            <h2>Website Design and Development</h2>
                         </div>
                         <div className="solution-accordion-summary">
-                            <span>High-performing, conversion-focused websites that look great on every device.</span>
+                            <span>Our San Jose website design and development team builds fast, custom websites that turn visitors into customers, combining strong visuals with seamless functionality.</span>
                             <span className="solution-toggle-icon" aria-hidden="true">
                                 <span className="line horizontal"></span>
                                 <span className="line vertical"></span>
@@ -444,10 +444,10 @@ export function SolutionsSection({ hideOnMobile = false }) {
                         onClick={() => toggleSolution('mobile-apps')}
                     >
                         <div className="solution-accordion-title">
-                            <h3>Mobile App Design</h3>
+                            <h2>Mobile App Design and Development</h2>
                         </div>
                         <div className="solution-accordion-summary">
-                            <span>App interfaces that feel intuitive, on-brand, and built for engagement.</span>
+                            <span>We deliver mobile app design and development in San Jose that&apos;s clean, intuitive, and built around your users, helping your business stay in their pocket and top of mind.</span>
                             <span className="solution-toggle-icon" aria-hidden="true">
                                 <span className="line horizontal"></span>
                                 <span className="line vertical"></span>
@@ -557,10 +557,10 @@ export function SolutionsSection({ hideOnMobile = false }) {
                         onClick={() => toggleSolution('digital-marketing')}
                     >
                         <div className="solution-accordion-title">
-                            <h3>Digital Marketing</h3>
+                            <h2>Digital Marketing</h2>
                         </div>
                         <div className="solution-accordion-summary">
-                            <span>Campaign visuals and creative that help your message cut through the noise.</span>
+                            <span>As a full-service digital marketing agency in San Jose, we build marketing campaigns that put your business in front of the right customers at the right time.</span>
                             <span className="solution-toggle-icon" aria-hidden="true">
                                 <span className="line horizontal"></span>
                                 <span className="line vertical"></span>
@@ -670,10 +670,10 @@ export function SolutionsSection({ hideOnMobile = false }) {
                         onClick={() => toggleSolution('seo')}
                     >
                         <div className="solution-accordion-title">
-                            <h3>SEO & Content</h3>
+                            <h2>SEO and Content</h2>
                         </div>
                         <div className="solution-accordion-summary">
-                            <span>On-brand content and visuals that help you rank better and convert better.</span>
+                            <span>Our San Jose SEO team helps your business rank higher, drive organic traffic, and turn searches into real customers through strategic content.</span>
                             <span className="solution-toggle-icon" aria-hidden="true">
                                 <span className="line horizontal"></span>
                                 <span className="line vertical"></span>

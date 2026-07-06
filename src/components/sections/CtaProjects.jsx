@@ -1,11 +1,26 @@
-import React, { useEffect, useRef } from 'react';
-import { motion, useAnimationControls, useInView } from 'framer-motion';
-import { onScrollTopReplay } from '../../lib/scrollMotionReplay';
+import React, { useEffect, useRef } from "react";
+import { motion, useAnimationControls, useInView } from "framer-motion";
+import { onScrollTopReplay } from "../../lib/scrollMotionReplay";
 
 const CONTACTS = [
-  { icon: 'fa-phone', label: '24/7 Support', value: '(214) 449-1305', href: 'tel:+12144491305' },
-  { icon: 'fa-comments', label: 'Talk to Us', value: 'Live Chat', href: '/contact-us' },
-  { icon: 'fa-envelope', label: 'Email us at', value: 'info@sanjoselogodesign.com', href: 'mailto:info@sanjoselogodesign.com' },
+  {
+    icon: "fa-phone",
+    label: "24/7 Support",
+    value: "(214) 449-1305",
+    href: "tel:+12144491305",
+  },
+  {
+    icon: "fa-comments",
+    label: "Talk to Us",
+    value: "Live Chat",
+    href: "/contact-us",
+  },
+  {
+    icon: "fa-envelope",
+    label: "Email us at",
+    value: "info@sanjoselogodesign.com",
+    href: "mailto:info@sanjoselogodesign.com",
+  },
 ];
 
 const stagger = {
@@ -15,25 +30,33 @@ const stagger = {
 
 const rise = {
   hidden: { opacity: 0, y: 14 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] },
+  },
 };
 
 function useSectionReplay(sectionRef, controls) {
-  const inView = useInView(sectionRef, { amount: 0.2, margin: '0px 0px -4% 0px' });
+  const inView = useInView(sectionRef, {
+    amount: 0.2,
+    margin: "0px 0px -4% 0px",
+  });
 
   useEffect(() => {
-    if (inView) controls.start('visible');
+    if (inView) controls.start("visible");
   }, [controls, inView]);
 
   useEffect(() => {
     return onScrollTopReplay(() => {
-      controls.set('hidden');
+      controls.set("hidden");
       requestAnimationFrame(() => {
         const el = sectionRef.current;
         if (!el) return;
         const rect = el.getBoundingClientRect();
         const vh = window.innerHeight || document.documentElement.clientHeight;
-        if (rect.top < vh * 0.92 && rect.bottom > vh * 0.08) controls.start('visible');
+        if (rect.top < vh * 0.92 && rect.bottom > vh * 0.08)
+          controls.start("visible");
       });
     });
   }, [controls, sectionRef]);
@@ -59,18 +82,23 @@ export function CtaProjects() {
   useSectionReplay(sectionRef, controls);
 
   return (
-    <section className="cta-projects" ref={sectionRef} aria-label="Call to action" data-no-motion="true">
+    <section
+      className="cta-projects"
+      ref={sectionRef}
+      aria-label="Call to action"
+      data-no-motion="true"
+    >
       <motion.div
         className="cta-projects__glow cta-projects__glow--left"
         aria-hidden
         animate={{ opacity: [0.3, 0.55, 0.3], scale: [1, 1.06, 1] }}
-        transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
+        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
       />
       <motion.div
         className="cta-projects__glow cta-projects__glow--right"
         aria-hidden
         animate={{ opacity: [0.25, 0.5, 0.25], scale: [1, 1.08, 1] }}
-        transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
+        transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
       />
 
       <motion.div
@@ -82,18 +110,22 @@ export function CtaProjects() {
         <motion.div className="cta-projects__card" variants={rise}>
           <div className="cta-projects__head">
             <motion.div className="cta-projects__copy" variants={rise}>
-              <p className="cta-projects__eyebrow">Award-Winning Logo Design</p>
+              <h3 className="cta-projects__eyebrow">
+                AWARD-WINNING LOGO DESIGN & BRANDING AGENCY
+              </h3>
               <h2 className="cta-projects__title">
-                Let&apos;s create a brand <span>YOU ARE PROUD OF</span>
+                LET’S BUILD A BRAND{" "}
+                <span>YOU’RE PROUD TO PUT YOUR NAME ON.</span>
               </h2>
               <p className="cta-projects__text">
-                Share your vision with our expert designers we&apos;ll craft a custom logo
-                and visual identity that builds trust, turns heads, and grows with your business.
+              Tell us about your business and your goals. We'll design a custom logo and brand identity that builds trust, grabs attention, and scales as you grow.
               </p>
             </motion.div>
 
             <a href="/contact-us" className="cta-projects__btn">
-              <span className="cta-projects__btn-label">Let&apos;s Get Started</span>
+              <span className="cta-projects__btn-label">
+                Let&apos;s Get Started
+              </span>
               <span className="cta-projects__btn-icon">
                 <i className="fa-solid fa-arrow-right" aria-hidden />
               </span>
@@ -174,19 +206,19 @@ export function CtaProjects() {
         .cta-projects__eyebrow {
           margin: 0 0 6px;
           color: #ff8c3a;
-          font-size: 0.72rem;
+          font-size: 18px;
           font-weight: 700;
           letter-spacing: 0.18em;
           text-transform: uppercase;
         }
 
         .cta-projects__title {
-          margin: 0 0 8px;
-          color: #fff;
-          font-size: clamp(1.2rem, 2.4vw, 2.5rem);
-          font-weight: 800;
-          line-height: 1.2;
-          letter-spacing: -0.02em;
+            margin: 0 0 8px;
+    color: #fff;
+    font-size: clamp(1.2rem, 2.4vw, 1.6rem);
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: 0.05em;
         }
 
         .cta-projects__title span {
@@ -404,6 +436,18 @@ export function CtaProjects() {
           top: 0;
           z-index: 1;
         }
+
+        @media (max-width: 767px) {
+        .cta-projects__eyebrow {
+        font-size: 12px; 
+    }
+
+    .cta-projects__title {
+    font-size: 14px;
+
+}
+}
+
       `}</style>
     </section>
   );

@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { Link } from 'react-router-dom';
 const FEATURED_STORIES = [
   {
     id: 'tereva-king',
@@ -70,8 +70,9 @@ export function FeaturedStories() {
 
         <div className="stories-bottom text-center">
           <p>
-            Mastering the art of design and marketing services, SanJose Logo Design is a digital agency providing a
-            vast range of other services as well.
+            <Link to="/logo-design-services">Logo design</Link> is our foundation, but it&apos;s not where we stop. Our team also handles  branding,
+            <Link to="/video-animation-services">video animations</Link>, web design,{' '}
+            <Link to="/digital-marketing-services">digital marketing</Link>, and the creative support businesses need to grow with confidence.
           </p>
         </div>
       </div>

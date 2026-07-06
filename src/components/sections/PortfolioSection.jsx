@@ -204,11 +204,13 @@ export function PortfolioSection() {
         <div className="container-fluid">
           <div className="portfolio-header text-center">
             <h2>
-              We’ve Done Lot’s Of Work, Let’s Check
+            WE'VE DONE A LOT OF WORK, LET'S EXPLORE 
               <br />
-              Some From Here
+              SOME OF OUR BEST PROJECTS
             </h2>
-
+            <div className="stories-bottom text-center">
+            <p>What makes one business unforgettable while another fades into the background? Take a look at our work and see how San Jose Logo Design has made that difference for real clients.</p>
+            </div>
             {loading && <p className="text-muted mb-0">Loading portfolio…</p>}
 
             {!loading && error && (
@@ -294,7 +296,7 @@ export function PortfolioSection() {
         setLightbox={setLightbox}
         onClose={() => setLightbox(null)}
       />
-      <SuccessStoriesHome />
+      {/* <SuccessStoriesHome /> */}
     </>
   );
 }

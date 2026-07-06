@@ -7,9 +7,8 @@ export function AwesomeProjects({ variant } = {}) {
         <div className="container">
             <div className="awesome-header text-center">
                 <img src="/assets/images/icon/unique-brands.png" alt="" />
-                <h2>Awesome Projects</h2>
-                <p>Jeremy Ellsworth Designs LLC is a full-service design agency catering to businesses and individuals,
-                    with a focus on delivering high-quality, professional design solutions.</p>
+                <h3>AWESOME PROJECTS</h3>
+                <p>Custom logos. Real businesses. See the branding work behind San Jose Logo Design's reputation.</p>
             </div>
         </div>
         <div className="awesome-marquee">
