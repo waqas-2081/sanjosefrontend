@@ -114,8 +114,7 @@ export function CtaProjects() {
                 AWARD-WINNING LOGO DESIGN & BRANDING AGENCY
               </h3>
               <h2 className="cta-projects__title">
-                LET’S BUILD A BRAND{" "}
-                <span>YOU’RE PROUD TO PUT YOUR NAME ON.</span>
+                LET’S BUILD A BRAND{" "}YOU’RE PROUD TO PUT YOUR NAME ON.
               </h2>
               <p className="cta-projects__text">
               Tell us about your business and your goals. We'll design a custom logo and brand identity that builds trust, grabs attention, and scales as you grow.
