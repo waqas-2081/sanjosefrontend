@@ -98,7 +98,7 @@ export default function BlogsPage() {
   <title>Blogs | San Jose Logo Design</title>
   <meta
     name="description"
-    content="Visit our website to read helpful blogs, Clients' case studies, & reviews of our Family like clients."
+    content="Read expert logo design, branding, and digital marketing insights from San Jose Logo Design — tips, case studies, and growth strategies for your business."
   />
   <meta name="robots" content="index,follow" />
   <meta name="googlebot" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1" />
@@ -113,7 +113,7 @@ export default function BlogsPage() {
   <meta property="og:title" content="Blogs | San Jose Logo Design" />
   <meta
     property="og:description"
-    content="Visit our website to read helpful blogs, Clients' case studies, & reviews of our Family like clients."
+    content="Read expert logo design, branding, and digital marketing insights from San Jose Logo Design — tips, case studies, and growth strategies for your business."
   />
   <meta property="og:url" content="https://sanjoselogodesign.com/blog" />
   <meta property="og:site_name" content="Sanjoselogodesign" />
@@ -125,7 +125,7 @@ export default function BlogsPage() {
   <meta name="twitter:title" content="Blogs | San Jose Logo Design" />
   <meta
     name="twitter:description"
-    content="Visit our website to read helpful blogs, Clients' case studies, & reviews of our Family like clients."
+    content="Read expert logo design, branding, and digital marketing insights from San Jose Logo Design — tips, case studies, and growth strategies for your business."
   />
   <meta property="twitter:url" content="https://sanjoselogodesign.com/blog" />
   <meta name="twitter:image" content="seo_image" />
