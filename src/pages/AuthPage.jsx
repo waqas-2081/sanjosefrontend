@@ -19,6 +19,7 @@ export default function AuthPage() {
   return (
     <>
       <Helmet>
+        <meta name="robots" content="noindex, nofollow" />
         <meta
           name="description"
           content="Sign in to your San Jose Logo Design client account."

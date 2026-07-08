@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
+import { BlogListSkeleton } from '../components/blog/BlogSkeletons';
 
 const BLOGS_ENDPOINT = 'https://admin.sanjoselogodesign.com/api/v1/blogs';
 const BLOGS_PER_PAGE = 30;
@@ -172,11 +173,13 @@ export default function BlogsPage() {
 
     <section className="modern-blog-sec">
         <div className="container-fluid">
+            {loading ? (
+              <BlogListSkeleton />
+            ) : (
             <div className="modern-blog-grid">
-                {loading && <p className="text-center text-muted">Loading blogs...</p>}
-                {!loading && error && <p className="text-center text-danger">{error}</p>}
+                {error && <p className="text-center text-danger">{error}</p>}
 
-                {!loading && !error && blogs.map((blog) => (
+                {!error && blogs.map((blog) => (
                   <article key={blog.id} className="modern-blog-card">
                     <div className="image">
                       <img src={blog.thumbnail || '/assets/images/portfolio/logo/1.png'} alt={blog.title} />
@@ -192,10 +195,11 @@ export default function BlogsPage() {
                   </article>
                 ))}
 
-                {!loading && !error && blogs.length === 0 && (
+                {!error && blogs.length === 0 && (
                   <p className="text-center text-muted">No blogs found.</p>
                 )}
             </div>
+            )}
 
             {!loading && !error && meta.last_page > 1 && (
               <div className="d-flex justify-content-center align-items-center gap-2 mt-4">

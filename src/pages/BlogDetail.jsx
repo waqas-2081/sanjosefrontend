@@ -1,7 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { Link, useParams } from 'react-router-dom';
-const BLOG_DETAIL_ENDPOINT_BASE = 'https://admin.sanjoselogodesign.com/api/v1/blogs';
+import { BlogDetailSkeleton } from '../components/blog/BlogSkeletons';
+import NotFoundPage from './NotFoundPage';const BLOG_DETAIL_ENDPOINT_BASE = 'https://admin.sanjoselogodesign.com/api/v1/blogs';
 
 /** Fixed line under breadcrumbs (not article `short_description`) */
 const BLOG_DETAIL_HERO_TAGLINE =
@@ -71,7 +72,7 @@ function getApiErrorMessage(result) {
 }
 
 export default function BlogDetail() {
-  const { slug } = useParams();
+  const { slug, '*': extraPath } = useParams();
   const [blog, setBlog] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -130,13 +131,25 @@ export default function BlogDetail() {
       }
     }
 
-    if (slug) loadBlog();
+    if (slug && !extraPath) loadBlog();
+    else if (!cancelled) setLoading(false);
     return () => {
       cancelled = true;
     };
-  }, [slug]);
+  }, [slug, extraPath]);
 
-  const heroSrc = blog?.thumbnail || '';
+  if (extraPath || !slug) {
+    return <NotFoundPage />;
+  }
+
+  if (loading) {
+    return <BlogDetailSkeleton />;
+  }
+  if (error || !blog) {
+    return <NotFoundPage />;
+  }
+
+  const heroSrc = blog.thumbnail || '';
 
   return (
     <div className="blog-detail-page blog-detail-page--no-mobile-section-pad">
@@ -155,10 +168,8 @@ export default function BlogDetail() {
           </div>
 
           <div className="inner-breadcrumb-content">
-            <span className="inner-breadcrumb-tag">{blog?.is_featured ? 'Featured' : 'Blog Article'}</span>
-            <h1>
-              {blog?.title || 'Blog'}
-            </h1>
+            <span className="inner-breadcrumb-tag">{blog.is_featured ? 'Featured' : 'Blog Article'}</span>
+            <h1>{blog.title}</h1>
             <div className="inner-breadcrumb-links">
               <Link to="/">Home</Link>
               <i className="fa-solid fa-angle-right" />
@@ -181,7 +192,7 @@ export default function BlogDetail() {
       <section className="blog-detail-hero-wrap" aria-label="Article hero">
         <div className="">
           <figure className="blog-detail-hero">
-            <img src={heroSrc} alt={blog?.title || 'Blog article'} />
+            <img src={heroSrc} alt={blog.title} />
           </figure>
         </div>
       </section>
@@ -193,13 +204,13 @@ export default function BlogDetail() {
               <span className="blog-detail-meta-item">
                 <i className="fa-solid fa-user" aria-hidden="true" />
                 <span className="blog-detail-meta-label">Author</span>
-                <span className="blog-detail-meta-value">{blog?.author_name || 'San Jose Team'}</span>
+                <span className="blog-detail-meta-value">{blog.author_name || 'San Jose Team'}</span>
               </span>
               <span className="blog-detail-meta-divider" aria-hidden="true" />
               <span className="blog-detail-meta-item">
                 <i className="fa-solid fa-calendar-days" aria-hidden="true" />
                 <span className="blog-detail-meta-label">Published</span>
-                <span className="blog-detail-meta-value">{blog?.formatted_date || '-'}</span>
+                <span className="blog-detail-meta-value">{blog.formatted_date || '-'}</span>
               </span>
             </div>
           
@@ -210,17 +221,13 @@ export default function BlogDetail() {
       <article className="blog-article blog-article--luxury">
         <div className="container-fluid">
           <div className="blog-article-inner">
-            {loading && <p className="text-muted">Loading article...</p>}
-            {!loading && error && <p className="text-danger">{error}</p>}
-            {!loading && !error && blog && (
-              <section className="blog-article-section" id="content">
-                {hasHtml(blog.content) ? (
-                  <div className="blog-content-body" dangerouslySetInnerHTML={{ __html: blog.content }} />
-                ) : (
-                  <div className="blog-content-body">{parsePlainBlogContent(blog.content || '')}</div>
-                )}
-              </section>
-            )}
+            <section className="blog-article-section" id="content">
+              {hasHtml(blog.content) ? (
+                <div className="blog-content-body" dangerouslySetInnerHTML={{ __html: blog.content }} />
+              ) : (
+                <div className="blog-content-body">{parsePlainBlogContent(blog.content || '')}</div>
+              )}
+            </section>
 
          
             <div className="blog-article-footer-nav">
