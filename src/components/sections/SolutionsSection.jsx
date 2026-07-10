@@ -121,7 +121,7 @@ export function SolutionsSection({ hideOnMobile = false }) {
                                                     onClick={openFromSlide}
                                                     onKeyDown={onGalleryKeyDown}
                                                 >
-                                                    <img src="/assets/images/1.jpg" alt="The Wrap Ninjas logo" />
+                                                    <img src="/assets/images/1.png" alt="The Wrap Ninjas logo" />
                                                 </div>
                                             </div>
                                             <div className="swiper-slide">
@@ -133,7 +133,7 @@ export function SolutionsSection({ hideOnMobile = false }) {
                                                     onClick={openFromSlide}
                                                     onKeyDown={onGalleryKeyDown}
                                                 >
-                                                    <img src="/assets/images/22.jpg" alt="Big Kahuna logo" />
+                                                    <img src="/assets/images/2.png" alt="Big Kahuna logo" />
                                                 </div>
                                             </div>
                                             <div className="swiper-slide">
@@ -145,7 +145,7 @@ export function SolutionsSection({ hideOnMobile = false }) {
                                                     onClick={openFromSlide}
                                                     onKeyDown={onGalleryKeyDown}
                                                 >
-                                                    <img src="/assets/images/3.jpg" alt="Boss Hawgs logo" />
+                                                    <img src="/assets/images/3.png" alt="Boss Hawgs logo" />
                                                 </div>
                                             </div>
                                             <div className="swiper-slide">
@@ -157,7 +157,7 @@ export function SolutionsSection({ hideOnMobile = false }) {
                                                     onClick={openFromSlide}
                                                     onKeyDown={onGalleryKeyDown}
                                                 >
-                                                    <img src="/assets/images/4.jpg" alt="Nacho Business logo" />
+                                                    <img src="/assets/images/4.png" alt="Nacho Business logo" />
                                                 </div>
                                             </div>
                                             <div className="swiper-slide">
@@ -169,7 +169,7 @@ export function SolutionsSection({ hideOnMobile = false }) {
                                                     onClick={openFromSlide}
                                                     onKeyDown={onGalleryKeyDown}
                                                 >
-                                                    <img src="/assets/images/5.jpg" alt="City delivery van wrap" />
+                                                    <img src="/assets/images/5.png" alt="City delivery van wrap" />
                                                 </div>
                                             </div>
                                             <div className="swiper-slide">
@@ -181,7 +181,7 @@ export function SolutionsSection({ hideOnMobile = false }) {
                                                     onClick={openFromSlide}
                                                     onKeyDown={onGalleryKeyDown}
                                                 >
-                                                    <img src="/assets/images/6.jpg" alt="High-impact bus wrap design" />
+                                                    <img src="/assets/images/6.png" alt="High-impact bus wrap design" />
                                                 </div>
                                             </div>
                                         </div>

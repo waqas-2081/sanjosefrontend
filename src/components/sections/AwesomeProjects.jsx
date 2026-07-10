@@ -34,7 +34,7 @@ export function AwesomeProjects({ variant } = {}) {
                         <img src="/assets/images/portfolio/logo/5.png" alt="Fence Pros of Texas project" />
                     </div>
                     <div className="awesome-project-card">
-                        <img src="/assets/images/portfolio/logo/3.png" alt="Blue Tiger project" />
+                        <img src="/assets/images/portfolio/logo/6.png" alt="Blue Tiger project" />
                     </div>
                 </div>
             </div>
