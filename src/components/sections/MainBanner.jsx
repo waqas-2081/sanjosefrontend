@@ -4,10 +4,23 @@ export function MainBanner() {
     <section className="main-banner">
         <div className="banner-images">
             <div className="bg-image">
-                <img src="/assets/images/banner/banner.png" alt="" />
+                <img
+                  src="/assets/images/banner/banner.webp"
+                  alt=""
+                  width={1903}
+                  height={1140}
+                  fetchPriority="high"
+                  decoding="async"
+                />
             </div>
             <div className="main-banner-image">
-                <img src="/assets/images/banner/main_banner.png" alt="" />
+                <img
+                  src="/assets/images/banner/main_banner.webp"
+                  alt=""
+                  width={1504}
+                  height={648}
+                  decoding="async"
+                />
             </div>
         </div>
         <div className="banner-content">

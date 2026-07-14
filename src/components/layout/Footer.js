@@ -7,7 +7,14 @@ export default function Footer() {
       <div className="container-fluid">
         <div className="footer-cta">
           <div className="image">
-            <img src="/assets/images/cta.png" alt="" />
+            <img
+              src="/assets/images/cta.webp"
+              alt=""
+              width={858}
+              height={791}
+              decoding="async"
+              loading="lazy"
+            />
           </div>
           <div className="cta-content">
             <h2>
@@ -33,7 +40,14 @@ export default function Footer() {
             <div className="footer-brand">
               <div className="footer-logo">
                 <Link to="/">
-                  <img src="/assets/images/logo/logo-white.png" alt="" />
+                  <img
+                    src="/assets/images/logo/logo-white.png"
+                    alt="San Jose Logo Design"
+                    width={1487}
+                    height={531}
+                    decoding="async"
+                    loading="lazy"
+                  />
                 </Link>
               </div>
               <p>

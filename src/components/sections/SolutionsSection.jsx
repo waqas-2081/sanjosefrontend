@@ -80,7 +80,7 @@ export function SolutionsSection({ hideOnMobile = false }) {
   return (
     <>
     <section className={`solutions-sec${hideOnMobile ? ' solutions-sec--hide-mobile' : ''}`}>
-        <img src="/assets/images/icon/section_bottom_shape.svg" alt="" className="section_top_shape" />
+        <img loading="lazy" decoding="async" src="/assets/images/icon/section_bottom_shape.svg" alt="" className="section_top_shape" />
         <div className="container-fluid">
             <div className="solutions-header">
                 <h3>Our <span>Solutions</span></h3>
@@ -107,6 +107,7 @@ export function SolutionsSection({ hideOnMobile = false }) {
                         </div>
                     </button>
                     <div className="solution-accordion-content">
+                        {openSolution === 'branding' ? (
                         <div className="solution-accordion-inner">
                             <div className="row align-items-center">
                                 <div className="col-lg-12">
@@ -121,7 +122,7 @@ export function SolutionsSection({ hideOnMobile = false }) {
                                                     onClick={openFromSlide}
                                                     onKeyDown={onGalleryKeyDown}
                                                 >
-                                                    <img src="/assets/images/1.png" alt="The Wrap Ninjas logo" />
+                                                    <img loading="lazy" decoding="async" src="/assets/images/1.webp" alt="The Wrap Ninjas logo" />
                                                 </div>
                                             </div>
                                             <div className="swiper-slide">
@@ -133,7 +134,7 @@ export function SolutionsSection({ hideOnMobile = false }) {
                                                     onClick={openFromSlide}
                                                     onKeyDown={onGalleryKeyDown}
                                                 >
-                                                    <img src="/assets/images/2.png" alt="Big Kahuna logo" />
+                                                    <img loading="lazy" decoding="async" src="/assets/images/2.webp" alt="Big Kahuna logo" />
                                                 </div>
                                             </div>
                                             <div className="swiper-slide">
@@ -145,7 +146,7 @@ export function SolutionsSection({ hideOnMobile = false }) {
                                                     onClick={openFromSlide}
                                                     onKeyDown={onGalleryKeyDown}
                                                 >
-                                                    <img src="/assets/images/3.png" alt="Boss Hawgs logo" />
+                                                    <img loading="lazy" decoding="async" src="/assets/images/3.webp" alt="Boss Hawgs logo" />
                                                 </div>
                                             </div>
                                             <div className="swiper-slide">
@@ -157,7 +158,7 @@ export function SolutionsSection({ hideOnMobile = false }) {
                                                     onClick={openFromSlide}
                                                     onKeyDown={onGalleryKeyDown}
                                                 >
-                                                    <img src="/assets/images/4.png" alt="Nacho Business logo" />
+                                                    <img loading="lazy" decoding="async" src="/assets/images/4.webp" alt="Nacho Business logo" />
                                                 </div>
                                             </div>
                                             <div className="swiper-slide">
@@ -169,7 +170,7 @@ export function SolutionsSection({ hideOnMobile = false }) {
                                                     onClick={openFromSlide}
                                                     onKeyDown={onGalleryKeyDown}
                                                 >
-                                                    <img src="/assets/images/5.png" alt="City delivery van wrap" />
+                                                    <img loading="lazy" decoding="async" src="/assets/images/5.webp" alt="City delivery van wrap" />
                                                 </div>
                                             </div>
                                             <div className="swiper-slide">
@@ -181,7 +182,7 @@ export function SolutionsSection({ hideOnMobile = false }) {
                                                     onClick={openFromSlide}
                                                     onKeyDown={onGalleryKeyDown}
                                                 >
-                                                    <img src="/assets/images/6.png" alt="High-impact bus wrap design" />
+                                                    <img loading="lazy" decoding="async" src="/assets/images/6.webp" alt="High-impact bus wrap design" />
                                                 </div>
                                             </div>
                                         </div>
@@ -206,6 +207,7 @@ export function SolutionsSection({ hideOnMobile = false }) {
                                 </div>
                             </div>
                         </div>
+                        ) : null}
                     </div>
                 </div>
 
@@ -229,6 +231,7 @@ export function SolutionsSection({ hideOnMobile = false }) {
                         </div>
                     </button>
                     <div className="solution-accordion-content">
+                        {openSolution === 'vehicle' ? (
                         <div className="solution-accordion-inner">
                             <div className="row align-items-center">
                                 <div className="col-lg-12">
@@ -243,7 +246,7 @@ export function SolutionsSection({ hideOnMobile = false }) {
                                                     onClick={openFromSlide}
                                                     onKeyDown={onGalleryKeyDown}
                                                 >
-                                                    <img src="/assets/images/our-solutions/vehicle-wrap-design/1.png"
+                                                    <img loading="lazy" decoding="async" src="/assets/images/our-solutions/vehicle-wrap-design/1.webp"
                                                         alt="Premium fleet wrap design" />
                                                 </div>
                                             </div>
@@ -256,7 +259,7 @@ export function SolutionsSection({ hideOnMobile = false }) {
                                                     onClick={openFromSlide}
                                                     onKeyDown={onGalleryKeyDown}
                                                 >
-                                                    <img src="/assets/images/our-solutions/vehicle-wrap-design/2.png"
+                                                    <img loading="lazy" decoding="async" src="/assets/images/our-solutions/vehicle-wrap-design/2.webp"
                                                         alt="City delivery van wrap" />
                                                 </div>
                                             </div>
@@ -269,7 +272,7 @@ export function SolutionsSection({ hideOnMobile = false }) {
                                                     onClick={openFromSlide}
                                                     onKeyDown={onGalleryKeyDown}
                                                 >
-                                                    <img src="/assets/images/our-solutions/vehicle-wrap-design/3.png"
+                                                    <img loading="lazy" decoding="async" src="/assets/images/our-solutions/vehicle-wrap-design/3.webp"
                                                         alt="High-impact bus wrap design" />
                                                 </div>
                                             </div>
@@ -282,7 +285,7 @@ export function SolutionsSection({ hideOnMobile = false }) {
                                                     onClick={openFromSlide}
                                                     onKeyDown={onGalleryKeyDown}
                                                 >
-                                                    <img src="/assets/images/our-solutions/vehicle-wrap-design/4.png"
+                                                    <img loading="lazy" decoding="async" src="/assets/images/our-solutions/vehicle-wrap-design/4.webp"
                                                         alt="City delivery van wrap" />
                                                 </div>
                                             </div>
@@ -295,7 +298,7 @@ export function SolutionsSection({ hideOnMobile = false }) {
                                                     onClick={openFromSlide}
                                                     onKeyDown={onGalleryKeyDown}
                                                 >
-                                                    <img src="/assets/images/our-solutions/vehicle-wrap-design/5.png"
+                                                    <img loading="lazy" decoding="async" src="/assets/images/our-solutions/vehicle-wrap-design/5.webp"
                                                         alt="High-impact bus wrap design" />
                                                 </div>
                                             </div>
@@ -320,6 +323,7 @@ export function SolutionsSection({ hideOnMobile = false }) {
                                 </div>
                             </div>
                         </div>
+                        ) : null}
                     </div>
                 </div>
 
@@ -342,6 +346,7 @@ export function SolutionsSection({ hideOnMobile = false }) {
                         </div>
                     </button>
                     <div className="solution-accordion-content">
+                        {openSolution === 'website' ? (
                         <div className="solution-accordion-inner">
                             <div className="row align-items-center">
                                 <div className="col-lg-12">
@@ -356,7 +361,7 @@ export function SolutionsSection({ hideOnMobile = false }) {
                                                     onClick={openFromSlide}
                                                     onKeyDown={onGalleryKeyDown}
                                                 >
-                                                    <img src="/assets/images/our-solutions/website/1.png"
+                                                    <img loading="lazy" decoding="async" src="/assets/images/our-solutions/website/1.webp"
                                                         alt="Premium fleet wrap design" />
                                                 </div>
                                             </div>
@@ -369,7 +374,7 @@ export function SolutionsSection({ hideOnMobile = false }) {
                                                     onClick={openFromSlide}
                                                     onKeyDown={onGalleryKeyDown}
                                                 >
-                                                    <img src="/assets/images/our-solutions/website/2.png"
+                                                    <img loading="lazy" decoding="async" src="/assets/images/our-solutions/website/2.webp"
                                                         alt="City delivery van wrap" />
                                                 </div>
                                             </div>
@@ -382,7 +387,7 @@ export function SolutionsSection({ hideOnMobile = false }) {
                                                     onClick={openFromSlide}
                                                     onKeyDown={onGalleryKeyDown}
                                                 >
-                                                    <img src="/assets/images/our-solutions/website/3.png"
+                                                    <img loading="lazy" decoding="async" src="/assets/images/our-solutions/website/3.webp"
                                                         alt="High-impact bus wrap design" />
                                                 </div>
                                             </div>
@@ -395,7 +400,7 @@ export function SolutionsSection({ hideOnMobile = false }) {
                                                     onClick={openFromSlide}
                                                     onKeyDown={onGalleryKeyDown}
                                                 >
-                                                    <img src="/assets/images/our-solutions/website/4.png"
+                                                    <img loading="lazy" decoding="async" src="/assets/images/our-solutions/website/4.webp"
                                                         alt="City delivery van wrap" />
                                                 </div>
                                             </div>
@@ -408,7 +413,7 @@ export function SolutionsSection({ hideOnMobile = false }) {
                                                     onClick={openFromSlide}
                                                     onKeyDown={onGalleryKeyDown}
                                                 >
-                                                    <img src="/assets/images/our-solutions/website/5.png"
+                                                    <img loading="lazy" decoding="async" src="/assets/images/our-solutions/website/5.webp"
                                                         alt="High-impact bus wrap design" />
                                                 </div>
                                             </div>
@@ -433,6 +438,7 @@ export function SolutionsSection({ hideOnMobile = false }) {
                                 </div>
                             </div>
                         </div>
+                        ) : null}
                     </div>
                 </div>
 
@@ -455,6 +461,7 @@ export function SolutionsSection({ hideOnMobile = false }) {
                         </div>
                     </button>
                     <div className="solution-accordion-content">
+                        {openSolution === 'mobile-apps' ? (
                         <div className="solution-accordion-inner">
                             <div className="row align-items-center">
                                 <div className="col-lg-12">
@@ -469,7 +476,7 @@ export function SolutionsSection({ hideOnMobile = false }) {
                                                     onClick={openFromSlide}
                                                     onKeyDown={onGalleryKeyDown}
                                                 >
-                                                    <img src="/assets/images/our-solutions/mobile-app-design/1.png"
+                                                    <img loading="lazy" decoding="async" src="/assets/images/our-solutions/mobile-app-design/1.webp"
                                                         alt="Premium fleet wrap design" />
                                                 </div>
                                             </div>
@@ -482,7 +489,7 @@ export function SolutionsSection({ hideOnMobile = false }) {
                                                     onClick={openFromSlide}
                                                     onKeyDown={onGalleryKeyDown}
                                                 >
-                                                    <img src="/assets/images/our-solutions/mobile-app-design/2.png"
+                                                    <img loading="lazy" decoding="async" src="/assets/images/our-solutions/mobile-app-design/2.webp"
                                                         alt="City delivery van wrap" />
                                                 </div>
                                             </div>
@@ -495,7 +502,7 @@ export function SolutionsSection({ hideOnMobile = false }) {
                                                     onClick={openFromSlide}
                                                     onKeyDown={onGalleryKeyDown}
                                                 >
-                                                    <img src="/assets/images/our-solutions/mobile-app-design/3.png"
+                                                    <img loading="lazy" decoding="async" src="/assets/images/our-solutions/mobile-app-design/3.webp"
                                                         alt="High-impact bus wrap design" />
                                                 </div>
                                             </div>
@@ -508,7 +515,7 @@ export function SolutionsSection({ hideOnMobile = false }) {
                                                     onClick={openFromSlide}
                                                     onKeyDown={onGalleryKeyDown}
                                                 >
-                                                    <img src="/assets/images/our-solutions/mobile-app-design/4.png"
+                                                    <img loading="lazy" decoding="async" src="/assets/images/our-solutions/mobile-app-design/4.webp"
                                                         alt="City delivery van wrap" />
                                                 </div>
                                             </div>
@@ -521,7 +528,7 @@ export function SolutionsSection({ hideOnMobile = false }) {
                                                     onClick={openFromSlide}
                                                     onKeyDown={onGalleryKeyDown}
                                                 >
-                                                    <img src="/assets/images/our-solutions/mobile-app-design/5.png"
+                                                    <img loading="lazy" decoding="async" src="/assets/images/our-solutions/mobile-app-design/5.webp"
                                                         alt="High-impact bus wrap design" />
                                                 </div>
                                             </div>
@@ -546,6 +553,7 @@ export function SolutionsSection({ hideOnMobile = false }) {
                                 </div>
                             </div>
                         </div>
+                        ) : null}
                     </div>
                 </div>
 
@@ -568,6 +576,7 @@ export function SolutionsSection({ hideOnMobile = false }) {
                         </div>
                     </button>
                     <div className="solution-accordion-content">
+                        {openSolution === 'digital-marketing' ? (
                         <div className="solution-accordion-inner">
                             <div className="row align-items-center">
                                 <div className="col-lg-12">
@@ -582,7 +591,7 @@ export function SolutionsSection({ hideOnMobile = false }) {
                                                     onClick={openFromSlide}
                                                     onKeyDown={onGalleryKeyDown}
                                                 >
-                                                    <img src="/assets/images/our-solutions/marketing/1.png"
+                                                    <img loading="lazy" decoding="async" src="/assets/images/our-solutions/marketing/1.webp"
                                                         alt="Premium fleet wrap design" />
                                                 </div>
                                             </div>
@@ -595,7 +604,7 @@ export function SolutionsSection({ hideOnMobile = false }) {
                                                     onClick={openFromSlide}
                                                     onKeyDown={onGalleryKeyDown}
                                                 >
-                                                    <img src="/assets/images/our-solutions/marketing/2.png"
+                                                    <img loading="lazy" decoding="async" src="/assets/images/our-solutions/marketing/2.webp"
                                                         alt="City delivery van wrap" />
                                                 </div>
                                             </div>
@@ -608,7 +617,7 @@ export function SolutionsSection({ hideOnMobile = false }) {
                                                     onClick={openFromSlide}
                                                     onKeyDown={onGalleryKeyDown}
                                                 >
-                                                    <img src="/assets/images/our-solutions/marketing/3.png"
+                                                    <img loading="lazy" decoding="async" src="/assets/images/our-solutions/marketing/3.webp"
                                                         alt="High-impact bus wrap design" />
                                                 </div>
                                             </div>
@@ -621,7 +630,7 @@ export function SolutionsSection({ hideOnMobile = false }) {
                                                     onClick={openFromSlide}
                                                     onKeyDown={onGalleryKeyDown}
                                                 >
-                                                    <img src="/assets/images/our-solutions/marketing/4.png"
+                                                    <img loading="lazy" decoding="async" src="/assets/images/our-solutions/marketing/4.webp"
                                                         alt="City delivery van wrap" />
                                                 </div>
                                             </div>
@@ -634,7 +643,7 @@ export function SolutionsSection({ hideOnMobile = false }) {
                                                     onClick={openFromSlide}
                                                     onKeyDown={onGalleryKeyDown}
                                                 >
-                                                    <img src="/assets/images/our-solutions/marketing/5.png"
+                                                    <img loading="lazy" decoding="async" src="/assets/images/our-solutions/marketing/5.webp"
                                                         alt="High-impact bus wrap design" />
                                                 </div>
                                             </div>
@@ -659,6 +668,7 @@ export function SolutionsSection({ hideOnMobile = false }) {
                                 </div>
                             </div>
                         </div>
+                        ) : null}
                     </div>
                 </div>
 
@@ -681,6 +691,7 @@ export function SolutionsSection({ hideOnMobile = false }) {
                         </div>
                     </button>
                     <div className="solution-accordion-content">
+                        {openSolution === 'seo' ? (
                         <div className="solution-accordion-inner">
                             <div className="row align-items-center">
                                 <div className="col-lg-12">
@@ -695,7 +706,7 @@ export function SolutionsSection({ hideOnMobile = false }) {
                                                     onClick={openFromSlide}
                                                     onKeyDown={onGalleryKeyDown}
                                                 >
-                                                    <img src="/assets/images/our-solutions/seo-and-content/1.png"
+                                                    <img loading="lazy" decoding="async" src="/assets/images/our-solutions/seo-and-content/1.png"
                                                         alt="Premium fleet wrap design" />
                                                 </div>
                                             </div>
@@ -708,7 +719,7 @@ export function SolutionsSection({ hideOnMobile = false }) {
                                                     onClick={openFromSlide}
                                                     onKeyDown={onGalleryKeyDown}
                                                 >
-                                                    <img src="/assets/images/our-solutions/seo-and-content/2.png"
+                                                    <img loading="lazy" decoding="async" src="/assets/images/our-solutions/seo-and-content/2.png"
                                                         alt="City delivery van wrap" />
                                                 </div>
                                             </div>
@@ -721,7 +732,7 @@ export function SolutionsSection({ hideOnMobile = false }) {
                                                     onClick={openFromSlide}
                                                     onKeyDown={onGalleryKeyDown}
                                                 >
-                                                    <img src="/assets/images/our-solutions/seo-and-content/3.png"
+                                                    <img loading="lazy" decoding="async" src="/assets/images/our-solutions/seo-and-content/3.png"
                                                         alt="High-impact bus wrap design" />
                                                 </div>
                                             </div>
@@ -734,7 +745,7 @@ export function SolutionsSection({ hideOnMobile = false }) {
                                                     onClick={openFromSlide}
                                                     onKeyDown={onGalleryKeyDown}
                                                 >
-                                                    <img src="/assets/images/our-solutions/seo-and-content/4.png"
+                                                    <img loading="lazy" decoding="async" src="/assets/images/our-solutions/seo-and-content/4.png"
                                                         alt="City delivery van wrap" />
                                                 </div>
                                             </div>
@@ -747,7 +758,7 @@ export function SolutionsSection({ hideOnMobile = false }) {
                                                     onClick={openFromSlide}
                                                     onKeyDown={onGalleryKeyDown}
                                                 >
-                                                    <img src="/assets/images/our-solutions/seo-and-content/5.png"
+                                                    <img loading="lazy" decoding="async" src="/assets/images/our-solutions/seo-and-content/5.png"
                                                         alt="High-impact bus wrap design" />
                                                 </div>
                                             </div>
@@ -772,6 +783,7 @@ export function SolutionsSection({ hideOnMobile = false }) {
                                 </div>
                             </div>
                         </div>
+                        ) : null}
                     </div>
                 </div>
             </div>

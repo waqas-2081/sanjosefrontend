@@ -1537,6 +1537,7 @@ section {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-top: 28px;
 }
 
 .solution-cta p {
@@ -2052,6 +2053,8 @@ section {
     padding: 10px;
     margin-bottom: 18px;
     width: 200px;
+    height: auto;
+    aspect-ratio: 1487 / 531;
 }
 
 .footer-brand p {
@@ -2232,6 +2235,9 @@ section {
 
 .footer-cta .image img {
     width: 100%;
+    height: auto;
+    aspect-ratio: 858 / 791;
+    display: block;
 }
 
 .footer-cta .cta-content {

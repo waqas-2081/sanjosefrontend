@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { mountLegacyWidgets, teardownLegacyWidgets } from '../../lib/legacyWidgets';
 import { PackageCheckoutProvider } from '../../context/PackageCheckoutContext';
@@ -19,7 +19,8 @@ export default function MainLayout() {
     return undefined;
   }, [pathname]);
 
-  useLayoutEffect(() => {
+  /* After paint so Swiper/Owl measure don't force reflow during LCP */
+  useEffect(() => {
     teardownLegacyWidgets();
     frameRef.current = requestAnimationFrame(() => {
       mountLegacyWidgets();

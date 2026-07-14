@@ -164,35 +164,33 @@ export function initGlobalScrollMotion(root = document) {
     }
   );
 
-  const resetForReplay = () => {
+  const measureAndReveal = () => {
     const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 900;
-
-    uniqueTargets.forEach((el) => {
-      el.classList.remove('is-revealed');
-      observe(el);
-    });
-
-    uniqueTargets.forEach((el) => {
-      const rect = el.getBoundingClientRect();
-      if (isElementVisibleForInitialState(rect, viewportHeight)) {
+    /* Batch all geometry reads in one frame (avoids forced reflow after style writes) */
+    const rects = uniqueTargets.map((el) => el.getBoundingClientRect());
+    uniqueTargets.forEach((el, i) => {
+      if (isElementVisibleForInitialState(rects[i], viewportHeight)) {
         reveal(el);
+      } else {
+        observe(el);
       }
     });
   };
 
-  const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 900;
-  uniqueTargets.forEach((el) => {
-    const rect = el.getBoundingClientRect();
-    if (isElementVisibleForInitialState(rect, viewportHeight)) {
-      reveal(el);
-      return;
-    }
-    observe(el);
-  });
+  const resetForReplay = () => {
+    uniqueTargets.forEach((el) => {
+      el.classList.remove('is-revealed');
+      observe(el);
+    });
+    requestAnimationFrame(measureAndReveal);
+  };
+
+  const measureRaf = requestAnimationFrame(measureAndReveal);
 
   const teardownScrollReplay = onScrollTopReplay(resetForReplay);
 
   return () => {
+    cancelAnimationFrame(measureRaf);
     teardownScrollReplay();
     observer.disconnect();
     observed.clear();

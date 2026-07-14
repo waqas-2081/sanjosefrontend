@@ -4,41 +4,130 @@
     <meta charset="utf-8" />
     <link rel="icon" href="/assets/images/favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
- 
+
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+
+    <!-- Faster connection setup for CDNs (does not change UI) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com" />
+
+    <!-- LCP: discover banner image in initial HTML (React paints later) -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Mona+Sans:ital,wght@0,200..900;1,200..900&display=swap"
-      rel="stylesheet"
+      rel="preload"
+      as="image"
+      href="%PUBLIC_URL%/assets/images/banner/banner.webp"
+      fetchpriority="high"
+      type="image/webp"
+    />
+
+    <!--
+      Critical CSS stays render-blocking so first paint matches the live UI.
+      Third-party / widget CSS is loaded async (same files, same styles).
+    -->
+    <link
+      rel="preload"
+      as="style"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
     />
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
     />
+    <link rel="stylesheet" href="%PUBLIC_URL%/assets/css/style.css" />
+    <link rel="stylesheet" href="%PUBLIC_URL%/assets/css/responsive.css" />
+    <link rel="stylesheet" href="%PUBLIC_URL%/assets/css/mobile-nav.css" />
+
+    <!-- Preload critical latin fonts early to cut font-swap CLS (same faces, same look) -->
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      crossorigin
+      href="https://fonts.gstatic.com/s/bebasneue/v16/JTUSjIg69CK48gW7PXoo9WlhyyTh89Y.woff2"
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      crossorigin
+      href="https://fonts.gstatic.com/s/monasans/v4/o-0bIpQmx24alC5A4PNB6Ryti20_6n1iPHjc5a7du3mhPy0.woff2"
+    />
+
+    <!-- Google Fonts: upright variable only (same look; drops unused italic axis) -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Mona+Sans:wght@200..900&display=swap"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Mona+Sans:wght@200..900&display=swap"
+      />
+    </noscript>
+
+    <!--
+      Icons + carousel/lightbox CSS: same files/same look, non-blocking for FCP/LCP.
+      media=print + onload is the standard pattern — styles apply fully once loaded.
+    -->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      media="print"
+      onload="this.media='all'"
     />
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@5.0.7/dist/fancybox/fancybox.css"
+      media="print"
+      onload="this.media='all'"
     />
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+      media="print"
+      onload="this.media='all'"
     />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css"
+      media="print"
+      onload="this.media='all'"
     />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css"
+      media="print"
+      onload="this.media='all'"
     />
-    <link rel="stylesheet" href="%PUBLIC_URL%/assets/css/style.css" />
-    <link rel="stylesheet" href="%PUBLIC_URL%/assets/css/responsive.css" />
-    <link rel="stylesheet" href="%PUBLIC_URL%/assets/css/mobile-nav.css" />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      />
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@5.0.7/dist/fancybox/fancybox.css"
+      />
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+      />
+      <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css"
+      />
+      <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css"
+      />
+    </noscript>
+
     <title>Award-Winning San Jose Logo Design &amp; Branding Agency</title>
     <meta
       name="description"
@@ -65,94 +154,109 @@
       content="Custom logo design, branding, web design &amp; SEO in San Jose. We've helped businesses grow revenue by 255%+ through strategic designs and marketing."
     />
     <script src="%PUBLIC_URL%/seo-boot.js"></script>
-
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=UA-215567117-1"
-    ></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag("js", new Date());
-
-      gtag("config", "UA-215567117-1");
-    </script>
-
-    
-
-    <script type="text/javascript">
-      (function (c, l, a, r, i, t, y) {
-        c[a] =
-          c[a] ||
-          function () {
-            (c[a].q = c[a].q || []).push(arguments);
-          };
-        t = l.createElement(r);
-        t.async = 1;
-        t.src = "https://www.clarity.ms/tag/" + i;
-        y = l.getElementsByTagName(r)[0];
-        y.parentNode.insertBefore(t, y);
-      })(window, document, "clarity", "script", "gnzeg92pf4");
-    </script>
-
-
-<!-- Meta Pixel Code -->
-<script>
-!function(f,b,e,v,n,t,s)
-{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window, document,'script',
-'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '986059304336051');
-fbq('track', 'PageView');
-</script>
-<noscript><img height="1" width="1" style="display:none"
-src="https://www.facebook.com/tr?id=986059304336051&ev=PageView&noscript=1"
-/></noscript>
-<!-- End Meta Pixel Code -->
-
-    <!-- Hotjar Tracking Code -->
-    <script>
-        (function(h,o,t,j,a,r){
-            h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
-            h._hjSettings={hjid:2835202,hjsv:6};
-            a=o.getElementsByTagName('head')[0];
-            r=o.createElement('script');r.async=1;
-            r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
-            a.appendChild(r);
-        })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
-    </script>
-
-
-    <!--Start of Tawk.to Script-->
-    <script type="text/javascript">
-    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-    (function(){
-    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-    s1.async=true;
-    s1.src='https://embed.tawk.to/68dd7e796d9210194d3451a1/1j6gjc3el';
-    s1.charset='UTF-8';
-    s1.setAttribute('crossorigin','*');
-    s0.parentNode.insertBefore(s1,s0);
-    })();
-    </script>
-    <!--End of Tawk.to Script-->
-
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@5.0.7/dist/fancybox/fancybox.umd.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+    <!-- Widget libs: deferred so they don't compete with first paint (order preserved) -->
+    <script
+      defer
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+    ></script>
+    <script
+      defer
+      src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"
+    ></script>
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    ></script>
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@5.0.7/dist/fancybox/fancybox.umd.js"
+    ></script>
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"
+    ></script>
+
+    <!-- Analytics / chat: load only after first user interaction (keeps FCP/LCP clean) -->
+    <script>
+      (function () {
+        var loaded = false;
+        var events = ['pointerdown', 'touchstart', 'scroll', 'keydown', 'mousemove'];
+
+        function loadAnalytics() {
+          if (loaded) return;
+          loaded = true;
+          events.forEach(function (e) {
+            window.removeEventListener(e, loadAnalytics, { capture: true });
+          });
+
+          /* Google Analytics */
+          var g = document.createElement('script');
+          g.async = true;
+          g.src = 'https://www.googletagmanager.com/gtag/js?id=UA-215567117-1';
+          document.head.appendChild(g);
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          window.gtag = gtag;
+          gtag('js', new Date());
+          gtag('config', 'UA-215567117-1');
+
+          /* Microsoft Clarity */
+          (function (c, l, a, r, i, t, y) {
+            c[a] =
+              c[a] ||
+              function () {
+                (c[a].q = c[a].q || []).push(arguments);
+              };
+            t = l.createElement(r);
+            t.async = 1;
+            t.src = 'https://www.clarity.ms/tag/' + i;
+            y = l.getElementsByTagName(r)[0];
+            y.parentNode.insertBefore(t, y);
+          })(window, document, 'clarity', 'script', 'gnzeg92pf4');
+
+          /* Meta Pixel */
+          !(function (f, b, e, v, n, t, s) {
+            if (f.fbq) return;
+            n = f.fbq = function () {
+              n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
+            };
+            if (!f._fbq) f._fbq = n;
+            n.push = n;
+            n.loaded = !0;
+            n.version = '2.0';
+            n.queue = [];
+            t = b.createElement(e);
+            t.async = !0;
+            t.src = v;
+            s = b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t, s);
+          })(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+          fbq('init', '986059304336051');
+          fbq('track', 'PageView');
+
+          /* Tawk.to */
+          window.Tawk_API = window.Tawk_API || {};
+          window.Tawk_LoadStart = new Date();
+          var s1 = document.createElement('script');
+          var s0 = document.getElementsByTagName('script')[0];
+          s1.async = true;
+          s1.src = 'https://embed.tawk.to/68dd7e796d9210194d3451a1/1j6gjc3el';
+          s1.charset = 'UTF-8';
+          s1.setAttribute('crossorigin', '*');
+          s0.parentNode.insertBefore(s1, s0);
+        }
+
+        events.forEach(function (e) {
+          window.addEventListener(e, loadAnalytics, { once: true, passive: true, capture: true });
+        });
+      })();
+    </script>
   </body>
 </html>

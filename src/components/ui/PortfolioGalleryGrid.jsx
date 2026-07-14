@@ -94,9 +94,9 @@ export function PortfolioGalleryGrid({
                         onKeyDown={(e) => onCardKeyDown(e, index)}
                       >
                         {item.kind === 'video' ? (
-                          <video src={item.src} loop muted autoPlay playsInline />
+                          <video src={item.src} loop muted autoPlay playsInline preload="metadata" />
                         ) : (
-                          <img src={item.src} alt={item.alt} />
+                          <img src={item.src} alt={item.alt} loading="lazy" decoding="async" />
                         )}
                         <div className="content">
                           <h3>Services</h3>

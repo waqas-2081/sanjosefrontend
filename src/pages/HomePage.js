@@ -178,8 +178,8 @@ const HOME_PAGE_SCHEMA = {
     {
       '@type': 'ImageObject',
       '@id': 'https://sanjoselogodesign.com/#primaryimage',
-      url: 'https://sanjoselogodesign.com/assets/images/banner/main_banner.png',
-      contentUrl: 'https://sanjoselogodesign.com/assets/images/banner/main_banner.png',
+      url: 'https://sanjoselogodesign.com/assets/images/banner/main_banner.webp',
+      contentUrl: 'https://sanjoselogodesign.com/assets/images/banner/main_banner.webp',
       caption: 'San Jose Logo Design Digital Agency',
     },
   ],
@@ -198,6 +198,7 @@ export default function HomePage() {
     if (loading) return undefined;
     const timers = [];
     let teardownMotion = () => {};
+    let idleId;
 
     const remount = () => {
       teardownLegacyWidgets();
@@ -205,16 +206,23 @@ export default function HomePage() {
     };
 
     const frame = window.requestAnimationFrame(remount);
-    const motionFrame = window.requestAnimationFrame(() => {
+    const startMotion = () => {
       teardownMotion();
       teardownMotion = initGlobalScrollMotion(document);
-    });
+    };
+    if ('requestIdleCallback' in window) {
+      idleId = window.requestIdleCallback(startMotion, { timeout: 1500 });
+    } else {
+      timers.push(window.setTimeout(startMotion, 50));
+    }
     timers.push(window.setTimeout(remount, 250));
     timers.push(window.setTimeout(remount, 900));
 
     return () => {
       window.cancelAnimationFrame(frame);
-      window.cancelAnimationFrame(motionFrame);
+      if (idleId != null && 'cancelIdleCallback' in window) {
+        window.cancelIdleCallback(idleId);
+      }
       timers.forEach((timer) => window.clearTimeout(timer));
       teardownMotion();
     };
