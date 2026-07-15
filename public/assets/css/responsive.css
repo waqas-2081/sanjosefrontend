@@ -265,15 +265,77 @@
         height: auto;
     }
 
+    /* User + menu: same size, vertically centered, hover keeps icon visible */
     .main-header .contact-info {
+        display: flex;
+        position: absolute;
+        top: 50%;
+        right: 62px;
+        transform: translateY(-50%);
+        z-index: 101;
+        gap: 0;
+        margin: 0;
+        padding: 0;
+        justify-content: flex-end;
+        align-items: center;
+    }
+
+    .main-header .contact-info .google-rating-badge,
+    .main-header .contact-info > .btn {
+        display: none !important;
+    }
+
+    .main-header .contact-info .header-user-btn {
+        box-sizing: border-box;
+        width: 44px;
+        height: 44px;
+        min-width: 44px;
+        min-height: 44px;
+        padding: 0;
+        margin: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 999px;
+        border: 1.5px solid rgba(5, 8, 27, 0.22);
+        background: #ffffff;
+        color: #05081b;
+        line-height: 1;
+        gap: 0;
+    }
+
+    .main-header .contact-info .header-user-btn:hover,
+    .main-header .contact-info .header-user-btn:focus-visible {
+        background: #05081b;
+        border-color: #05081b;
+        color: #ffffff;
+    }
+
+    .main-header .contact-info .header-user-btn svg {
+        width: 18px;
+        height: 18px;
+        display: block;
+        flex-shrink: 0;
+    }
+
+    .main-header .contact-info .header-user-btn__name {
         display: none;
     }
 
     .main-header .header-toggle {
         display: flex;
         position: absolute;
-        top: 14px;
+        top: 50%;
         right: 13px;
+        transform: translateY(-50%);
+        width: 44px;
+        height: 44px;
+        margin: 0;
+        z-index: 101;
+    }
+
+    .main-header.nav-open .header-toggle {
+        transform: translateY(-50%);
     }
 
     /* Drawer slide + scroll lock → assets/css/mobile-nav.css */
@@ -504,32 +566,58 @@
     .main-banner .banner-content {
         top: clamp(8px, 2.5vh, 22px);
         left: 50%;
-        transform: translate(-54%, 55%);
+        right: auto;
+        transform: translate(-50%, 55%);
         height: auto;
-        padding: 0 12px;
+        width: 100%;
+        max-width: 100%;
+        padding: 0 16px;
+        box-sizing: border-box;
         z-index: 6;
     }
 
     .main-banner .banner-content h1 {
-        font-size: clamp(42px, 10vw, 56px);
+        font-size: 46px;
         line-height: 0.95;
         margin-top: 0;
+        margin-left: 0;
+        margin-right: 0;
+        max-width: 100%;
+        width: 100%;
+        box-sizing: border-box;
+        transform: rotate(-4deg);
+        letter-spacing: -0.5px;
+    }
+
+    .main-banner .banner-images .bg-image {
+        height: min(48vh, 400px);
+        overflow: hidden;
     }
 
     .main-banner .banner-images .bg-image img {
-        height: min(46vh, 380px);
-        object-position: 50% 88%;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center 55%;
     }
 
     .main-banner .banner-images .main-banner-image {
-        transform: translate(-50%, 0%);
+        top: auto;
         bottom: 0;
+        left: 50%;
+        transform: translate(-50%, 0%);
         width: 100%;
+        height: auto;
+        max-height: none;
+        align-items: flex-end;
         z-index: 4;
     }
 
     .main-banner .banner-images .main-banner-image img {
-        width: min(100%, 440px);
+        width: 92% !important;
+        max-width: 420px;
+        height: auto !important;
+        object-fit: contain;
         display: block;
     }
 
@@ -780,17 +868,26 @@
 
 @media (max-width: 400px) {
     .main-banner .banner-content h1 {
-        font-size: 38px;
+        font-size: 40px;
         line-height: 0.92;
     }
 
+    .main-banner .banner-images .bg-image {
+        height: min(44vh, 360px);
+    }
+
     .main-banner .banner-images .bg-image img {
-        height: min(44vh, 340px);
-        object-position: 50% 90%;
+        object-position: center 58%;
     }
 
     .main-banner .banner-images .main-banner-image {
-        transform: translate(-50%, -0%);
+        transform: translate(-50%, 0%);
+    }
+
+    .main-banner .banner-images .main-banner-image img {
+        width: 94% !important;
+        max-width: 380px;
+        height: auto !important;
     }
 }
 
@@ -798,9 +895,9 @@
        .main-banner .banner-content {
         top: clamp(8px, 2.5vh, 22px);
         left: 50%;
-        transform: translate(-54%, 85%);
+        transform: translate(-50%, 85%);
         height: auto;
-        padding: 0 12px;
+        padding: 0 14px;
         z-index: 6;
     }
 }
@@ -809,9 +906,9 @@
        .main-banner .banner-content {
         top: clamp(8px, 2.5vh, 22px);
         left: 50%;
-        transform: translate(-54%, 28%);
+        transform: translate(-50%, 28%);
         height: auto;
-        padding: 0 12px;
+        padding: 0 14px;
         z-index: 6;
     }
 }
@@ -820,9 +917,9 @@
        .main-banner .banner-content {
         top: clamp(8px, 2.5vh, 22px);
         left: 50%;
-        transform: translate(-54%, 70%);
+        transform: translate(-50%, 70%);
         height: auto;
-        padding: 0 12px;
+        padding: 0 14px;
         z-index: 6;
     }
 }
@@ -833,7 +930,7 @@
        .main-banner .banner-content {
         top: clamp(8px, 2.5vh, 22px);
         left: 50%;
-        transform: translate(-54%, 58%);
+        transform: translate(-50%, 58%);
         height: auto;
         padding: 0 12px;
         z-index: 6;
@@ -844,7 +941,7 @@
        .main-banner .banner-content {
         top: clamp(8px, 2.5vh, 22px);
         left: 50%;
-        transform: translate(-54%, 55%);
+        transform: translate(-50%, 55%);
         height: auto;
         padding: 0 12px;
         z-index: 6;
@@ -896,6 +993,46 @@
 
     .main-banner .banner-images .main-banner-image img {
         width: 100% !important;
+    }
+}
+
+/* Mobile last: beat earlier width:100%!important so truck keeps natural aspect ratio */
+@media (max-width: 991.98px) {
+    .main-banner .banner-images .bg-image {
+        height: min(48vh, 400px);
+        overflow: hidden;
+    }
+
+    .main-banner .banner-images .bg-image img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        object-position: center 55% !important;
+    }
+
+    .main-banner .banner-images .main-banner-image {
+        top: auto !important;
+        bottom: 0 !important;
+        height: auto !important;
+        align-items: flex-end !important;
+    }
+
+    .main-banner .banner-images .main-banner-image img {
+        width: 92% !important;
+        max-width: 420px !important;
+        height: auto !important;
+        object-fit: contain !important;
+    }
+}
+
+@media (max-width: 400px) {
+    .main-banner .banner-images .bg-image {
+        height: min(44vh, 360px);
+    }
+
+    .main-banner .banner-images .main-banner-image img {
+        width: 94% !important;
+        max-width: 380px !important;
     }
 }
 

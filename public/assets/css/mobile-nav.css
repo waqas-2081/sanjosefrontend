@@ -45,6 +45,7 @@
 
   .main-header.nav-open .header-toggle {
     background-color: #e04a1a !important;
+    transform: translateY(-50%);
   }
 
   .main-header.nav-open .header-toggle i::before {
