@@ -26,6 +26,7 @@
     .main-banner .banner-content h1 {
         font-size: 150px;
         line-height: 150px;
+        margin-top: 200px;
     }
 
     .main-banner .banner-images .main-banner-image {
@@ -52,13 +53,13 @@
     }
 
     .main-banner .banner-content h1 {
-        font-size: 140px;
+        font-size: 150px;
         line-height: 120px;
-        margin-top: 30px;
+        margin-top: 140px;
     }
 
     .main-banner .banner-images .main-banner-image {
-        transform: translate(-50%, -10%);
+        transform: translate(-50%, 0%);
     }
 
     .main-header .nav ul {
@@ -92,9 +93,9 @@
 
 @media (max-width: 1366px) {
     .main-banner .banner-content h1 {
-        font-size: 130px;
-        line-height: 120px;
-        margin-top: 120px;
+        font-size: 110px;
+        line-height: 100px;
+        margin-top: 40px;
 
     }
 }
@@ -133,9 +134,9 @@
     }
 
     .main-banner .banner-content h1 {
-        font-size: 120px;
-        line-height: 110px;
-        margin-top: 90px;
+        font-size: 110px;
+        line-height: 100px;
+        margin-top: 70px;
     }
 
     .main-banner .banner-images .main-banner-image img {
@@ -857,6 +858,23 @@
     }
 }
 
+/* ~1536px only (e.g. 1920@125%): override 1680 truck 100% + lift headline */
+@media (min-width: 1500px) and (max-width: 1579px) {
+    .main-banner .banner-content h1 {
+        font-size: 120px;
+        line-height: 110px;
+        margin-top: 90px;
+    }
+
+    .main-banner .banner-images .main-banner-image {
+        transform: translate(-50%, -6%);
+    }
+
+    .main-banner .banner-images .main-banner-image img {
+        width: 100% !important;
+    }
+}
+
 @media (max-width: 1440px) {
     .main-header .container-fluid {
         padding: 0 10px;
@@ -870,7 +888,7 @@
 @media (max-width: 1366px) {
 
     .main-banner .banner-images .main-banner-image img {
-        width: 80% !important;
+        width: 100% !important;
     }
 }
 

@@ -15,11 +15,11 @@ export function BrandPotential() {
                             <div className="col-lg-12">
                                 <div className="brand-content">
                                     <div className="image">
-                                        <img src="/assets/images/1.png" alt="" />
+                                        <img src="/assets/images/year.png" alt="" />
                                     </div>
                                     <div className="brand-text">
-                                    <h3>TNT PIZZA</h3>
-                                        <p>A full rebrand gave TNT Pizza a fresh, appetite-driving identity. The new design and advertising strategy helped fuel a 190% increase in revenue.
+                                    <h3>YEARSPORTS</h3>
+                                        <p>A bold rebrand gave YearSports a rugged, adventure ready identity. The new branding design and advertising strategy helped fuel a 190% increase in revenue.
                                         </p>
                                     </div>
                                 </div>
@@ -27,11 +27,11 @@ export function BrandPotential() {
                             <div className="col-lg-12">
                                 <div className="brand-content">
                                     <div className="image">
-                                        <img src="/assets/images/2.png" alt="" />
+                                        <img src="/assets/images/marud.png" alt="" />
                                     </div>
                                     <div className="brand-text">
-                                    <h3>PREMIER MOBILE DETAILING</h3>
-                                        <p>A sleek, premium identity repositioned Premier Mobile Detailing as a top tier option in its market, driving a 174% increase in revenue.
+                                    <h3>MARUD</h3>
+                                        <p>A rugged, professional identity repositioned Marud as a top tier option in the construction market, driving a 174% increase in revenue.
                                         </p>
                                     </div>
                                 </div>
@@ -44,11 +44,11 @@ export function BrandPotential() {
                         <div className="col-lg-12">
                             <div className="brand-content">
                                 <div className="image">
-                                    <img src="/assets/images/3.png" alt="" />
+                                    <img src="/assets/images/veltra.png" alt="" />
                                 </div>
                                 <div className="brand-text">
-                                <h3>2 SONS OF GUNS PRESSURE WASHING</h3>
-                                        <p>From a new logo to custom vehicle wraps, this brand refresh gave 2 Sons of Guns Pressure Washing a bolder presence on the road and a 215% jump in revenue.
+                                <h3>VELTRA LABS</h3>
+                                        <p>From a new logo design to a fully custom mobile kitchen truck wrap, this brand refresh gave Veltra Labs a bolder presence on the road and a 215% jump in revenue.
                                         </p>
                                 </div>
                             </div>
@@ -56,11 +56,11 @@ export function BrandPotential() {
                         <div className="col-lg-12">
                             <div className="brand-content">
                                 <div className="image">
-                                    <img src="/assets/images/4.png" alt="" />
+                                    <img src="/assets/images/parkwise.png" alt="" />
                                 </div>
                                 <div className="brand-text">
-                                <h3>LOADMASTER</h3>
-                                    <p>A high impact rebrand positioned LoadMaster as a serious player in the hauling industry, contributing to a 255% increase in revenue.
+                                <h3>PARKWISE</h3>
+                                    <p>A high impact rebrand positioned ParkWise as a serious player in the cleaning industry, contributing to a 255% increase in revenue.
                                     </p>
                                 </div>
                             </div>
