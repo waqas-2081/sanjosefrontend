@@ -3,9 +3,7 @@
 }
 
 @media (max-width: 1921px) {
-    .main-banner .banner-images .main-banner-image img {
-        width: 79%;
-    }
+  
 
     .main-banner .banner-images .main-banner-image {
         transform: translate(-50%, -6%);
@@ -14,19 +12,18 @@
 
     .main-banner .banner-content h1 {
         margin-top: 120px;
-        font-size: 150px;
+        font-size: 180px;
+        line-height: 140px;
     }
 }
 
 @media (max-width: 1701px) {
-    .main-banner .banner-images .main-banner-image img {
-        width: 71%;
-    }
+   
 
     .main-banner .banner-content h1 {
-        font-size: 150px;
+        font-size: 180px;
         line-height: 150px;
-        margin-top: 200px;
+        margin-top: 190px;
     }
 
     .main-banner .banner-images .main-banner-image {
@@ -48,14 +45,11 @@
         padding: 0 10px;
     }
 
-    .main-banner .banner-images .main-banner-image img {
-        width: 88%;
-    }
 
     .main-banner .banner-content h1 {
-        font-size: 150px;
-        line-height: 120px;
-        margin-top: 140px;
+        font-size: 180px;
+        line-height: 140px;
+        margin-top: 110px;
     }
 
     .main-banner .banner-images .main-banner-image {
@@ -83,19 +77,20 @@
     }
 }
 
+
 @media (max-width: 1440px) {
     .main-banner .banner-content h1 {
-        font-size: 140px;
+        font-size: 160px;
         line-height: 130px;
-        margin-top: 130px;
+        margin-top: 120px;
     }
 }
 
 @media (max-width: 1366px) {
     .main-banner .banner-content h1 {
-        font-size: 110px;
-        line-height: 100px;
-        margin-top: 40px;
+        font-size: 130px;
+        line-height: 112px;
+        margin-top: 20px;
 
     }
 }
@@ -105,9 +100,9 @@
         padding: 9px 3px;
     }
 
-    .main-banner .banner-images .main-banner-image img {
+    /* .main-banner .banner-images .main-banner-image img {
         width: 80%;
-    }
+    } */
 
     .footer-cta .cta-content h2 {
         font-size: 60px;
@@ -134,9 +129,9 @@
     }
 
     .main-banner .banner-content h1 {
-        font-size: 110px;
-        line-height: 100px;
-        margin-top: 70px;
+        font-size: 140px;
+        line-height: 115px;
+        margin-top: 50px;
     }
 
     .main-banner .banner-images .main-banner-image img {
@@ -577,9 +572,9 @@
     }
 
     .main-banner .banner-content h1 {
-        font-size: 46px;
+        font-size: 48px;
         line-height: 0.95;
-        margin-top: 0;
+        margin-top: 46px;
         margin-left: 0;
         margin-right: 0;
         max-width: 100%;
@@ -868,8 +863,9 @@
 
 @media (max-width: 400px) {
     .main-banner .banner-content h1 {
-        font-size: 40px;
+        font-size: 36px;
         line-height: 0.92;
+        margin-top: 3px;
     }
 
     .main-banner .banner-images .bg-image {
@@ -948,12 +944,7 @@
     }
 }
 
-@media (max-width: 1680px) {
 
-    .main-banner .banner-images .main-banner-image img {
-        width: 100% !important;
-    }
-}
 
 /* ~1536px only (e.g. 1920@125%): override 1680 truck 100% + lift headline */
 @media (min-width: 1500px) and (max-width: 1579px) {
@@ -978,7 +969,41 @@
     }
 
     .main-banner .banner-images .main-banner-image img {
-        width: 95% !important;
+        width: 100% !important;
+    }
+}
+
+
+@media (width: 1440px) and (height: 840px) {
+    .main-banner .banner-content h1 {
+        font-size: 146px;
+        line-height: 125px;
+        margin-top: 70px;
+    }
+
+    .main-banner .banner-images .main-banner-image {
+        transform: translate(-50%, 0%);
+    }
+
+    .main-banner .banner-images .main-banner-image img {
+        width: 100% !important;
+    }
+}
+
+/* 1440×800 dedicated — after other 1440 rules so truck/text overrides win */
+@media (width: 1440px) and (height: 800px) {
+    .main-banner .banner-content h1 {
+        font-size: 146px;
+        line-height: 125px;
+        margin-top: 30px;
+    }
+
+    .main-banner .banner-images .main-banner-image {
+        transform: translate(-50%, 0%);
+    }
+
+    .main-banner .banner-images .main-banner-image img {
+        width: 100% !important;
     }
 }
 
@@ -1031,8 +1056,8 @@
     }
 
     .main-banner .banner-images .main-banner-image img {
-        width: 94% !important;
-        max-width: 380px !important;
+        width: 100% !important;
+      
     }
 }
 
