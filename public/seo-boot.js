@@ -45,36 +45,36 @@
     "ogImage": "https://sanjoselogodesign.com/images/sanjoseog.png"
   },
   "/video-animation-services": {
-    "title": "Video Animation Agency San Jose | Explainer Video Animation San Jose",
-    "description": "Experience the best in Whiteboard Animation with San Jose Logo Design. We provide the best explainer videos, pre-roll ads, and logo animation in San Jose, CA.",
+    "title": "Video Animation Services San Jose, CA | San Jose Logo Design",
+    "description": "Custom video animation services San Jose businesses trust. From explainer videos to motion graphics, animated in-house by a dedicated creative team. Get a free quote today.",
     "robots": "index,follow",
     "canonical": "https://sanjoselogodesign.com/video-animation-services",
     "ogImage": "https://sanjoselogodesign.com/images/sanjoseog.png"
   },
   "/mobile-app-development-services": {
-    "title": "App Developer Agency | Mobile App Development San Jose",
-    "description": "San Jose Logo Design is the leading Mobile App Development Agency. Hire expert app developers for IOS & Android app development in San Jose, CA.",
+    "title": "Mobile App Development San Jose, CA | San Jose Logo Design",
+    "description": "Mobile app development San Jose businesses trust. Custom iOS and Android apps built by expert designers and developers. Get a free quote today.",
     "robots": "index,follow",
     "canonical": "https://sanjoselogodesign.com/mobile-app-development-services",
     "ogImage": "https://sanjoselogodesign.com/images/sanjoseog.png"
   },
   "/digital-marketing-services": {
-    "title": "Digital Marketing Agency San Jose | Content Marketing Agency San Jose",
-    "description": "Get Social Media Marketing Services from a top Digital Marketing Agency In San Jose, CA. We offer expert Facebook Instagram Ads Strategies for your business.",
+    "title": "Digital Marketing San Jose, CA | San Jose Logo Design",
+    "description": "Digital marketing San Jose businesses trust. SEO, paid ads, and social media strategies built by a full-service marketing agency. Get a free quote today.",
     "robots": "index,follow",
     "canonical": "https://sanjoselogodesign.com/digital-marketing-services",
     "ogImage": "https://sanjoselogodesign.com/images/sanjoseog.png"
   },
   "/merchandising-services": {
-    "title": "Retail Merchandising & Point-of-Sale Design | San Jose Logo Design",
-    "description": "Merchandising design in San Jose: in-store displays, packaging concepts, retail graphics, and campaign kits that turn browsers into buyers.",
+    "title": "Branded Merchandise San Jose, CA | San Jose Logo Design",
+    "description": "Branded merchandise San Jose businesses trust. Custom company merch, from apparel to drinkware, designed and produced in-house. Get a free quote today.",
     "robots": "index,follow",
     "canonical": "https://sanjoselogodesign.com/merchandising-services",
     "ogImage": "https://sanjoselogodesign.com/images/sanjoseog.png"
   },
   "/search-engine-optimization-services": {
-    "title": "San Jose Search Engine Marketing Agency | Search Optimization San Jose",
-    "description": "We are a leading SEO Agency offering expert International SEO services, Shopify SEO, SEO audit services, & link building services in San Jose, CA.",
+    "title": "SEO Services San Jose, CA | San Jose Logo Design",
+    "description": "SEO services San Jose businesses trust. Technical SEO, local SEO, and content strategy from an experienced SEO agency. Get a free quote today.",
     "robots": "index,follow",
     "canonical": "https://sanjoselogodesign.com/search-engine-optimization-services",
     "ogImage": "https://sanjoselogodesign.com/images/sanjoseog.png"
