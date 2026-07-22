@@ -1,0 +1,32 @@
+# Apache origin cache headers.
+# Behind Cloudflare: set Caching → Browser Cache TTL → "Respect Existing Headers"
+# (otherwise Cloudflare overwrites these to 1 day and PageSpeed stays red).
+
+<IfModule mod_headers.c>
+  # HTML: always revalidate so deploys show up immediately
+  <FilesMatch "\.(html?)$">
+    Header set Cache-Control "public, max-age=0, must-revalidate"
+  </FilesMatch>
+
+  # Static assets: 1 year (images, video, fonts, CSS, JS, maps)
+  <FilesMatch "\.(?:js|css|mjs|map|woff2|woff|ttf|otf|eot|ico|gif|jpe?g|png|webp|avif|svg|mp4|webm|wasm)$">
+    Header set Cache-Control "public, max-age=31536000"
+  </FilesMatch>
+
+  # seo-boot.js is not content-hashed — override after the JS rule above
+  <Files "seo-boot.js">
+    Header set Cache-Control "public, max-age=3600, must-revalidate"
+  </Files>
+</IfModule>
+
+# SPA fallback for client-side routes
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+  RewriteRule ^index\.html$ - [L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_URI} !^/static/
+  RewriteCond %{REQUEST_URI} !^/assets/
+  RewriteRule . /index.html [L]
+</IfModule>
