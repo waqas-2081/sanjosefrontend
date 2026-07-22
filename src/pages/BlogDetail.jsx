@@ -71,6 +71,27 @@ function getApiErrorMessage(result) {
   return 'Unable to load this article.';
 }
 
+/** Normalize blogs.schema (object or JSON / script-wrapped string) for JSON-LD. */
+function parseBlogSchema(schema) {
+  if (schema == null || schema === '') return null;
+  if (typeof schema === 'object') return schema;
+
+  if (typeof schema !== 'string') return null;
+  let raw = schema.trim();
+  if (!raw) return null;
+
+  const scriptMatch = raw.match(
+    /<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/i
+  );
+  if (scriptMatch) raw = scriptMatch[1].trim();
+
+  try {
+    return JSON.parse(raw);
+  } catch {
+    return null;
+  }
+}
+
 export default function BlogDetail() {
   const { slug, '*': extraPath } = useParams();
   const [blog, setBlog] = useState(null);
@@ -83,6 +104,7 @@ export default function BlogDetail() {
         title: 'Blog Detail | San Jose Logo Design',
         description: '',
         keywords: '',
+        schema: null,
       };
     }
     const metaTitle = typeof blog.meta_title === 'string' ? blog.meta_title.trim() : '';
@@ -92,7 +114,7 @@ export default function BlogDetail() {
     const description = metaDesc || short || '';
     const keywords =
       typeof blog.meta_keywords === 'string' ? blog.meta_keywords.trim() : '';
-    return { title, description, keywords };
+    return { title, description, keywords, schema: parseBlogSchema(blog.schema) };
   }, [blog]);
 
   useEffect(() => {
@@ -157,6 +179,9 @@ export default function BlogDetail() {
         <title>{head.title}</title>
         {head.description ? <meta name="description" content={head.description} /> : null}
         {head.keywords ? <meta name="keywords" content={head.keywords} /> : null}
+        {head.schema ? (
+          <script type="application/ld+json">{JSON.stringify(head.schema)}</script>
+        ) : null}
       </Helmet>
 
       <section className="inner-breadcrumb blog-detail-breadcrumb">
