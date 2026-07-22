@@ -96,7 +96,7 @@ export default function AboutPage() {
                 <div className="col-lg-5">
                     <div className="content">
                         <h1>
-                            What Makes Us The Best <div>Logo Design</div> Company And What Sets Us Apart?
+                            What Makes Us The Best Logo Design Company And What Sets Us Apart?
                         </h1>
                         <p>
                             We are the United States most famous and leading Logo Design company, mastermind in services focusing on graphic design services, Best SEO Service, Video Animation Services, and much more. Design Services Professional video animation services Best Social Media Marketing Services Search Engine Optimization Services. Our team includes highly skilled creative website developers, digital marketers, programmers, and content writers. Out of this diligent team has emerged America's best graphic design firm.
