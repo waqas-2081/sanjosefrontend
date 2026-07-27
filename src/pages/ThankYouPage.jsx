@@ -1,8 +1,26 @@
-import { Link } from 'react-router-dom';
+import { useEffect, useRef } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 
 export default function ThankYouPage() {
   useDocumentTitle('Thank You | San Jose Logo Design');
+
+  const location = useLocation();
+  const navigate = useNavigate();
+  const firedRef = useRef(false);
+
+  useEffect(() => {
+    // Only fire after a real contact/popup submit (state flag), not on manual visits or refresh
+    if (!location.state?.formSubmitted || firedRef.current) return;
+    firedRef.current = true;
+
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({ event: 'form_submitted_confirmed' });
+    console.log('[GTM] form_submitted_confirmed pushed');
+
+    // Clear state so refresh / remount cannot re-fire
+    navigate('.', { replace: true, state: {} });
+  }, [location.state, navigate]);
 
   return (
     <section className="contact-section py-5">

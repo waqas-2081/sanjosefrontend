@@ -164,7 +164,7 @@ export default function ContactPage() {
       setSubmitted(true);
       setSubmittedId(data.data?.id ?? null);
       setForm(initialForm);
-      navigate('/thankyou');
+      navigate('/thankyou', { replace: true, state: { formSubmitted: true } });
     } catch (error) {
       setSubmitError(error.message || 'Unable to send your message. Please try again.');
     } finally {

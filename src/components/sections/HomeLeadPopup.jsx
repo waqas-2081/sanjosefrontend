@@ -246,7 +246,7 @@ export function HomeLeadPopup({ autoOpenOnLoad = false }) {
       setSubmitSuccess(data.message || 'Thank you! Your request has been submitted.');
       setForm(emptyForm);
       setOpen(false);
-      navigate('/thankyou');
+      navigate('/thankyou', { replace: true, state: { formSubmitted: true } });
     } catch (err) {
       setSubmitError(err?.message || 'Something went wrong. Please try again.');
     } finally {

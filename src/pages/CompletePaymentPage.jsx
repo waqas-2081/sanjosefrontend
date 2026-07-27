@@ -612,8 +612,25 @@ export default function CompletePaymentPage() {
   const [fetchErr, setFetchErr] = useState('');
   const [error,    setError]    = useState('');
 
-  // On success: navigate to /payment-completed/:token passing all info + loginToken as state
+  // On success: fire GTM once, then navigate to /payment-completed/:token
   const handleSuccess = useCallback((loginToken = null) => {
+    const transactionId = info?.paymentRequestId;
+    const confirmKey = transactionId != null ? `payment_confirmed_${transactionId}` : null;
+
+    // Only fire on a real successful charge — not on refresh or already-paid revisits
+    if (confirmKey && !sessionStorage.getItem(confirmKey)) {
+      sessionStorage.setItem(confirmKey, '1');
+      window.dataLayer = window.dataLayer || [];
+      const paymentConfirmedPayload = {
+        event: 'payment_confirmed',
+        transaction_id: transactionId,
+        value: Number(info?.amount) || 0,
+        currency: 'USD',
+      };
+      window.dataLayer.push(paymentConfirmedPayload);
+      console.log('[GTM] payment_confirmed pushed', paymentConfirmedPayload);
+    }
+
     navigate(`/payment-completed/${token}`, {
       replace: true,
       state: {
