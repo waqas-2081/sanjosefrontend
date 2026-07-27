@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { Link, useParams } from 'react-router-dom';
 import { BlogDetailSkeleton } from '../components/blog/BlogSkeletons';
+import BlogLeadPopup from '../components/blog/BlogLeadPopup';
 import NotFoundPage from './NotFoundPage';const BLOG_DETAIL_ENDPOINT_BASE = 'https://admin.sanjoselogodesign.com/api/v1/blogs';
 
 /** Fixed line under breadcrumbs (not article `short_description`) */
@@ -263,6 +264,8 @@ export default function BlogDetail() {
           </div>
         </div>
       </article>
+
+      <BlogLeadPopup />
     </div>
   );
 }

@@ -242,19 +242,6 @@
             window.removeEventListener(e, loadAnalytics, { capture: true });
           });
 
-          /* Google Analytics */
-          var g = document.createElement('script');
-          g.async = true;
-          g.src = 'https://www.googletagmanager.com/gtag/js?id=UA-215567117-1';
-          document.head.appendChild(g);
-          window.dataLayer = window.dataLayer || [];
-          function gtag() {
-            dataLayer.push(arguments);
-          }
-          window.gtag = gtag;
-          gtag('js', new Date());
-          gtag('config', 'UA-215567117-1');
-
           /* Microsoft Clarity */
           (function (c, l, a, r, i, t, y) {
             c[a] =

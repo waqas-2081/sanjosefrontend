@@ -612,23 +612,38 @@ export default function CompletePaymentPage() {
   const [fetchErr, setFetchErr] = useState('');
   const [error,    setError]    = useState('');
 
-  // On success: fire GTM once, then navigate to /payment-completed/:token
+  // On success: fire GTM + Meta Pixel once, then navigate to /payment-completed/:token
   const handleSuccess = useCallback((loginToken = null) => {
     const transactionId = info?.paymentRequestId;
     const confirmKey = transactionId != null ? `payment_confirmed_${transactionId}` : null;
+    const purchaseValue = Number(info?.amount);
 
     // Only fire on a real successful charge — not on refresh or already-paid revisits
     if (confirmKey && !sessionStorage.getItem(confirmKey)) {
       sessionStorage.setItem(confirmKey, '1');
+
       window.dataLayer = window.dataLayer || [];
       const paymentConfirmedPayload = {
         event: 'payment_confirmed',
         transaction_id: transactionId,
-        value: Number(info?.amount) || 0,
+        value: Number.isFinite(purchaseValue) ? purchaseValue : 0,
         currency: 'USD',
       };
       window.dataLayer.push(paymentConfirmedPayload);
       console.log('[GTM] payment_confirmed pushed', paymentConfirmedPayload);
+
+      // Meta Pixel Purchase — value must be numeric > 0, currency ISO code only
+      if (typeof window.fbq === 'function' && Number.isFinite(purchaseValue) && purchaseValue > 0) {
+        const purchasePayload = {
+          value: purchaseValue,
+          currency: 'USD',
+          content_name: info?.packageName || undefined,
+          content_ids: transactionId != null ? [String(transactionId)] : undefined,
+          content_type: 'product',
+        };
+        window.fbq('track', 'Purchase', purchasePayload);
+        console.log('[Meta Pixel] Purchase tracked', purchasePayload);
+      }
     }
 
     navigate(`/payment-completed/${token}`, {
