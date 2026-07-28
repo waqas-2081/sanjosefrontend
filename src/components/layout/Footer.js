@@ -51,7 +51,7 @@ export default function Footer() {
                 </Link>
               </div>
               <p>
-              SanJose Logo Design is the united states primarily based totally advertising business enterprise this is providing a complete variety of advertising offerings and answers to numerous purpose-pushed industries.
+              San Jose Logo Design is a full service creative agency specializing in logo design, branding, web design, digital marketing and SEO, helping American businesses build identities that drive real growth.
               </p>
             </div>
           </div>
