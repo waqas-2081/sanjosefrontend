@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { postLogoCreatorStart, postLogoCreatorStep } from "../api/logoCreatorApi";
 import { resetViewportForSpaNavigation } from "../lib/resetViewportForSpaNavigation";
+
+const BRAND_LOGO = `${process.env.PUBLIC_URL || ""}/assets/images/logo/logo-white.png`;
 
 const INDUSTRIES = [
   "Technology", "Healthcare", "Finance", "Education",
@@ -101,14 +103,28 @@ function Particles() {
 }
 
 // Step 1: Business Name
-function Step1({ data, onChange, onNext, pending, error }) {
+function Step1({ data, onChange, onNext, pending, error, creatorPage = false }) {
   const [focused, setFocused] = useState(false);
 
   return (
     <div className="step-content animate-in">
       <div className="hero-text">
-        <h2 className="hero-title">Create Your <span className="accent">CUSTOM LOGO DESIGN</span></h2>
-        <p className="hero-sub">Start your branding journey here.</p>
+        <h2 className="hero-title">
+          {creatorPage ? (
+            <>
+              Create Your <span className="accent">CUSTOM</span> Logo Design
+            </>
+          ) : (
+            <>
+              Create Your <span className="accent">CUSTOM LOGO DESIGN</span>
+            </>
+          )}
+        </h2>
+        <p className="hero-sub">
+          {creatorPage
+            ? "Start your business with a brand identity that matters."
+            : "Start your branding journey here."}
+        </p>
       </div>
       {error ? <p className="hero-inline-error" role="alert">{error}</p> : null}
 
@@ -336,19 +352,28 @@ export default function LogoWizard() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [step, setStep] = useState(0);
-  const [showModal, setShowModal] = useState(false);
+  const isLogoCreatorPage = location.pathname === "/logo-creator";
+  const inboundBusinessName =
+    typeof location.state?.businessName === "string"
+      ? location.state.businessName.trim()
+      : "";
+  const arrivedWithBusiness = isLogoCreatorPage && inboundBusinessName.length > 0;
+
+  const [step, setStep] = useState(arrivedWithBusiness ? 1 : 0);
+  const [showModal, setShowModal] = useState(arrivedWithBusiness);
   const [formData, setFormData] = useState({
-    businessName: "", slogan: "", industry: "", email: "", phone: ""
+    businessName: inboundBusinessName,
+    slogan: "",
+    industry: "",
+    email: "",
+    phone: "",
   });
   const [sessionToken, setSessionToken] = useState(null);
-  const [sessionStarting, setSessionStarting] = useState(false);
+  const [sessionStarting, setSessionStarting] = useState(arrivedWithBusiness);
   const [stepSaving, setStepSaving] = useState(false);
   const [apiError, setApiError] = useState("");
 
   const update = (key, val) => setFormData(prev => ({ ...prev, [key]: val }));
-
-  const isLogoCreatorPage = location.pathname === "/logo-creator";
 
   const handleGetStarted = async () => {
     const name = formData.businessName.trim();
@@ -535,8 +560,13 @@ export default function LogoWizard() {
           padding-bottom: 10px !important;
         }
         .logo-wizard-section--creator {
-          padding-top: 32px !important;
-          padding-bottom: 32px !important;
+          padding-top: 0 !important;
+          padding-bottom: 0 !important;
+          margin: 0 !important;
+          min-height: 100%;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
         }
 
         .lw-root {
@@ -553,6 +583,68 @@ export default function LogoWizard() {
         .lw-root--creator {
           background: transparent;
           overflow: visible;
+          flex: 1 1 auto;
+          min-height: 100%;
+          width: 100%;
+          padding-top: 24px;
+          padding-bottom: max(32px, env(safe-area-inset-bottom, 0px));
+        }
+        .lw-root--creator .hero-section {
+          width: 100%;
+          max-width: 900px;
+        }
+        .lw-root--creator .hero-text {
+          margin-bottom: 28px;
+        }
+        .lw-root--creator .hero-title {
+          font-size: clamp(2.4rem, 6.5vw, 4.25rem);
+          line-height: 1.05;
+          text-shadow: 0 4px 28px rgba(0, 0, 0, 0.65);
+        }
+        .lw-root--creator .hero-sub {
+          margin-top: 12px;
+          color: rgba(255, 255, 255, 0.72);
+          text-shadow: 0 2px 16px rgba(0, 0, 0, 0.55);
+        }
+
+        /* Direct /logo-creator — stays visible above modal overlay */
+        .lw-creator-brand {
+          position: fixed;
+          top: max(16px, env(safe-area-inset-top, 0px));
+          left: 50%;
+          transform: translateX(-50%);
+          z-index: 11050;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          pointer-events: auto;
+        }
+        .lw-creator-brand__link {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          text-decoration: none;
+          transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+        .lw-creator-brand__link:hover {
+          opacity: 0.9;
+          transform: translateY(-1px);
+        }
+        .lw-creator-brand__img {
+          display: block;
+          width: auto;
+          height: clamp(42px, 6vw, 64px);
+          object-fit: contain;
+          filter: drop-shadow(0 2px 12px rgba(0, 0, 0, 0.55));
+        }
+        @media (max-width: 600px) {
+          .lw-creator-brand__img { height: 40px; }
+        }
+
+        /* Creator page: lighter modal dim so bg logos + brand stay visible */
+        .logo-wizard-section--creator .modal-overlay {
+          background: rgba(0, 0, 0, 0.28);
+          backdrop-filter: blur(2px);
         }
 
         /* BG Slideshow */
@@ -1289,11 +1381,16 @@ export default function LogoWizard() {
 
         @media (max-width: 768px) {
           .logo-wizard-section { padding-top: 0 !important; padding-bottom: 0px !important; }
-          .logo-wizard-section--creator { padding-top: 24px !important; padding-bottom: 24px !important; }
+          .logo-wizard-section--creator { padding-top: 0 !important; padding-bottom: 0 !important; }
           .lw-root { padding-top: 40px; padding-bottom: 40px; }
+          .lw-root--creator {
+            padding-top: 16px;
+            padding-bottom: max(24px, env(safe-area-inset-bottom, 0px));
+          }
           .hero-section { padding: 0 16px; }
           .hero-text { margin-bottom: 28px; }
           .hero-title { font-size: 22px; }
+          .lw-root--creator .hero-title { font-size: clamp(1.7rem, 7.5vw, 2.4rem); }
           .hero-sub { font-size: 1rem; }
         }
 
@@ -1446,6 +1543,15 @@ export default function LogoWizard() {
           {!isLogoCreatorPage && <Particles />}
           {!isLogoCreatorPage && <HeroLogoColumns />}
 
+          {/* Direct URL only — keep visible during wizard steps too */}
+          {isLogoCreatorPage && !arrivedWithBusiness && (
+            <header className="lw-creator-brand">
+              <Link to="/" className="lw-creator-brand__link" aria-label="San Jose Logo Design — Home">
+                <img src={BRAND_LOGO} alt="San Jose Logo Design" className="lw-creator-brand__img" />
+              </Link>
+            </header>
+          )}
+
           {!(isLogoCreatorPage && showModal) && (
             <div className="hero-section">
               <Step1
@@ -1454,6 +1560,7 @@ export default function LogoWizard() {
                 onNext={handleGetStarted}
                 pending={isLogoCreatorPage && sessionStarting && !showModal}
                 error={isLogoCreatorPage && !showModal ? apiError : ""}
+                creatorPage={isLogoCreatorPage}
               />
             </div>
           )}
