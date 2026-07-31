@@ -3107,6 +3107,160 @@ section {
     color: var(--accent-orange);
 }
 
+/* Blog HTML tables (CMS / editor) */
+.blog-article--luxury .blog-article-section .blog-content-body .table-responsive,
+.blog-article--luxury .blog-article-section .blog-content-body figure.table,
+.blog-article--luxury .blog-article-section .blog-content-body .tableWrapper {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 28px 0 32px;
+}
+
+.blog-article--luxury .blog-article-section .blog-content-body table {
+    width: 100%;
+    max-width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 28px 0 32px;
+    table-layout: auto;
+    background: #fff;
+    border: 1px solid rgba(42, 32, 26, 0.12);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 10px 32px rgba(26, 20, 16, 0.08);
+}
+
+.blog-article--luxury .blog-article-section .blog-content-body .table-responsive > table,
+.blog-article--luxury .blog-article-section .blog-content-body figure.table > table,
+.blog-article--luxury .blog-article-section .blog-content-body .tableWrapper > table {
+    margin: 0;
+    min-width: 520px;
+}
+
+.blog-article--luxury .blog-article-section .blog-content-body table caption {
+    caption-side: top;
+    text-align: left;
+    padding: 0 4px 12px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #2c241c;
+}
+
+.blog-article--luxury .blog-article-section .blog-content-body th,
+.blog-article--luxury .blog-article-section .blog-content-body td {
+    padding: 14px 18px;
+    vertical-align: top;
+    text-align: left;
+    font-size: 16px;
+    line-height: 1.55;
+    color: #3d342c;
+    border-bottom: 1px solid rgba(42, 32, 26, 0.1);
+    border-right: 1px solid rgba(42, 32, 26, 0.08);
+}
+
+.blog-article--luxury .blog-article-section .blog-content-body th:last-child,
+.blog-article--luxury .blog-article-section .blog-content-body td:last-child {
+    border-right: none;
+}
+
+.blog-article--luxury .blog-article-section .blog-content-body thead th,
+.blog-article--luxury .blog-article-section .blog-content-body tr:first-child th {
+    background: linear-gradient(135deg, #2a211c 0%, #1a1410 100%);
+    color: #fff4ea;
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: none;
+    border-bottom: 1px solid rgba(255, 140, 90, 0.35);
+    border-right-color: rgba(255, 255, 255, 0.08);
+}
+
+.blog-article--luxury .blog-article-section .blog-content-body thead th:last-child,
+.blog-article--luxury .blog-article-section .blog-content-body tr:first-child th:last-child {
+    border-right: none;
+}
+
+/* Header row when editor uses <td><strong>…</strong></td> instead of <th> */
+.blog-article--luxury .blog-article-section .blog-content-body tbody tr:first-child td:has(> strong:only-child),
+.blog-article--luxury .blog-article-section .blog-content-body tbody tr:first-child td:has(> b:only-child),
+.blog-article--luxury .blog-article-section .blog-content-body tbody tr:first-child td:has(> p > strong:only-child),
+.blog-article--luxury .blog-article-section .blog-content-body tbody tr:first-child td:has(> p > b:only-child) {
+    background: linear-gradient(135deg, #2a211c 0%, #1a1410 100%);
+    color: #fff4ea;
+    font-weight: 800;
+    border-bottom: 1px solid rgba(255, 140, 90, 0.35);
+}
+
+.blog-article--luxury .blog-article-section .blog-content-body tbody tr:first-child td:has(> strong:only-child) strong,
+.blog-article--luxury .blog-article-section .blog-content-body tbody tr:first-child td:has(> b:only-child) b,
+.blog-article--luxury .blog-article-section .blog-content-body tbody tr:first-child td:has(> p > strong:only-child) strong,
+.blog-article--luxury .blog-article-section .blog-content-body tbody tr:first-child td:has(> p > b:only-child) b,
+.blog-article--luxury .blog-article-section .blog-content-body tbody tr:first-child td:has(> p > strong:only-child) p,
+.blog-article--luxury .blog-article-section .blog-content-body tbody tr:first-child td:has(> p > b:only-child) p {
+    color: #fff4ea;
+    margin: 0;
+}
+
+.blog-article--luxury .blog-article-section .blog-content-body tbody tr:nth-child(even) td {
+    background: rgba(255, 140, 90, 0.04);
+}
+
+.blog-article--luxury .blog-article-section .blog-content-body tbody tr:hover td {
+    background: rgba(255, 94, 44, 0.07);
+}
+
+.blog-article--luxury .blog-article-section .blog-content-body thead tr:hover th,
+.blog-article--luxury .blog-article-section .blog-content-body tr:first-child:hover th,
+.blog-article--luxury .blog-article-section .blog-content-body tbody tr:first-child:hover td:has(> strong:only-child),
+.blog-article--luxury .blog-article-section .blog-content-body tbody tr:first-child:hover td:has(> b:only-child),
+.blog-article--luxury .blog-article-section .blog-content-body tbody tr:first-child:hover td:has(> p > strong:only-child),
+.blog-article--luxury .blog-article-section .blog-content-body tbody tr:first-child:hover td:has(> p > b:only-child) {
+    background: linear-gradient(135deg, #2a211c 0%, #1a1410 100%);
+}
+
+.blog-article--luxury .blog-article-section .blog-content-body tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.blog-article--luxury .blog-article-section .blog-content-body th p,
+.blog-article--luxury .blog-article-section .blog-content-body td p {
+    margin: 0 0 8px;
+    font-size: inherit;
+    line-height: inherit;
+    color: inherit;
+}
+
+.blog-article--luxury .blog-article-section .blog-content-body th p:last-child,
+.blog-article--luxury .blog-article-section .blog-content-body td p:last-child {
+    margin-bottom: 0;
+}
+
+.blog-article--luxury .blog-article-section .blog-content-body td ul,
+.blog-article--luxury .blog-article-section .blog-content-body td ol {
+    margin: 6px 0 0;
+    padding-left: 1.2em;
+}
+
+@media (max-width: 767.98px) {
+    .blog-article--luxury .blog-article-section .blog-content-body table {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        border-radius: 12px;
+    }
+
+    .blog-article--luxury .blog-article-section .blog-content-body th,
+    .blog-article--luxury .blog-article-section .blog-content-body td {
+        padding: 12px 14px;
+        font-size: 15px;
+        min-width: 160px;
+    }
+}
+
 .blog-compare-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
