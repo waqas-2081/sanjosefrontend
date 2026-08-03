@@ -5,6 +5,7 @@ import { AwesomeProjects } from '../components/sections/AwesomeProjects';
 import { BrandPotential } from '../components/sections/BrandPotential';
 import { FeaturedStories } from '../components/sections/FeaturedStories';
 import { HomeLogoPackages } from '../components/sections/HomeLogoPackages';
+import { HomeVideoReviews } from '../components/sections/HomeVideoReviews';
 import { HomeAbout } from '../components/sections/HomeAbout';
 import { HomeVipLoader } from '../components/sections/HomeVipLoader';
 // Temporarily unused — MainBanner commented out on home (LogoWizard is banner)
@@ -287,6 +288,7 @@ export default function HomePage() {
       <HomeAbout />
       <FeaturedStories />
       <HomeLogoPackages />
+      <HomeVideoReviews />
       <PortfolioSection />
       <CtaProjects />
       <BrandPotential />
