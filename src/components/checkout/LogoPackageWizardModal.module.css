@@ -362,7 +362,7 @@
 }
 
 .addonMedia {
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 1 / 1;
   overflow: hidden;
   background: #0d0b0a;
   flex-shrink: 0;
@@ -809,9 +809,10 @@
 
   .addonMedia {
     width: 112px;
-    aspect-ratio: auto;
-    align-self: stretch;
-    min-height: 112px;
+    aspect-ratio: 1 / 1;
+    align-self: center;
+    min-height: 0;
+    flex-shrink: 0;
   }
 
   .addonBody {
@@ -942,7 +943,8 @@
 
   .addonMedia {
     width: 92px;
-    min-height: 100px;
+    aspect-ratio: 1 / 1;
+    min-height: 0;
   }
 
   .addonBody {

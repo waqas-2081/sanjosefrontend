@@ -529,13 +529,17 @@ export default function LogoPackageWizardModal({ open, selectedPackage, onClose 
                       const selected = addon.skipAddons
                         ? selectedAddonIds.length === 0
                         : selectedAddonIds.includes(addon.id);
+                      const addonImage =
+                        addon.skipAddons && selectedPackage?.previewImage
+                          ? selectedPackage.previewImage
+                          : addon.image;
                       return (
                         <article
                           key={addon.id}
                           className={`${styles.addonCard}${selected ? ` ${styles.addonCardSelected}` : ''}`}
                         >
                           <div className={styles.addonMedia}>
-                            <img src={addon.image} alt="" loading="lazy" />
+                            <img src={addonImage} alt="" loading="lazy" />
                           </div>
                           <div className={styles.addonBody}>
                             <h4 className={styles.addonTitle}>{addon.title}</h4>

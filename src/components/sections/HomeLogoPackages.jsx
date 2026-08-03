@@ -159,7 +159,7 @@ export function HomeLogoPackages() {
                     <button
                       type="button"
                       className={styles.cta}
-                      onClick={() => setWizardPackage(pkg)}
+                      onClick={() => setWizardPackage({ ...pkg, previewImage: imageSrc })}
                     >
                       {pkg.button_text || 'Start Now'}
                       <span className={styles.ctaArrow} aria-hidden="true">
