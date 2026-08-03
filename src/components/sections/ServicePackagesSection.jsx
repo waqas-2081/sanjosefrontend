@@ -86,9 +86,7 @@ export default function ServicePackagesSection({ serviceType, title, subtitle, p
                 >
                   <span className="plan-badge">{pkg.badge || 'Plan'}</span>
                   <h3>{pkg.name}</h3>
-                  <h2>
-                    ${pkg.price} <small>{pkg.price_type}</small>
-                  </h2>
+                  <h2>${pkg.price}</h2>
                   {lines.length > 0 ? (
                     <ul>
                       {lines.map((line, i) => (

@@ -128,7 +128,7 @@ export default function PaymentCompletedPage() {
   }
 
   const {
-    customerName, email, phone, packageName, amount,
+    customerName, email, phone, packageName, addonsLabel, durationLabel, amount,
     salesAgent, paymentMethod, paymentLink,
   } = info;
 
@@ -257,7 +257,15 @@ export default function PaymentCompletedPage() {
                     { label: 'Email',         value: email || '—',      icon: 'fa-solid fa-envelope' },
                     { label: 'Phone',         value: phone || '—',      icon: 'fa-solid fa-phone' },
                     { label: 'Package',       value: packageName || '—',icon: 'fa-solid fa-box' },
-                  ].map(({ label, value, icon }) => (
+                    addonsLabel
+                      ? { label: 'Add-ons', value: addonsLabel, icon: 'fa-solid fa-puzzle-piece' }
+                      : null,
+                    durationLabel
+                      ? { label: 'Duration', value: durationLabel, icon: 'fa-solid fa-clock' }
+                      : null,
+                  ]
+                    .filter(Boolean)
+                    .map(({ label, value, icon }) => (
                     <div key={label} className={styles.row}>
                       <span className={styles.rowLabel}>
                         <i className={icon} /> {label}

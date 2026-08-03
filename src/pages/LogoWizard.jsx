@@ -56,6 +56,51 @@ function HeroLogoColumns() {
   );
 }
 
+/** Mobile: horizontal logo marquees at top & bottom (desktop uses side columns) */
+function HeroLogoMobileRow({ logos, direction = "left", duration = 28 }) {
+  const loop = [...logos, ...logos];
+
+  return (
+    <div className="hero-logo-mobile-row">
+      <div
+        className={`hero-logo-mobile-track hero-logo-mobile-track--${direction}`}
+        style={{ animationDuration: `${duration}s` }}
+      >
+        {loop.map((src, i) => (
+          <div key={`${src}-${i}`} className="hero-logo-mobile-item">
+            <img src={src} alt="" loading="lazy" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+const HERO_LOGO_MOBILE_TOP = [
+  { logos: [0, 4, 8, 12, 0, 4, 8, 12].map((i) => HERO_LOGO_IMAGES[i]), direction: "left", duration: 26 },
+  { logos: [1, 5, 9, 13, 1, 5, 9, 13].map((i) => HERO_LOGO_IMAGES[i]), direction: "right", duration: 30 },
+];
+
+const HERO_LOGO_MOBILE_BOTTOM = [
+  { logos: [2, 6, 10, 14, 2, 6, 10, 14].map((i) => HERO_LOGO_IMAGES[i]), direction: "right", duration: 28 },
+  { logos: [3, 7, 11, 15, 3, 7, 11, 15].map((i) => HERO_LOGO_IMAGES[i]), direction: "left", duration: 32 },
+];
+
+function HeroLogoMobileBand({ position = "top" }) {
+  const rows = position === "top" ? HERO_LOGO_MOBILE_TOP : HERO_LOGO_MOBILE_BOTTOM;
+
+  return (
+    <div
+      className={`hero-logo-mobile-band hero-logo-mobile-band--${position}`}
+      aria-hidden
+    >
+      {rows.map((row, i) => (
+        <HeroLogoMobileRow key={`${position}-${i}`} {...row} />
+      ))}
+    </div>
+  );
+}
+
 const PANEL_LOGO_IMAGES = [
   `${process.env.PUBLIC_URL || ""}/assets/images/steplogo1.png`,
   `${process.env.PUBLIC_URL || ""}/assets/images/steplogo2.png`,
@@ -579,6 +624,10 @@ export default function LogoWizard() {
           display: flex;
           align-items: center;
           justify-content: center;
+          /* Match MainBanner hero height (bg image was 120vh) */
+          min-height: 88vh;
+          min-height: 88dvh;
+          box-sizing: border-box;
         }
         .lw-root--creator {
           background: transparent;
@@ -748,6 +797,11 @@ export default function LogoWizard() {
           .hero-logo-track--down {
             animation: none;
           }
+        }
+
+        /* Mobile top/bottom logo bands — desktop hides; ≤1100 shows in grid */
+        .hero-logo-mobile-band {
+          display: none;
         }
 
         /* Hero CTA */
@@ -1377,24 +1431,219 @@ export default function LogoWizard() {
 
         @media (max-width: 1100px) {
           .hero-logo-columns { display: none; }
+
+          /*
+            Mobile hero: fill viewport height, scale logos/CTA by screen height.
+            Grid: top logos | centered CTA | bottom logos — no fixed 168px dead space.
+          */
+          .lw-root:not(.lw-root--creator) {
+            --m-logo: clamp(48px, 9.5svh, 72px);
+            --m-gap: clamp(6px, 1.1svh, 10px);
+            --m-band-pad-y: clamp(8px, 1.4svh, 14px);
+            --m-cta-h: clamp(48px, 6.2svh, 58px);
+            --m-title: clamp(1.45rem, 4.2svh + 0.35rem, 2.65rem);
+            --m-sub: clamp(0.85rem, 1.6svh + 0.35rem, 1.05rem);
+            --m-text-gap: clamp(10px, 2.4svh, 28px);
+
+            display: grid;
+            grid-template-columns: minmax(0, 1fr);
+            grid-template-rows: auto minmax(0, 1fr) auto;
+            align-items: stretch;
+            justify-items: stretch;
+            min-height: 100svh;
+            min-height: 100dvh;
+            height: auto;
+            max-height: none;
+            padding-top: max(6px, env(safe-area-inset-top, 0px));
+            padding-bottom: max(8px, env(safe-area-inset-bottom, 0px));
+            padding-left: 0;
+            padding-right: 0;
+            box-sizing: border-box;
+            overflow: hidden;
+          }
+
+          .lw-root:not(.lw-root--creator) > .bg-slides,
+          .lw-root:not(.lw-root--creator) > .particles,
+          .lw-root:not(.lw-root--creator) > .hero-logo-columns {
+            grid-column: 1;
+            grid-row: 1 / -1;
+            z-index: 0;
+          }
+
+          .lw-root:not(.lw-root--creator) > .hero-logo-mobile-band {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            gap: var(--m-gap);
+            padding-top: var(--m-band-pad-y);
+            padding-bottom: var(--m-band-pad-y);
+            width: 100%;
+            min-width: 0;
+            pointer-events: none;
+            overflow: hidden;
+          }
+
+          .lw-root:not(.lw-root--creator) > .hero-logo-mobile-band--top {
+            grid-column: 1;
+            grid-row: 1;
+          }
+
+          .lw-root:not(.lw-root--creator) > .hero-logo-mobile-band--bottom {
+            grid-column: 1;
+            grid-row: 3;
+          }
+
+          .hero-logo-mobile-row {
+            width: 100%;
+            height: var(--m-logo);
+            overflow: hidden;
+            -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 8%, #000 92%, transparent 100%);
+            mask-image: linear-gradient(to right, transparent 0%, #000 8%, #000 92%, transparent 100%);
+          }
+
+          .hero-logo-mobile-track {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: var(--m-gap);
+            width: max-content;
+            height: 100%;
+            will-change: transform;
+          }
+
+          .hero-logo-mobile-track--left {
+            animation: heroLogoMobileLeft linear infinite;
+          }
+
+          .hero-logo-mobile-track--right {
+            animation: heroLogoMobileRight linear infinite;
+          }
+
+          .hero-logo-mobile-item {
+            width: var(--m-logo);
+            height: var(--m-logo);
+            flex-shrink: 0;
+            border-radius: clamp(10px, 2.2vw, 13px);
+            overflow: hidden;
+            border: 1px solid rgba(255, 170, 116, 0.28);
+            background: rgba(22, 14, 12, 0.45);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+          }
+
+          .hero-logo-mobile-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+          }
+
+          @keyframes heroLogoMobileLeft {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+          }
+
+          @keyframes heroLogoMobileRight {
+            from { transform: translateX(-50%); }
+            to { transform: translateX(0); }
+          }
+
+          @media (prefers-reduced-motion: reduce) {
+            .hero-logo-mobile-track--left,
+            .hero-logo-mobile-track--right {
+              animation: none;
+            }
+          }
+
+          .lw-root:not(.lw-root--creator) > .hero-section {
+            grid-column: 1;
+            grid-row: 2;
+            align-self: center;
+            justify-self: center;
+            width: 100%;
+            max-width: min(900px, 100%);
+            padding: 0 clamp(16px, 4vw, 28px);
+            z-index: 2;
+          }
+
+          .lw-root:not(.lw-root--creator) .hero-text {
+            margin-bottom: var(--m-text-gap);
+          }
+
+          .lw-root:not(.lw-root--creator) .hero-title {
+            font-size: var(--m-title);
+            letter-spacing: 0.05em;
+          }
+
+          .lw-root:not(.lw-root--creator) .hero-sub {
+            font-size: var(--m-sub);
+            margin-top: clamp(6px, 1svh, 10px);
+          }
+
+          .lw-root:not(.lw-root--creator) .main-input,
+          .lw-root:not(.lw-root--creator) .cta-btn {
+            height: var(--m-cta-h);
+            min-height: var(--m-cta-h);
+          }
+        }
+
+        /* Short phones: drop 2nd logo row so CTA fits without scroll */
+        @media (max-width: 1100px) and (max-height: 720px) {
+          .lw-root:not(.lw-root--creator) {
+            --m-logo: clamp(42px, 8.5svh, 58px);
+            --m-text-gap: clamp(8px, 1.8svh, 18px);
+            --m-title: clamp(1.3rem, 3.6svh + 0.4rem, 2.1rem);
+          }
+
+          .hero-logo-mobile-band .hero-logo-mobile-row:nth-child(2) {
+            display: none;
+          }
+        }
+
+        /* Very short / landscape-ish phones */
+        @media (max-width: 1100px) and (max-height: 560px) {
+          .lw-root:not(.lw-root--creator) {
+            --m-logo: clamp(36px, 10svh, 48px);
+            --m-gap: 5px;
+            --m-band-pad-y: 6px;
+            --m-cta-h: clamp(42px, 9svh, 50px);
+            --m-title: clamp(1.15rem, 4.5svh, 1.7rem);
+            --m-sub: clamp(0.78rem, 2.2svh, 0.92rem);
+            --m-text-gap: clamp(6px, 1.4svh, 12px);
+            min-height: 100svh;
+            min-height: 100dvh;
+          }
+
+          .lw-root:not(.lw-root--creator) .hero-sub {
+            display: none;
+          }
         }
 
         @media (max-width: 768px) {
           .logo-wizard-section { padding-top: 0 !important; padding-bottom: 0px !important; }
           .logo-wizard-section--creator { padding-top: 0 !important; padding-bottom: 0 !important; }
-          .lw-root { padding-top: 40px; padding-bottom: 40px; }
-          .lw-root--creator {
-            padding-top: 16px;
-            padding-bottom: max(24px, env(safe-area-inset-bottom, 0px));
-          }
-          .hero-section { padding: 0 16px; }
-          .hero-text { margin-bottom: 28px; }
-          .hero-title { font-size: 22px; }
-          .lw-root--creator .hero-title { font-size: clamp(1.7rem, 7.5vw, 2.4rem); }
-          .hero-sub { font-size: 1rem; }
-        }
 
-        
+          .lw-root--creator {
+            --m-logo: clamp(44px, 8svh, 64px);
+            --m-cta-h: clamp(48px, 6.5svh, 56px);
+            --m-title: clamp(1.55rem, 4svh + 0.5rem, 2.35rem);
+            --m-sub: clamp(0.85rem, 1.5svh + 0.35rem, 1rem);
+            --m-text-gap: clamp(10px, 2.2svh, 24px);
+
+            padding-top: max(12px, env(safe-area-inset-top, 0px));
+            padding-bottom: max(16px, env(safe-area-inset-bottom, 0px));
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+          }
+
+          .hero-section { padding: 0 16px; }
+          .lw-root--creator .hero-text { margin-bottom: var(--m-text-gap, 20px); }
+          .lw-root--creator .hero-title { font-size: var(--m-title, clamp(1.55rem, 7vw, 2.35rem)); }
+          .lw-root--creator .hero-sub { font-size: var(--m-sub, 0.95rem); }
+        }
 
         @media (max-width: 600px) {
           .input-row {
@@ -1404,9 +1653,9 @@ export default function LogoWizard() {
           }
           .main-input {
             border-radius: 10px 10px 0 0;
-            min-height: 52px;
-            height: auto;
-            padding: 14px 16px;
+            min-height: var(--m-cta-h, 50px);
+            height: var(--m-cta-h, auto);
+            padding: clamp(10px, 1.6svh, 14px) 16px;
             font-size: 16px;
             letter-spacing: 0.06em;
           }
@@ -1414,10 +1663,16 @@ export default function LogoWizard() {
             width: 100%;
             border-radius: 0 0 10px 10px;
             justify-content: center;
-            min-height: 52px;
-            height: auto;
-            padding: 14px 20px;
-            font-size: 1.25rem;
+            min-height: var(--m-cta-h, 50px);
+            height: var(--m-cta-h, auto);
+            padding: clamp(10px, 1.6svh, 14px) 20px;
+            font-size: clamp(1.1rem, 2.2svh + 0.4rem, 1.3rem);
+          }
+
+          .lw-root:not(.lw-root--creator) .main-input,
+          .lw-root:not(.lw-root--creator) .cta-btn {
+            height: var(--m-cta-h);
+            min-height: var(--m-cta-h);
           }
 
           .modal-overlay {
@@ -1542,6 +1797,7 @@ export default function LogoWizard() {
           {!isLogoCreatorPage && <BgSlides />}
           {!isLogoCreatorPage && <Particles />}
           {!isLogoCreatorPage && <HeroLogoColumns />}
+          {!isLogoCreatorPage && <HeroLogoMobileBand position="top" />}
 
           {/* Direct URL only — keep visible during wizard steps too */}
           {isLogoCreatorPage && !arrivedWithBusiness && (
@@ -1564,6 +1820,8 @@ export default function LogoWizard() {
               />
             </div>
           )}
+
+          {!isLogoCreatorPage && <HeroLogoMobileBand position="bottom" />}
         </div>
 
         {showModal && (

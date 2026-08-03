@@ -24,11 +24,10 @@ function parsePackageAmount(price) {
   return Number.isFinite(num) && num >= 0.01 ? num : null;
 }
 
-function formatDisplayPrice(price, priceType) {
+function formatDisplayPrice(price) {
   const num = parsePackageAmount(price);
   const value = num != null ? `$${num.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}` : `$${price}`;
-  const suffix = priceType ? String(priceType).trim() : '';
-  return { value, suffix };
+  return { value };
 }
 
 export default function PackageCheckoutModal() {
@@ -54,8 +53,8 @@ export default function PackageCheckoutModal() {
   };
 
   const priceDisplay = useMemo(() => {
-    if (!selectedPackage) return { value: '', suffix: '' };
-    return formatDisplayPrice(selectedPackage.price, selectedPackage.price_type);
+    if (!selectedPackage) return { value: '' };
+    return formatDisplayPrice(selectedPackage.price);
   }, [selectedPackage]);
 
   useEffect(() => {
@@ -194,10 +193,7 @@ export default function PackageCheckoutModal() {
               <div>
                 <p className={styles.summaryName}>{selectedPackage.name}</p>
               </div>
-              <p className={styles.summaryPrice}>
-                {priceDisplay.value}
-                {priceDisplay.suffix ? <small>{priceDisplay.suffix}</small> : null}
-              </p>
+              <p className={styles.summaryPrice}>{priceDisplay.value}</p>
             </div>
 
             <div className={styles.fieldGrid}>
@@ -220,11 +216,7 @@ export default function PackageCheckoutModal() {
                 <input
                   id="pcm-price"
                   className={styles.readonlyInput}
-                  value={
-                    priceDisplay.suffix
-                      ? `${priceDisplay.value} ${priceDisplay.suffix}`
-                      : priceDisplay.value
-                  }
+                  value={priceDisplay.value}
                   readOnly
                   tabIndex={-1}
                 />

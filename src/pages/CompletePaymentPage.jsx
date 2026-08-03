@@ -653,6 +653,8 @@ export default function CompletePaymentPage() {
         email:            info?.email            || '',
         phone:            info?.phone            || '',
         packageName:      info?.packageName      || '',
+        addonsLabel:      info?.addonsLabel      || '',
+        durationLabel:    info?.durationLabel    || '',
         amount:           info?.amount           || '0.00',
         salesAgent:       info?.salesAgent       || '',
         paymentMethod:    info?.paymentMethod,
@@ -673,6 +675,8 @@ export default function CompletePaymentPage() {
         email:            routeState.email           || '',
         phone:            routeState.phone           || '',
         packageName:      routeState.packageName     || '',
+        addonsLabel:      routeState.addonsLabel     || '',
+        durationLabel:    routeState.durationLabel   || '',
         amount:           routeState.amount          || '0.00',
         salesAgent:       routeState.salesAgent      || '',
         paymentMethod:    routeState.paymentMethod,
@@ -766,7 +770,17 @@ export default function CompletePaymentPage() {
     );
   }
 
-  const { customerName, email, phone, packageName, amount, paymentMethod, paymentRequestId } = info;
+  const {
+    customerName,
+    email,
+    phone,
+    packageName,
+    addonsLabel,
+    durationLabel,
+    amount,
+    paymentMethod,
+    paymentRequestId,
+  } = info;
 
   const paymentMethodLabel = {
     stripe:  'Card (Stripe)',
@@ -862,8 +876,16 @@ export default function CompletePaymentPage() {
                     { label: 'Email',    value: email || '—' },
                     { label: 'Phone',    value: phone || '—' },
                     { label: 'Package',  value: packageName || '—' },
+                    addonsLabel
+                      ? { label: 'Add-ons', value: addonsLabel }
+                      : null,
+                    durationLabel
+                      ? { label: 'Duration', value: durationLabel }
+                      : null,
                     { label: 'Payment',  value: paymentMethodLabel || '—' },
-                  ].map(({ label, value }) => (
+                  ]
+                    .filter(Boolean)
+                    .map(({ label, value }) => (
                     <div key={label} className={styles.summaryRow}>
                       <span className={styles.summaryLabel}>{label}</span>
                       <span className={styles.summaryValue}>{value}</span>

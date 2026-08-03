@@ -122,7 +122,7 @@ export default function ServicesPage() {
                 <article className="package-card">
                     <span className="plan-badge">Starter</span>
                     <h3>Brand Kickoff</h3>
-                    <h2>$499 <small>/one time</small></h2>
+                    <h2>$499</h2>
                     <ul>
                         <li><i className="fa-solid fa-check"></i> 2 Logo Concepts</li>
                         <li><i className="fa-solid fa-check"></i> Color & Typography Guide</li>
@@ -135,7 +135,7 @@ export default function ServicesPage() {
                 <article className="package-card featured">
                     <span className="plan-badge">Most Popular</span>
                     <h3>Growth Suite</h3>
-                    <h2>$999 <small>/project</small></h2>
+                    <h2>$999</h2>
                     <ul>
                         <li><i className="fa-solid fa-check"></i> Complete Brand Identity</li>
                         <li><i className="fa-solid fa-check"></i> 5 Page Website</li>
@@ -148,7 +148,7 @@ export default function ServicesPage() {
                 <article className="package-card">
                     <span className="plan-badge">Premium</span>
                     <h3>Scale Partner</h3>
-                    <h2>$1999 <small>/project</small></h2>
+                    <h2>$1999</h2>
                     <ul>
                         <li><i className="fa-solid fa-check"></i> Strategy + Positioning</li>
                         <li><i className="fa-solid fa-check"></i> Custom Conversion Website</li>
