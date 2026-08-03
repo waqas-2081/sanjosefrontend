@@ -1587,29 +1587,28 @@ export default function LogoWizard() {
           }
         }
 
-        /* Short phones: drop 2nd logo row so CTA fits without scroll */
+        /* Short phones: keep 2 logo rows (like desktop), just scale smaller */
         @media (max-width: 1100px) and (max-height: 720px) {
           .lw-root:not(.lw-root--creator) {
-            --m-logo: clamp(42px, 8.5svh, 58px);
-            --m-text-gap: clamp(8px, 1.8svh, 18px);
-            --m-title: clamp(1.3rem, 3.6svh + 0.4rem, 2.1rem);
-          }
-
-          .hero-logo-mobile-band .hero-logo-mobile-row:nth-child(2) {
-            display: none;
+            --m-logo: clamp(38px, 7.2svh, 52px);
+            --m-gap: clamp(5px, 0.9svh, 8px);
+            --m-band-pad-y: clamp(6px, 1svh, 10px);
+            --m-text-gap: clamp(8px, 1.6svh, 16px);
+            --m-title: clamp(1.25rem, 3.4svh + 0.35rem, 2rem);
+            --m-cta-h: clamp(44px, 6svh, 52px);
           }
         }
 
-        /* Very short / landscape-ish phones */
+        /* Very short / landscape-ish phones — still 2 rows */
         @media (max-width: 1100px) and (max-height: 560px) {
           .lw-root:not(.lw-root--creator) {
-            --m-logo: clamp(36px, 10svh, 48px);
-            --m-gap: 5px;
-            --m-band-pad-y: 6px;
-            --m-cta-h: clamp(42px, 9svh, 50px);
-            --m-title: clamp(1.15rem, 4.5svh, 1.7rem);
-            --m-sub: clamp(0.78rem, 2.2svh, 0.92rem);
-            --m-text-gap: clamp(6px, 1.4svh, 12px);
+            --m-logo: clamp(32px, 6.5svh, 44px);
+            --m-gap: 4px;
+            --m-band-pad-y: 5px;
+            --m-cta-h: clamp(40px, 8svh, 48px);
+            --m-title: clamp(1.1rem, 4svh, 1.55rem);
+            --m-sub: clamp(0.75rem, 2svh, 0.88rem);
+            --m-text-gap: clamp(6px, 1.2svh, 10px);
             min-height: 100svh;
             min-height: 100dvh;
           }

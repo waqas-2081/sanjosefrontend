@@ -10,9 +10,9 @@ const PACKAGE_LIMIT = 3;
 const FEATURE_LIMIT = 5;
 
 const CARD_IMAGES = [
-  '/assets/images/portfolio/logo/1.png',
-  '/assets/images/portfolio/logo/7.png',
-  '/assets/images/portfolio/logo/10.png',
+  '/assets/images/portfolio/logo/pack1.png',
+  '/assets/images/portfolio/logo/pack2.png',
+  '/assets/images/portfolio/logo/pack3.png',
 ];
 
 /** Higher score = more “main” selling points for the home cards */

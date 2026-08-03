@@ -58,9 +58,9 @@ function Stars({ rating = 5 }) {
   );
 }
 
-function ReviewCard({ review, isPlaying, onTogglePlay, videoRef }) {
+function ReviewCard({ review, isPlaying, onTogglePlay, videoRef, className = '' }) {
   return (
-    <motion.article className={styles.card} variants={rise}>
+    <motion.article className={`${styles.card}${className ? ` ${className}` : ''}`} variants={rise}>
       <div className={styles.videoFrame}>
         <div className={styles.videoGlow} aria-hidden="true" />
         <button
@@ -104,9 +104,11 @@ function ReviewCard({ review, isPlaying, onTogglePlay, videoRef }) {
 
 export function HomeVideoReviews() {
   const sectionRef = useRef(null);
+  const trackRef = useRef(null);
   const videoRefs = useRef({});
   const controls = useAnimationControls();
   const [playingId, setPlayingId] = useState(null);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   useSectionReplay(sectionRef, controls);
 
@@ -115,43 +117,99 @@ export function HomeVideoReviews() {
     else delete videoRefs.current[id];
   }, []);
 
-  const onTogglePlay = useCallback(async (id) => {
-    const entries = Object.entries(videoRefs.current);
+  const pauseAllVideos = useCallback(() => {
+    Object.values(videoRefs.current).forEach((video) => {
+      if (!video) return;
+      video.pause();
+      video.muted = true;
+    });
+    setPlayingId(null);
+  }, []);
 
-    if (playingId === id) {
-      const current = videoRefs.current[id];
-      if (current) {
-        current.pause();
-        current.muted = true;
+  const onTogglePlay = useCallback(
+    async (id) => {
+      const entries = Object.entries(videoRefs.current);
+
+      if (playingId === id) {
+        const current = videoRefs.current[id];
+        if (current) {
+          current.pause();
+          current.muted = true;
+        }
+        setPlayingId(null);
+        return;
       }
-      setPlayingId(null);
-      return;
-    }
 
-    await Promise.all(
-      entries.map(async ([key, video]) => {
-        if (!video) return;
-        if (key === id) {
-          video.muted = false;
-          video.currentTime = video.currentTime || 0;
-          try {
-            await video.play();
-          } catch {
-            video.muted = true;
+      await Promise.all(
+        entries.map(async ([key, video]) => {
+          if (!video) return;
+          if (key === id) {
+            video.muted = false;
+            video.currentTime = video.currentTime || 0;
             try {
               await video.play();
             } catch {
-              /* ignore autoplay block */
+              video.muted = true;
+              try {
+                await video.play();
+              } catch {
+                /* ignore autoplay block */
+              }
             }
+          } else {
+            video.pause();
+            video.muted = true;
           }
-        } else {
-          video.pause();
-          video.muted = true;
+        }),
+      );
+      setPlayingId(id);
+    },
+    [playingId],
+  );
+
+  const scrollToIndex = useCallback(
+    (index) => {
+      const track = trackRef.current;
+      if (!track) return;
+      const next = Math.max(0, Math.min(HOME_VIDEO_REVIEWS.length - 1, index));
+      const slide = track.children[next];
+      if (!slide) return;
+      pauseAllVideos();
+      slide.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      setActiveIndex(next);
+    },
+    [pauseAllVideos],
+  );
+
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return undefined;
+
+    const onScroll = () => {
+      const slides = Array.from(track.children);
+      if (!slides.length) return;
+      const trackCenter = track.scrollLeft + track.clientWidth / 2;
+      let best = 0;
+      let bestDist = Infinity;
+      slides.forEach((slide, i) => {
+        const center = slide.offsetLeft + slide.offsetWidth / 2;
+        const dist = Math.abs(center - trackCenter);
+        if (dist < bestDist) {
+          bestDist = dist;
+          best = i;
         }
-      }),
-    );
-    setPlayingId(id);
-  }, [playingId]);
+      });
+      setActiveIndex((prev) => {
+        if (prev !== best) {
+          queueMicrotask(pauseAllVideos);
+        }
+        return best;
+      });
+    };
+
+    track.addEventListener('scroll', onScroll, { passive: true });
+    return () => track.removeEventListener('scroll', onScroll);
+  }, [pauseAllVideos]);
 
   useEffect(() => {
     const videos = videoRefs.current;
@@ -187,26 +245,71 @@ export function HomeVideoReviews() {
             Real Voices. <span className={styles.titleAccent}>Real Results.</span>
           </motion.h2>
           <motion.p className={styles.subtitle} variants={rise}>
-            Watch how founders and brands describe working with San Jose Logo Design — craft,
+            Watch how founders and brands describe working with San Jose Logo Design craft,
             clarity, and delivery that feels personal.
           </motion.p>
         </motion.header>
 
         <motion.div
-          className={styles.grid}
+          className={styles.sliderWrap}
           variants={stagger}
           initial="hidden"
           animate={controls}
         >
-          {HOME_VIDEO_REVIEWS.map((review) => (
-            <ReviewCard
-              key={review.id}
-              review={review}
-              isPlaying={playingId === review.id}
-              onTogglePlay={onTogglePlay}
-              videoRef={(node) => setVideoRef(review.id, node)}
-            />
-          ))}
+          <div
+            ref={trackRef}
+            className={styles.track}
+            role="region"
+            aria-roledescription="carousel"
+            aria-label="Client video reviews"
+          >
+            {HOME_VIDEO_REVIEWS.map((review) => (
+              <div key={review.id} className={styles.slide}>
+                <ReviewCard
+                  review={review}
+                  isPlaying={playingId === review.id}
+                  onTogglePlay={onTogglePlay}
+                  videoRef={(node) => setVideoRef(review.id, node)}
+                />
+              </div>
+            ))}
+          </div>
+
+          <div className={styles.sliderControls}>
+            <button
+              type="button"
+              className={styles.navBtn}
+              onClick={() => scrollToIndex(activeIndex - 1)}
+              disabled={activeIndex === 0}
+              aria-label="Previous review"
+            >
+              <i className="fa-solid fa-chevron-left" aria-hidden="true" />
+            </button>
+
+            <div className={styles.dots} role="tablist" aria-label="Review slides">
+              {HOME_VIDEO_REVIEWS.map((review, i) => (
+                <button
+                  key={review.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={activeIndex === i}
+                  aria-label={`Go to review ${i + 1}`}
+                  className={`${styles.dot}${activeIndex === i ? ` ${styles.dotActive}` : ''}`}
+                  onClick={() => scrollToIndex(i)}
+                />
+              ))}
+            </div>
+
+            <button
+              type="button"
+              className={styles.navBtn}
+              onClick={() => scrollToIndex(activeIndex + 1)}
+              disabled={activeIndex === HOME_VIDEO_REVIEWS.length - 1}
+              aria-label="Next review"
+            >
+              <i className="fa-solid fa-chevron-right" aria-hidden="true" />
+            </button>
+          </div>
         </motion.div>
       </div>
     </section>
