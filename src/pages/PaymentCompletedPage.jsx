@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useParams, useNavigate } from 'react-router-dom';
+import { apiUrl } from '../api/apiBase';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { useAuth } from '../context/AuthContext';
 import styles from './PaymentCompletedPage.module.css';
 
-const API_BASE = 'https://admin.sanjoselogodesign.com/api';
 const COUNTDOWN = 10;
 
 export default function PaymentCompletedPage() {
@@ -41,7 +41,7 @@ export default function PaymentCompletedPage() {
 
     (async () => {
       try {
-        const res  = await fetch(`${API_BASE}/payment-requests/by-link/${token}`, {
+        const res  = await fetch(apiUrl(`/api/payment-requests/by-link/${token}`), {
           headers: { Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
         });
         const data = await res.json().catch(() => null);

@@ -1,4 +1,4 @@
-const LOGO_CREATOR_API_BASE = 'https://admin.sanjoselogodesign.com/api/logo-creator';
+import { apiUrl } from './apiBase';
 
 function getErrorMessage(data, fallback) {
   if (!data) return fallback;
@@ -30,7 +30,7 @@ async function readJsonResponse(res) {
  * Matches Laravel route in routes/api.php (logo-creator group).
  */
 export async function postLogoCreatorStart(businessName, options = {}) {
-  const res = await fetch(`${LOGO_CREATOR_API_BASE}/start`, {
+  const res = await fetch(apiUrl('/api/logo-creator/start'), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -51,7 +51,7 @@ export async function postLogoCreatorStart(businessName, options = {}) {
  * POST /api/logo-creator/step — body: { session_token, step, ...fields }
  */
 export async function postLogoCreatorStep(payload, options = {}) {
-  const res = await fetch(`${LOGO_CREATOR_API_BASE}/step`, {
+  const res = await fetch(apiUrl('/api/logo-creator/step'), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

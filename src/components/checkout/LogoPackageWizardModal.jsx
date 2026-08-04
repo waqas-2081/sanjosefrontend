@@ -2,13 +2,18 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import {
+  fetchLogoPackageOptions,
+  splitCompetitorReferences,
+  submitLogoPackageBrief,
+} from '../../api/logoPackageApi';
 import { createPaymentRequest } from '../../api/paymentRequestApi';
 import { saveCheckoutCustomer } from '../../lib/checkoutCustomer';
 import { CashAppMark, PayPalMark, StripeMark } from './PaymentMethodIcons';
 import {
-  LOGO_ADDONS,
-  LOGO_DURATIONS,
-  WIZARD_INDUSTRIES,
+  LOGO_ADDONS as FALLBACK_ADDONS,
+  LOGO_DURATIONS as FALLBACK_DURATIONS,
+  WIZARD_INDUSTRIES as FALLBACK_INDUSTRIES,
   formatMoney,
   parsePackageAmount,
 } from './logoPackageWizardData';
@@ -42,6 +47,15 @@ const STEP_META = [
   { id: 3, label: 'Add-ons' },
 ];
 
+function fallbackIndustryOptions() {
+  return FALLBACK_INDUSTRIES.map((name) => ({ id: name, name }));
+}
+
+function pickDefaultDurationId(durations) {
+  const included = durations.find((d) => d.included);
+  return included?.id ?? durations[0]?.id ?? null;
+}
+
 export default function LogoPackageWizardModal({ open, selectedPackage, onClose }) {
   const navigate = useNavigate();
   const bodyRef = useRef(null);
@@ -49,17 +63,22 @@ export default function LogoPackageWizardModal({ open, selectedPackage, onClose 
   const [step1, setStep1] = useState(EMPTY_STEP1);
   const [step2, setStep2] = useState(EMPTY_STEP2);
   const [selectedAddonIds, setSelectedAddonIds] = useState([]);
-  const [durationId, setDurationId] = useState('72h');
+  const [durationId, setDurationId] = useState(null);
   const [paymentMethod, setPaymentMethod] = useState('stripe');
   const [fieldErrors, setFieldErrors] = useState({});
   const [submitError, setSubmitError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const [industries, setIndustries] = useState(fallbackIndustryOptions);
+  const [addons, setAddons] = useState(FALLBACK_ADDONS);
+  const [durations, setDurations] = useState(FALLBACK_DURATIONS);
+  const [optionsLoading, setOptionsLoading] = useState(false);
+  const [optionsFromApi, setOptionsFromApi] = useState(false);
+
   const scrollBodyToTop = useCallback(() => {
     const el = bodyRef.current;
     if (!el) return;
     el.scrollTop = 0;
-    // iOS / delayed layout after step swap
     requestAnimationFrame(() => {
       if (bodyRef.current) bodyRef.current.scrollTop = 0;
     });
@@ -77,33 +96,70 @@ export default function LogoPackageWizardModal({ open, selectedPackage, onClose 
 
   const addonsTotal = useMemo(() => {
     return selectedAddonIds.reduce((sum, id) => {
-      const addon = LOGO_ADDONS.find((a) => a.id === id);
+      const addon = addons.find((a) => a.id === id);
       return sum + (addon?.price || 0);
     }, 0);
-  }, [selectedAddonIds]);
+  }, [selectedAddonIds, addons]);
 
   const durationTotal = useMemo(() => {
-    const d = LOGO_DURATIONS.find((item) => item.id === durationId);
+    const d = durations.find((item) => item.id === durationId);
     return d?.price || 0;
-  }, [durationId]);
+  }, [durationId, durations]);
+
+  const defaultDurationId = useMemo(() => pickDefaultDurationId(durations), [durations]);
 
   const grandTotal = packageAmount + addonsTotal + durationTotal;
 
   useEffect(() => {
     if (!open) return undefined;
+
     setStep(1);
     setStep1(EMPTY_STEP1);
     setStep2(EMPTY_STEP2);
     setSelectedAddonIds([]);
-    setDurationId('72h');
     setPaymentMethod('stripe');
     setFieldErrors({});
     setSubmitError('');
     setIsSubmitting(false);
+    setOptionsFromApi(false);
+    setIndustries(fallbackIndustryOptions());
+    setAddons(FALLBACK_ADDONS);
+    setDurations(FALLBACK_DURATIONS);
+    setDurationId(pickDefaultDurationId(FALLBACK_DURATIONS));
+
     const prev = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
+
+    const controller = new AbortController();
+    setOptionsLoading(true);
+
+    (async () => {
+      try {
+        const data = await fetchLogoPackageOptions({ signal: controller.signal });
+        if (controller.signal.aborted) return;
+
+        const nextIndustries =
+          data.industries.length > 0 ? data.industries : fallbackIndustryOptions();
+        const nextAddons = data.addons.length > 0 ? data.addons : FALLBACK_ADDONS;
+        const nextDurations = data.durations.length > 0 ? data.durations : FALLBACK_DURATIONS;
+
+        setIndustries(nextIndustries);
+        setAddons(nextAddons);
+        setDurations(nextDurations);
+        setDurationId(pickDefaultDurationId(nextDurations));
+        setOptionsFromApi(data.addons.length > 0 || data.durations.length > 0);
+      } catch (err) {
+        if (controller.signal.aborted || err?.name === 'AbortError') return;
+        // Keep static fallbacks so checkout still works offline.
+        setDurationId(pickDefaultDurationId(FALLBACK_DURATIONS));
+      } finally {
+        if (!controller.signal.aborted) setOptionsLoading(false);
+      }
+    })();
+
     return () => {
       document.body.style.overflow = prev;
+      controller.abort();
     };
   }, [open, selectedPackage?.id]);
 
@@ -191,14 +247,13 @@ export default function LogoPackageWizardModal({ open, selectedPackage, onClose 
     const phone = step1.phone.trim();
 
     const addonNames = selectedAddonIds
-      .map((id) => LOGO_ADDONS.find((a) => a.id === id)?.title)
+      .map((id) => addons.find((a) => a.id === id)?.title)
       .filter(Boolean);
-    const duration = LOGO_DURATIONS.find((d) => d.id === durationId);
+    const duration = durations.find((d) => d.id === durationId);
     const durationLabel =
       duration && !duration.included ? duration.label : '';
     const packageName = selectedPackage.name;
     const addonsLabel = addonNames.join(', ');
-    // Admin/API still gets a full line-item name for the order record
     const packageNameForApi = [
       packageName,
       ...addonNames,
@@ -212,6 +267,32 @@ export default function LogoPackageWizardModal({ open, selectedPackage, onClose 
 
     try {
       saveCheckoutCustomer({ fullName: companyName, email, phone });
+
+      const [comp1, comp2, comp3] = splitCompetitorReferences(step2.competitors);
+      const numericAddonIds = selectedAddonIds
+        .map((aid) => Number(aid))
+        .filter((aid) => Number.isInteger(aid) && aid > 0);
+
+      // Save brief to admin FIRST (same DB as local admin panel).
+      await submitLogoPackageBrief({
+        company_name: companyName,
+        email,
+        phone,
+        logo_name: step2.logoName.trim(),
+        slogan: step2.slogan.trim() || null,
+        industry: step2.industry.trim() || null,
+        business_description: step2.businessDescription.trim(),
+        competitor_reference_1: comp1,
+        competitor_reference_2: comp2,
+        competitor_reference_3: comp3,
+        package_name: packageName,
+        package_price: packageAmount,
+        selected_addons: optionsFromApi ? numericAddonIds : [],
+        duration_label: duration?.label || null,
+        duration_price: duration?.price ?? 0,
+        grand_total: grandTotal,
+        payment_request_id: null,
+      });
 
       const { id, paymentLink } = await createPaymentRequest({
         salesAgent: DEFAULT_SALES_AGENT,
@@ -259,11 +340,15 @@ export default function LogoPackageWizardModal({ open, selectedPackage, onClose 
     selectedPackage,
     isSubmitting,
     grandTotal,
+    packageAmount,
     step1,
     step2,
     selectedAddonIds,
     durationId,
     paymentMethod,
+    addons,
+    durations,
+    optionsFromApi,
     onClose,
     navigate,
   ]);
@@ -469,12 +554,14 @@ export default function LogoPackageWizardModal({ open, selectedPackage, onClose 
                       className={`${styles.select}${fieldErrors.industry ? ` ${styles.inputError}` : ''}`}
                       value={step2.industry}
                       onChange={setStep2Field('industry')}
-                      disabled={isSubmitting}
+                      disabled={isSubmitting || optionsLoading}
                     >
-                      <option value="">Select your industry</option>
-                      {WIZARD_INDUSTRIES.map((item) => (
-                        <option key={item} value={item}>
-                          {item}
+                      <option value="">
+                        {optionsLoading ? 'Loading industries…' : 'Select your industry'}
+                      </option>
+                      {industries.map((item) => (
+                        <option key={item.id} value={item.name}>
+                          {item.name}
                         </option>
                       ))}
                     </select>
@@ -524,67 +611,71 @@ export default function LogoPackageWizardModal({ open, selectedPackage, onClose 
                     payment total.
                   </p>
 
-                  <div className={styles.addonGrid}>
-                    {LOGO_ADDONS.map((addon) => {
-                      const selected = addon.skipAddons
-                        ? selectedAddonIds.length === 0
-                        : selectedAddonIds.includes(addon.id);
-                      const addonImage =
-                        addon.skipAddons && selectedPackage?.previewImage
-                          ? selectedPackage.previewImage
-                          : addon.image;
-                      return (
-                        <article
-                          key={addon.id}
-                          className={`${styles.addonCard}${selected ? ` ${styles.addonCardSelected}` : ''}`}
-                        >
-                          <div className={styles.addonMedia}>
-                            <img src={addonImage} alt="" loading="lazy" />
-                          </div>
-                          <div className={styles.addonBody}>
-                            <h4 className={styles.addonTitle}>{addon.title}</h4>
-                            <div className={styles.addonFooter}>
-                              {addon.skipAddons ? (
-                                <span className={styles.addonPriceNow}>—</span>
-                              ) : (
-                                <div className={styles.addonPrice}>
-                                  <span className={styles.addonPriceNow}>
-                                    +{formatMoney(addon.price)}
-                                  </span>
-                                  {addon.compareAt ? (
-                                    <span className={styles.addonPriceWas}>
-                                      {formatMoney(addon.compareAt)}
-                                    </span>
-                                  ) : null}
-                                </div>
-                              )}
-                              <button
-                                type="button"
-                                className={`${styles.addonBtn}${
-                                  selected ? ` ${styles.addonBtnActive}` : ''
-                                }${addon.skipAddons ? ` ${styles.addonBtnGhost}` : ''}`}
-                                onClick={() => toggleAddon(addon)}
-                                disabled={isSubmitting}
-                              >
-                                {addon.skipAddons
-                                  ? selected
-                                    ? 'Selected'
-                                    : 'Continue'
-                                  : selected
-                                    ? 'Added'
-                                    : 'Add'}
-                              </button>
+                  {optionsLoading ? (
+                    <p className={styles.sectionSub}>Loading add-ons…</p>
+                  ) : (
+                    <div className={styles.addonGrid}>
+                      {addons.map((addon) => {
+                        const selected = addon.skipAddons
+                          ? selectedAddonIds.length === 0
+                          : selectedAddonIds.includes(addon.id);
+                        const addonImage =
+                          addon.skipAddons && selectedPackage?.previewImage
+                            ? selectedPackage.previewImage
+                            : addon.image;
+                        return (
+                          <article
+                            key={addon.id}
+                            className={`${styles.addonCard}${selected ? ` ${styles.addonCardSelected}` : ''}`}
+                          >
+                            <div className={styles.addonMedia}>
+                              <img src={addonImage || ''} alt="" loading="lazy" />
                             </div>
-                          </div>
-                        </article>
-                      );
-                    })}
-                  </div>
+                            <div className={styles.addonBody}>
+                              <h4 className={styles.addonTitle}>{addon.title}</h4>
+                              <div className={styles.addonFooter}>
+                                {addon.skipAddons ? (
+                                  <span className={styles.addonPriceNow}>—</span>
+                                ) : (
+                                  <div className={styles.addonPrice}>
+                                    <span className={styles.addonPriceNow}>
+                                      +{formatMoney(addon.price)}
+                                    </span>
+                                    {addon.compareAt ? (
+                                      <span className={styles.addonPriceWas}>
+                                        {formatMoney(addon.compareAt)}
+                                      </span>
+                                    ) : null}
+                                  </div>
+                                )}
+                                <button
+                                  type="button"
+                                  className={`${styles.addonBtn}${
+                                    selected ? ` ${styles.addonBtnActive}` : ''
+                                  }${addon.skipAddons ? ` ${styles.addonBtnGhost}` : ''}`}
+                                  onClick={() => toggleAddon(addon)}
+                                  disabled={isSubmitting}
+                                >
+                                  {addon.skipAddons
+                                    ? selected
+                                      ? 'Selected'
+                                      : 'Continue'
+                                    : selected
+                                      ? 'Added'
+                                      : 'Add'}
+                                </button>
+                              </div>
+                            </div>
+                          </article>
+                        );
+                      })}
+                    </div>
+                  )}
 
                   <div className={styles.durationBlock}>
                     <h3 className={styles.sectionTitle}>Duration</h3>
                     <p className={styles.sectionSub}>Express logo delivery (optional)</p>
-                    {LOGO_DURATIONS.map((item) => (
+                    {durations.map((item) => (
                       <div key={item.id} className={styles.durationRow}>
                         <span className={styles.durationLabel}>{item.label}</span>
                         {item.included ? (
@@ -603,9 +694,11 @@ export default function LogoPackageWizardModal({ open, selectedPackage, onClose 
                               aria-checked={durationId === item.id}
                               aria-label={item.label}
                               onClick={() =>
-                                setDurationId((prev) => (prev === item.id ? '72h' : item.id))
+                                setDurationId((prev) =>
+                                  prev === item.id ? defaultDurationId : item.id,
+                                )
                               }
-                              disabled={isSubmitting}
+                              disabled={isSubmitting || optionsLoading}
                             >
                               <span className={styles.toggleKnob} />
                             </button>
@@ -663,7 +756,7 @@ export default function LogoPackageWizardModal({ open, selectedPackage, onClose 
                     type="button"
                     className={styles.btnPrimary}
                     onClick={handleProceed}
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || optionsLoading}
                     aria-busy={isSubmitting}
                   >
                     {isSubmitting ? (

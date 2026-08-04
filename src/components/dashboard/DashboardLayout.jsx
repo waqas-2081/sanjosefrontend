@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { storageUrl } from '../../api/apiBase';
 import { DASHBOARD_NAV, PAGE_META } from './dashboardNav';
 import { useAuth } from '../../context/AuthContext';
 import { IconHome, IconMenu } from './icons';
@@ -82,7 +83,7 @@ export default function DashboardLayout() {
   const displayName    = user?.name || 'Client';
   const avatarInitials = getInitials(displayName);
   const avatarUrl      = user?.avatar_path
-    ? `https://admin.sanjoselogodesign.com/public/storage/${user.avatar_path}`
+    ? storageUrl(user.avatar_path)
     : null;
 
   return (

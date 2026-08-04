@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { Link, useSearchParams } from 'react-router-dom';
+import { apiUrl } from '../api/apiBase';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { BlogListSkeleton } from '../components/blog/BlogSkeletons';
 
-const BLOGS_ENDPOINT = 'https://admin.sanjoselogodesign.com/api/v1/blogs';
 const BLOGS_PER_PAGE = 30;
 
 function getApiErrorMessage(result) {
@@ -37,7 +37,7 @@ export default function BlogsPage() {
         });
         if (search) qs.set('search', search);
 
-        const response = await fetch(`${BLOGS_ENDPOINT}?${qs.toString()}`, {
+        const response = await fetch(`${apiUrl('/api/v1/blogs')}?${qs.toString()}`, {
           headers: {
             Accept: 'application/json',
             'X-Requested-With': 'XMLHttpRequest',

@@ -285,10 +285,10 @@ export default function HomePage() {
       {/* Temporarily disabled — LogoWizard is the home banner for now */}
       {/* <MainBanner /> */}
       <LogoWizard />
+      <HomeVideoReviews />
+      <HomeLogoPackages />
       <HomeAbout />
       <FeaturedStories />
-      <HomeLogoPackages />
-      <HomeVideoReviews />
       <PortfolioSection />
       <CtaProjects />
       <BrandPotential />

@@ -46,10 +46,28 @@ function featureScore(line) {
   return score;
 }
 
+function coerceFeatures(features) {
+  if (Array.isArray(features)) return features;
+  if (typeof features !== 'string') return [];
+  const raw = features.trim();
+  if (!raw) return [];
+  if (raw.startsWith('[')) {
+    try {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) return parsed;
+    } catch {
+      /* fall through */
+    }
+  }
+  if (raw.includes('\n')) {
+    return raw.split(/\n+/).map((s) => s.trim()).filter(Boolean);
+  }
+  return [];
+}
+
 /** Keep only the 5 strongest feature points per package */
 function normalizeFeatures(features) {
-  if (!Array.isArray(features)) return [];
-  return features
+  return coerceFeatures(features)
     .map(featureText)
     .filter(Boolean)
     .map((line, index) => ({ line, index, score: featureScore(line) }))
@@ -61,10 +79,13 @@ function normalizeFeatures(features) {
 
 function displayName(name) {
   return String(name || 'Package')
-    .replace(/\s+logo\s*$/i, '')
+    .replace(/\s*logo(?:\s*(?:design|package))?\s*$/i, '')
     .replace(/\s+package\s*$/i, '')
     .trim()
-    .toUpperCase();
+    .replace(/\s+/g, ' ')
+    .toUpperCase()
+    .replace(/\s+LOGO$/u, '')
+    .trim();
 }
 
 function formatPrice(price) {
@@ -87,7 +108,10 @@ export function HomeLogoPackages() {
       setError('');
       try {
         const data = await fetchPackagesByServiceType(SERVICE_TYPE);
-        if (!cancelled) setPackages(Array.isArray(data) ? data.slice(0, PACKAGE_LIMIT) : []);
+        // Same last 3 plans as logo-design packages page (Business → Enterprise)
+        if (!cancelled) {
+          setPackages(Array.isArray(data) ? data.slice(-PACKAGE_LIMIT) : []);
+        }
       } catch (e) {
         if (!cancelled) setError(e.message || 'Failed to load packages.');
       } finally {
@@ -103,16 +127,13 @@ export function HomeLogoPackages() {
     <section className={styles.section} data-no-motion="true" aria-labelledby="home-logo-packages-title">
       <div className={styles.inner}>
         <header className={styles.header}>
-          <span className={styles.eyebrow}>
-            <span className={styles.eyebrowDot} aria-hidden="true" />
-            Logo Packages
-          </span>
+          
           <h2 id="home-logo-packages-title" className={styles.title}>
             Choose Your <span className={styles.titleAccent}>Identity</span>
           </h2>
           <p className={styles.subtitle}>
-            Three curated logo packages — same plans we offer on logo design — crafted for startups,
-            rebrands, and brands that want a lasting first impression.
+            Our top logo packages from logo design — built for growing brands that want premium
+            concepts, full stationery, and a lasting first impression.
           </p>
         </header>
 

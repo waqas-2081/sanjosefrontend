@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
+import { storageUrl } from '../../api/apiBase';
 import { useDocumentTitle } from '../../hooks/useDocumentTitle';
 import { useAuth } from '../../context/AuthContext';
 import styles from '../../components/dashboard/DashboardUI.module.css';
 
-const API_BASE        = 'https://admin.sanjoselogodesign.com/api';
 const AVATAR_MAX_BYTES = 2 * 1024 * 1024;
 const AVATAR_ACCEPT    = 'image/jpeg,image/png,image/webp';
 
@@ -113,7 +113,7 @@ export default function DashboardProfilePage() {
 
   // Build current avatar URL from stored user
   const storedAvatarUrl = user?.avatar_path
-    ? `${API_BASE.replace('/api', '')}/public/storage/${user.avatar_path}`
+    ? storageUrl(user.avatar_path)
     : null;
 
   // Password

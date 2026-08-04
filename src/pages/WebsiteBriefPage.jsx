@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { apiUrl } from '../api/apiBase';
 import styles from './WebsiteBriefPage.module.css';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 
@@ -68,9 +69,6 @@ const FEEL_VALUE_MAP = {
   Dark: 'dark',
   Light: 'light',
 };
-
-// Laravel local app (your admin panel is https://admin.sanjoselogodesign.com/admin — this form posts to the API route instead).
-const WEBSITE_BRIEF_ENDPOINT = 'https://admin.sanjoselogodesign.com/api/website-briefs';
 
 const initialForm = {
   fullName: '',
@@ -240,7 +238,7 @@ export default function WebsiteBriefPage({ embedded = false }) {
     try {
       const payload = buildWebsiteBriefPayload(form);
       const formData = toFormData(payload, files);
-      const response = await fetch(WEBSITE_BRIEF_ENDPOINT, {
+      const response = await fetch(apiUrl('/api/website-briefs'), {
         method: 'POST',
         headers: {
           Accept: 'application/json',

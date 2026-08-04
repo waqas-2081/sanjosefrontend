@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import { apiUrl } from '../api/apiBase';
 
-const API_BASE = 'https://admin.sanjoselogodesign.com/api';
 const TOKEN_KEY = 'sjld_token';
 const USER_KEY  = 'sjld_user';
 
@@ -18,7 +18,7 @@ export function AuthProvider({ children }) {
     const stored = localStorage.getItem(TOKEN_KEY);
     if (!stored) { setLoading(false); return; }
 
-    fetch(`${API_BASE}/auth/me`, {
+    fetch(apiUrl('/api/auth/me'), {
       headers: {
         Accept: 'application/json',
         Authorization: `Bearer ${stored}`,
@@ -56,7 +56,7 @@ export function AuthProvider({ children }) {
 
   /** Standard email/password login */
   const login = useCallback(async ({ email, password }) => {
-    const res  = await fetch(`${API_BASE}/auth/login`, {
+    const res  = await fetch(apiUrl('/api/auth/login'), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -73,7 +73,7 @@ export function AuthProvider({ children }) {
 
   /** Called after payment — backend returns login_token in payment confirm response */
   const loginWithToken = useCallback(async (loginToken) => {
-    const res = await fetch(`${API_BASE}/auth/me`, {
+    const res = await fetch(apiUrl('/api/auth/me'), {
       headers: {
         Accept: 'application/json',
         Authorization: `Bearer ${loginToken}`,
@@ -89,7 +89,7 @@ export function AuthProvider({ children }) {
 
   const logout = useCallback(async () => {
     if (token) {
-      fetch(`${API_BASE}/auth/logout`, {
+      fetch(apiUrl('/api/auth/logout'), {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}`, Accept: 'application/json' },
       }).catch(() => {});
@@ -100,7 +100,8 @@ export function AuthProvider({ children }) {
   /** Authenticated fetch — sets Bearer header, clears auth on 401 */
   const authFetch = useCallback(async (path, opts = {}) => {
     const tok = localStorage.getItem(TOKEN_KEY);
-    const res = await fetch(`${API_BASE}${path}`, {
+    const normalized = path.startsWith('/api') ? path : `/api${path.startsWith('/') ? path : `/${path}`}`;
+    const res = await fetch(apiUrl(normalized), {
       ...opts,
       headers: {
         Accept: 'application/json',

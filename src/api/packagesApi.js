@@ -1,11 +1,11 @@
-const PACKAGES_API_BASE = 'https://admin.sanjoselogodesign.com/api/v1';
+import { apiUrl } from './apiBase';
 
 /**
  * @param {string} serviceType Laravel Package::service_type (e.g. logo, website, animation, digital_marketing, seo)
  * @returns {Promise<Array<{ id: number, name: string, slug?: string, badge: string, price: string, price_type: string, features: unknown[], button_text?: string }>>}
  */
 export async function fetchPackagesByServiceType(serviceType) {
-  const url = `${PACKAGES_API_BASE}/packages?service_type=${encodeURIComponent(serviceType)}`;
+  const url = `${apiUrl('/api/v1/packages')}?service_type=${encodeURIComponent(serviceType)}`;
   const response = await fetch(url, {
     headers: {
       Accept: 'application/json',

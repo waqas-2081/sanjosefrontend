@@ -1,5 +1,7 @@
-const CONTACT_ENDPOINT = 'https://admin.sanjoselogodesign.com/api/contact';
-const CONTACT_AUTOSAVE_ENDPOINT = 'https://admin.sanjoselogodesign.com/api/contact/autosave';
+import { apiUrl } from './apiBase';
+
+const CONTACT_ENDPOINT = () => apiUrl('/api/contact');
+const CONTACT_AUTOSAVE_ENDPOINT = () => apiUrl('/api/contact/autosave');
 
 function getErrorMessage(data, fallback) {
   if (!data) return fallback;
@@ -30,7 +32,7 @@ async function readJsonResponse(res) {
  * POST /api/contact — Final submit with validation
  */
 export async function postContact(payload, options = {}) {
-  const res = await fetch(CONTACT_ENDPOINT, {
+  const res = await fetch(CONTACT_ENDPOINT(), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -51,7 +53,7 @@ export async function postContact(payload, options = {}) {
  * POST /api/contact/autosave — Auto-save draft (partial data allowed)
  */
 export async function autoSaveContact(payload, options = {}) {
-  const res = await fetch(CONTACT_AUTOSAVE_ENDPOINT, {
+  const res = await fetch(CONTACT_AUTOSAVE_ENDPOINT(), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',   

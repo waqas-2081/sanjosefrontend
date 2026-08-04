@@ -1,4 +1,4 @@
-const PAYMENT_REQUEST_ENDPOINT = 'https://admin.sanjoselogodesign.com/api/payment-requests';
+import { apiUrl } from './apiBase';
 
 export function getPaymentRequestApiErrorMessage(result) {
   if (result?.errors && typeof result.errors === 'object') {
@@ -23,7 +23,7 @@ export function getPaymentRequestApiErrorMessage(result) {
  * }} payload
  */
 export async function createPaymentRequest(payload) {
-  const response = await fetch(PAYMENT_REQUEST_ENDPOINT, {
+  const response = await fetch(apiUrl('/api/payment-requests'), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

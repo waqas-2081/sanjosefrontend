@@ -1,4 +1,4 @@
-const BLOG_LEAD_ENDPOINT = 'https://admin.sanjoselogodesign.com/api/blog-leads';
+import { apiUrl } from './apiBase';
 
 function getErrorMessage(data, fallback) {
   if (!data) return fallback;
@@ -29,7 +29,7 @@ async function readJsonResponse(res) {
  * POST /api/blog-leads — Blog article popup lead capture
  */
 export async function postBlogLead(payload, options = {}) {
-  const res = await fetch(BLOG_LEAD_ENDPOINT, {
+  const res = await fetch(apiUrl('/api/blog-leads'), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

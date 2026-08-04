@@ -1,5 +1,7 @@
-const BRANDING_BRIEF_ENDPOINT = 'https://admin.sanjoselogodesign.com/api/branding-brief';
-const BRANDING_BRIEF_AUTOSAVE_ENDPOINT = 'https://admin.sanjoselogodesign.com/api/branding-brief/autosave';
+import { apiUrl } from './apiBase';
+
+const BRANDING_BRIEF_ENDPOINT = () => apiUrl('/api/branding-brief');
+const BRANDING_BRIEF_AUTOSAVE_ENDPOINT = () => apiUrl('/api/branding-brief/autosave');
 
 function getErrorMessage(data, fallback) {
   if (!data) return fallback;
@@ -31,7 +33,7 @@ async function readJsonResponse(res) {
  * body: { full_name, email, phone, message }
  */
 export async function postBrandingBrief(payload, options = {}) {
-  const res = await fetch(BRANDING_BRIEF_ENDPOINT, {
+  const res = await fetch(BRANDING_BRIEF_ENDPOINT(), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -53,7 +55,7 @@ export async function postBrandingBrief(payload, options = {}) {
  * body: { full_name?, email?, phone?, message? }
  */
 export async function autoSaveBrandingBrief(payload, options = {}) {
-  const res = await fetch(BRANDING_BRIEF_AUTOSAVE_ENDPOINT, {
+  const res = await fetch(BRANDING_BRIEF_AUTOSAVE_ENDPOINT(), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { apiUrl } from '../api/apiBase';
 import styles from './PaymentInfoPage.module.css';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
-
-const PAYMENT_REQUEST_ENDPOINT = 'https://admin.sanjoselogodesign.com/api/payment-requests';
 
 const SALES_AGENTS = ['Jared', 'Luke', 'Robert', 'Shawn', 'Sam', 'Zack'];
 
@@ -90,7 +89,7 @@ export default function PaymentInfoPage() {
     };
 
     try {
-      const response = await fetch(PAYMENT_REQUEST_ENDPOINT, {
+      const response = await fetch(apiUrl('/api/payment-requests'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

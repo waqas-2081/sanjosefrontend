@@ -1,4 +1,4 @@
-const AUTH_API_BASE = 'https://admin.sanjoselogodesign.com/api/v1';
+import { apiUrl } from './apiBase';
 
 function getErrorMessage(data, fallback) {
   if (!data) return fallback;
@@ -16,7 +16,7 @@ function getErrorMessage(data, fallback) {
  * @param {string} email
  */
 export async function requestPasswordReset(email, options = {}) {
-  const res = await fetch(`${AUTH_API_BASE}/forgot-password`, {
+  const res = await fetch(apiUrl('/api/v1/forgot-password'), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -47,7 +47,7 @@ export async function requestPasswordReset(email, options = {}) {
  * @param {{ token: string, email: string, password: string, password_confirmation: string }} payload
  */
 export async function resetPassword(payload, options = {}) {
-  const res = await fetch(`${AUTH_API_BASE}/reset-password`, {
+  const res = await fetch(apiUrl('/api/v1/reset-password'), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

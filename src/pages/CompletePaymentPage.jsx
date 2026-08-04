@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { apiUrl } from '../api/apiBase';
 import styles from './CompletePaymentPage.module.css';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 
 // ── ENV / CONFIG ─────────────────────────────────────────────────────────────
-const API_BASE      = 'https://admin.sanjoselogodesign.com/api';
 const STRIPE_PK     = process.env.REACT_APP_STRIPE_KEY      || '';
 const PAYPAL_CLIENT = process.env.REACT_APP_PAYPAL_CLIENT_ID || '';
 
@@ -16,7 +16,7 @@ const PAYPAL_SDK_SRC = `https://www.paypal.com/sdk/js?client-id=${PAYPAL_CLIENT}
 
 // ── HELPERS ───────────────────────────────────────────────────────────────────
 async function apiPost(path, body) {
-  const res = await fetch(`${API_BASE}${path}`, {
+  const res = await fetch(apiUrl(`/api${path.startsWith('/') ? path : `/${path}`}`), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -697,7 +697,7 @@ export default function CompletePaymentPage() {
 
     (async () => {
       try {
-        const res = await fetch(`${API_BASE}/payment-requests/by-link/${token}`, {
+        const res = await fetch(apiUrl(`/api/payment-requests/by-link/${token}`), {
           headers: { Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
         });
         const data = await res.json().catch(() => null);

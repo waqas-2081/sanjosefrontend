@@ -148,28 +148,20 @@ function Particles() {
 }
 
 // Step 1: Business Name
-function Step1({ data, onChange, onNext, pending, error, creatorPage = false }) {
+function Step1({ data, onChange, onNext, pending, error }) {
   const [focused, setFocused] = useState(false);
 
   return (
     <div className="step-content animate-in">
       <div className="hero-text">
         <h2 className="hero-title">
-          {creatorPage ? (
-            <>
-              Create Your <span className="accent">CUSTOM</span> Logo Design
-            </>
-          ) : (
-            <>
-              Create Your <span className="accent">CUSTOM LOGO DESIGN</span>
-            </>
-          )}
+          <>
+            Get Your <span className="accent">FREE  Custom Logo Design</span>
+          </>
         </h2>
-        <p className="hero-sub">
-          {creatorPage
-            ? "Start your business with a brand identity that matters."
-            : "Start your branding journey here."}
-        </p>
+        <h1 className="hero-sub">
+          Award-winning San Jose Logo Design Agency
+        </h1>
       </div>
       {error ? <p className="hero-inline-error" role="alert">{error}</p> : null}
 
@@ -602,7 +594,7 @@ export default function LogoWizard() {
         .logo-wizard-section {
           margin: 0 !important;
           padding-top: 0 !important;
-          padding-bottom: 10px !important;
+          padding-bottom: 0px !important;
         }
         .logo-wizard-section--creator {
           padding-top: 0 !important;
@@ -822,8 +814,15 @@ export default function LogoWizard() {
           animation: fadeDown 0.8s ease both;
         }
         .hero-sub {
-          font-size: 1.1rem; color: rgba(255,255,255,0.6);
-          margin-top: 10px; font-weight: 400;
+          font-family: 'Barlow', sans-serif;
+          font-size: 1.1rem;
+          color: rgba(255,255,255,0.6);
+          margin-top: 10px;
+          margin-bottom: 0;
+          font-weight: 400;
+          letter-spacing: normal;
+          line-height: 1.45;
+          text-transform: none;
           animation: fadeDown 0.8s 0.15s ease both;
         }
         .hero-inline-error {
@@ -1815,7 +1814,6 @@ export default function LogoWizard() {
                 onNext={handleGetStarted}
                 pending={isLogoCreatorPage && sessionStarting && !showModal}
                 error={isLogoCreatorPage && !showModal ? apiError : ""}
-                creatorPage={isLogoCreatorPage}
               />
             </div>
           )}

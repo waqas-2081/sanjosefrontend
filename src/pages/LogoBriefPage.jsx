@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { apiUrl } from '../api/apiBase';
 import styles from './LogoBriefPage.module.css';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 
@@ -52,7 +53,6 @@ const LOGO_TYPE_MAP = {
   emblem: 'emblem',
 };
 
-const LOGO_BRIEF_ENDPOINT = 'https://admin.sanjoselogodesign.com/api/logo-brief';
 
 const initialForm = {
   contactName: '',
@@ -247,7 +247,7 @@ export default function LogoBriefPage({ embedded = false }) {
     try {
       const payload = buildLogoBriefPayload(form);
       const formData = toLogoBriefFormData(payload, files);
-      const response = await fetch(LOGO_BRIEF_ENDPOINT, {
+      const response = await fetch(apiUrl('/api/logo-brief'), {
         method: 'POST',
         headers: {
           Accept: 'application/json',

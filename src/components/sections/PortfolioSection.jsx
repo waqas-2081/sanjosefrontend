@@ -1,9 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { apiUrl } from '../../api/apiBase';
 import { refreshPortfolioTabSwipers } from '../../lib/legacyWidgets';
 import { GalleryLightboxPortal } from '../ui/GalleryLightbox';
 import { SuccessStoriesHome } from './SuccessStoriesHome';
-const PORTFOLIOS_ENDPOINT = 'https://admin.sanjoselogodesign.com/api/v1/portfolios';
-const PORTFOLIO_CATEGORIES_ENDPOINT = 'https://admin.sanjoselogodesign.com/api/v1/portfolio-categories';
 
 function getApiErrorMessage(result) {
   if (result?.message && typeof result.message === 'string') return result.message;
@@ -81,13 +80,13 @@ export function PortfolioSection() {
 
       try {
         const [catRes, listRes] = await Promise.all([
-          fetch(PORTFOLIO_CATEGORIES_ENDPOINT, {
+          fetch(apiUrl('/api/v1/portfolio-categories'), {
             headers: {
               Accept: 'application/json',
               'X-Requested-With': 'XMLHttpRequest',
             },
           }),
-          fetch(PORTFOLIOS_ENDPOINT, {
+          fetch(apiUrl('/api/v1/portfolios'), {
             headers: {
               Accept: 'application/json',
               'X-Requested-With': 'XMLHttpRequest',

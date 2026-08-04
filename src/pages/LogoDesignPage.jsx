@@ -1,10 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { storageUrl } from '../api/apiBase';
 import { PortfolioGalleryGrid } from '../components/ui/PortfolioGalleryGrid';
 import { Helmet } from 'react-helmet';
 import ServicePackagesSection from '../components/sections/ServicePackagesSection';
 import { SuccessStoriesHome } from '../components/sections/SuccessStoriesHome';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
+
+const LOGO_SCHEMA_IMAGE = storageUrl(
+  'portfolios/6UP6KgFMp2K5wcdWVHMv9xJg6YoBdRGmWOclcVte.png',
+);
 
 const LOGO_DESIGN_PAGE_SCHEMA = {
   '@context': 'https://schema.org',
@@ -23,8 +28,7 @@ const LOGO_DESIGN_PAGE_SCHEMA = {
       brand: { '@id': 'https://sanjoselogodesign.com/#organization' },
       mainEntityOfPage: { '@id': 'https://sanjoselogodesign.com/logo-design-services/#webpage' },
       image: {
-        '@id':
-          'https://admin.sanjoselogodesign.com/public/storage/portfolios/6UP6KgFMp2K5wcdWVHMv9xJg6YoBdRGmWOclcVte.png',
+        '@id': LOGO_SCHEMA_IMAGE,
       },
       keywords: [
         'logo design san jose',
@@ -65,8 +69,7 @@ const LOGO_DESIGN_PAGE_SCHEMA = {
     {
       '@type': 'ImageObject',
       '@id': 'https://sanjoselogodesign.com/logo-design-services/#primaryimage',
-      contentUrl:
-        'https://admin.sanjoselogodesign.com/public/storage/portfolios/6UP6KgFMp2K5wcdWVHMv9xJg6YoBdRGmWOclcVte.png',
+      contentUrl: LOGO_SCHEMA_IMAGE,
     },
     {
       '@type': 'BreadcrumbList',

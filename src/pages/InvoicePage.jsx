@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-
-const API_BASE = 'https://admin.sanjoselogodesign.com/api';
+import { apiUrl } from '../api/apiBase';
 
 export default function InvoicePage() {
   // Route: "genrate/*"
@@ -28,7 +27,7 @@ export default function InvoicePage() {
 
     (async () => {
       try {
-        const res = await fetch(`${API_BASE}/payment-requests/by-link/${token}`, {
+        const res = await fetch(apiUrl(`/api/payment-requests/by-link/${token}`), {
           headers: { Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
         });
         const data = await res.json().catch(() => null);

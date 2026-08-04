@@ -237,10 +237,6 @@ export function HomeVideoReviews() {
           initial="hidden"
           animate={controls}
         >
-          <motion.span className={styles.eyebrow} variants={rise}>
-            <span className={styles.eyebrowDot} aria-hidden="true" />
-            Client Reviews
-          </motion.span>
           <motion.h2 id="home-video-reviews-title" className={styles.title} variants={rise}>
             Real Voices. <span className={styles.titleAccent}>Real Results.</span>
           </motion.h2>

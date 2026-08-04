@@ -3,7 +3,8 @@ import { Helmet } from 'react-helmet';
 import { Link, useParams } from 'react-router-dom';
 import { BlogDetailSkeleton } from '../components/blog/BlogSkeletons';
 import BlogLeadPopup from '../components/blog/BlogLeadPopup';
-import NotFoundPage from './NotFoundPage';const BLOG_DETAIL_ENDPOINT_BASE = 'https://admin.sanjoselogodesign.com/api/v1/blogs';
+import { apiUrl } from '../api/apiBase';
+import NotFoundPage from './NotFoundPage';
 
 /** Fixed line under breadcrumbs (not article `short_description`) */
 const BLOG_DETAIL_HERO_TAGLINE =
@@ -127,7 +128,7 @@ export default function BlogDetail() {
       setBlog(null);
 
       try {
-        const response = await fetch(`${BLOG_DETAIL_ENDPOINT_BASE}/${encodeURIComponent(slug)}`, {
+        const response = await fetch(apiUrl(`/api/v1/blogs/${encodeURIComponent(slug)}`), {
           headers: {
             Accept: 'application/json',
             'X-Requested-With': 'XMLHttpRequest',

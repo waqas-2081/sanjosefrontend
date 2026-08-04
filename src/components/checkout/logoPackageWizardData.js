@@ -1,3 +1,4 @@
+/** Offline / API-failure fallbacks — live data comes from GET /api/v1/logo-package-options */
 export const WIZARD_INDUSTRIES = [
   'Technology',
   'Healthcare',
@@ -16,7 +17,7 @@ export const WIZARD_INDUSTRIES = [
   'Other',
 ];
 
-/** Add-ons inspired by toolkit checkout — prices add to package total */
+/** Fallback add-ons (string ids) — API returns numeric DB ids */
 export const LOGO_ADDONS = [
   {
     id: 'skip',

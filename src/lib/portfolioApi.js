@@ -1,6 +1,16 @@
-export const PORTFOLIOS_ENDPOINT = 'https://admin.sanjoselogodesign.com/api/v1/portfolios';
-export const PORTFOLIO_CATEGORIES_ENDPOINT =
-  'https://admin.sanjoselogodesign.com/api/v1/portfolio-categories';
+import { apiUrl } from '../api/apiBase';
+
+export function getPortfoliosEndpoint() {
+  return apiUrl('/api/v1/portfolios');
+}
+
+export function getPortfolioCategoriesEndpoint() {
+  return apiUrl('/api/v1/portfolio-categories');
+}
+
+/** @deprecated use getPortfoliosEndpoint() — kept for callers that read at call-time */
+export const PORTFOLIOS_ENDPOINT = getPortfoliosEndpoint();
+export const PORTFOLIO_CATEGORIES_ENDPOINT = getPortfolioCategoriesEndpoint();
 
 const JSON_HEADERS = {
   Accept: 'application/json',
@@ -24,7 +34,7 @@ async function parseJsonResponse(res) {
 }
 
 export async function fetchPortfolioCategories() {
-  const res = await fetch(PORTFOLIO_CATEGORIES_ENDPOINT, { headers: JSON_HEADERS });
+  const res = await fetch(getPortfolioCategoriesEndpoint(), { headers: JSON_HEADERS });
   const json = await parseJsonResponse(res);
   if (!res.ok || !json || json.success !== true) {
     throw new Error(getApiErrorMessage(json));
@@ -33,22 +43,15 @@ export async function fetchPortfolioCategories() {
 }
 
 export async function fetchPortfolios(category) {
+  const base = getPortfoliosEndpoint();
   const url = category
-    ? `${PORTFOLIOS_ENDPOINT}?category=${encodeURIComponent(category)}`
-    : PORTFOLIOS_ENDPOINT;
+    ? `${base}?category=${encodeURIComponent(category)}`
+    : base;
 
   const res = await fetch(url, { headers: JSON_HEADERS });
   const json = await parseJsonResponse(res);
   if (!res.ok || !json || json.success !== true) {
     throw new Error(getApiErrorMessage(json));
   }
-
-  const list = Array.isArray(json.data) ? json.data : [];
-  const filtered = category
-    ? list.filter((item) => item.category === category)
-    : list;
-
-  return filtered
-    .filter((item) => item.image)
-    .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0));
+  return Array.isArray(json.data) ? json.data : [];
 }
