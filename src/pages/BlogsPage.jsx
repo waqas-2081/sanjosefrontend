@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { Link, useSearchParams } from 'react-router-dom';
-import { apiUrl } from '../api/apiBase';
+import { apiUrl, storageUrl } from '../api/apiBase';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { BlogListSkeleton } from '../components/blog/BlogSkeletons';
 
@@ -10,6 +10,14 @@ const BLOGS_PER_PAGE = 30;
 function getApiErrorMessage(result) {
   if (result?.message && typeof result.message === 'string') return result.message;
   return 'Unable to load blog posts right now.';
+}
+
+/** Drop mistaken `/public` from admin storage URLs (same as portfolio / add-ons). */
+function normalizeBlogThumbnail(thumbnail) {
+  if (!thumbnail || typeof thumbnail !== 'string') return null;
+  const raw = thumbnail.trim();
+  if (!raw) return null;
+  return storageUrl(raw);
 }
 
 export default function BlogsPage() {
@@ -53,7 +61,13 @@ export default function BlogsPage() {
         }
 
         if (!cancelled) {
-          setBlogs(Array.isArray(result.data) ? result.data : []);
+          const list = Array.isArray(result.data) ? result.data : [];
+          setBlogs(
+            list.map((item) => ({
+              ...item,
+              thumbnail: normalizeBlogThumbnail(item?.thumbnail),
+            }))
+          );
           setMeta(result.meta || { current_page: 1, last_page: 1, total: 0 });
         }
       } catch (e) {

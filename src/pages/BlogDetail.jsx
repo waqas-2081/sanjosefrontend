@@ -3,8 +3,16 @@ import { Helmet } from 'react-helmet';
 import { Link, useParams } from 'react-router-dom';
 import { BlogDetailSkeleton } from '../components/blog/BlogSkeletons';
 import BlogLeadPopup from '../components/blog/BlogLeadPopup';
-import { apiUrl } from '../api/apiBase';
+import { apiUrl, storageUrl } from '../api/apiBase';
 import NotFoundPage from './NotFoundPage';
+
+/** Drop mistaken `/public` from admin storage URLs (same as portfolio / add-ons). */
+function normalizeBlogThumbnail(thumbnail) {
+  if (!thumbnail || typeof thumbnail !== 'string') return null;
+  const raw = thumbnail.trim();
+  if (!raw) return null;
+  return storageUrl(raw);
+}
 
 /** Fixed line under breadcrumbs (not article `short_description`) */
 const BLOG_DETAIL_HERO_TAGLINE =
@@ -143,7 +151,12 @@ export default function BlogDetail() {
         }
 
         if (!cancelled) {
-          setBlog(result.data || null);
+          const data = result.data || null;
+          setBlog(
+            data
+              ? { ...data, thumbnail: normalizeBlogThumbnail(data.thumbnail) }
+              : null
+          );
         }
       } catch (e) {
         if (!cancelled) {

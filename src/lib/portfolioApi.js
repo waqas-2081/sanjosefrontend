@@ -1,4 +1,4 @@
-import { apiUrl } from '../api/apiBase';
+import { apiUrl, storageUrl } from '../api/apiBase';
 
 export function getPortfoliosEndpoint() {
   return apiUrl('/api/v1/portfolios');
@@ -27,6 +27,14 @@ export function isVideoUrl(url) {
   return /\.(mp4|webm|ogg)(\?|$)/i.test(url);
 }
 
+/** Drop mistaken `/public` from admin storage URLs (same as add-ons). */
+function normalizePortfolioImage(image) {
+  if (!image || typeof image !== 'string') return null;
+  const raw = image.trim();
+  if (!raw) return null;
+  return storageUrl(raw);
+}
+
 async function parseJsonResponse(res) {
   const contentType = res.headers.get('content-type') || '';
   if (!contentType.includes('application/json')) return null;
@@ -53,5 +61,9 @@ export async function fetchPortfolios(category) {
   if (!res.ok || !json || json.success !== true) {
     throw new Error(getApiErrorMessage(json));
   }
-  return Array.isArray(json.data) ? json.data : [];
+  const list = Array.isArray(json.data) ? json.data : [];
+  return list.map((item) => ({
+    ...item,
+    image: normalizePortfolioImage(item?.image),
+  }));
 }
