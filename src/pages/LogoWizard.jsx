@@ -1589,7 +1589,7 @@ export default function LogoWizard() {
         /* Short phones: keep 2 logo rows (like desktop), just scale smaller */
         @media (max-width: 1100px) and (max-height: 720px) {
           .lw-root:not(.lw-root--creator) {
-            --m-logo: clamp(38px, 7.2svh, 52px);
+           --m-logo: clamp(68px, 8.2svh, 52px);
             --m-gap: clamp(5px, 0.9svh, 8px);
             --m-band-pad-y: clamp(6px, 1svh, 10px);
             --m-text-gap: clamp(8px, 1.6svh, 16px);
@@ -1601,7 +1601,7 @@ export default function LogoWizard() {
         /* Very short / landscape-ish phones — still 2 rows */
         @media (max-width: 1100px) and (max-height: 560px) {
           .lw-root:not(.lw-root--creator) {
-            --m-logo: clamp(32px, 6.5svh, 44px);
+           --m-logo: clamp(68px, 8.2svh, 52px);
             --m-gap: 4px;
             --m-band-pad-y: 5px;
             --m-cta-h: clamp(40px, 8svh, 48px);

@@ -287,14 +287,17 @@ export default function HomePage() {
       <LogoWizard />
       <HomeVideoReviews />
       <HomeLogoPackages />
-      <HomeAbout />
-      <FeaturedStories />
-      <PortfolioSection />
-      <CtaProjects />
-      <BrandPotential />
-      <SolutionsSection hideOnMobile />
-      <AwesomeProjects />
-      <Transforming />
+      {/* Desktop/tablet only — keep mobile home light */}
+      <div className="home-desktop-only">
+        <HomeAbout />
+        <FeaturedStories />
+        <PortfolioSection />
+        <CtaProjects />
+        <BrandPotential />
+        <SolutionsSection />
+        <AwesomeProjects />
+        <Transforming />
+      </div>
       <SuccessStoriesHome />
         </>
       )}

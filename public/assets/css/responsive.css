@@ -694,6 +694,11 @@
         display: none !important;
     }
 
+    /* Home: mobile shows only LogoWizard, reviews, packages, success stories + footer */
+    .home-desktop-only {
+        display: none !important;
+    }
+
     .brand-potential .content h2 {
         font-size: 50px;
     }
