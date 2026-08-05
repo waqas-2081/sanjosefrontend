@@ -56,6 +56,36 @@ function pickDefaultDurationId(durations) {
   return included?.id ?? durations[0]?.id ?? null;
 }
 
+/** Always keep a “just my logo” card so the selected package preview shows in add-ons. */
+function withSelectedPackageSkip(addons, selectedPackage) {
+  const list = Array.isArray(addons) ? [...addons] : [];
+  const skipIndex = list.findIndex((a) => a.skipAddons);
+  const skipImage =
+    selectedPackage?.previewImage ||
+    FALLBACK_ADDONS.find((a) => a.skipAddons)?.image ||
+    null;
+
+  if (skipIndex >= 0) {
+    list[skipIndex] = {
+      ...list[skipIndex],
+      image: skipImage || list[skipIndex].image,
+    };
+    return list;
+  }
+
+  return [
+    {
+      id: 'skip',
+      title: 'No thanks, just my Logo',
+      image: skipImage,
+      price: 0,
+      compareAt: null,
+      skipAddons: true,
+    },
+    ...list,
+  ];
+}
+
 export default function LogoPackageWizardModal({ open, selectedPackage, onClose }) {
   const navigate = useNavigate();
   const bodyRef = useRef(null);
@@ -123,7 +153,7 @@ export default function LogoPackageWizardModal({ open, selectedPackage, onClose 
     setIsSubmitting(false);
     setOptionsFromApi(false);
     setIndustries(fallbackIndustryOptions());
-    setAddons(FALLBACK_ADDONS);
+    setAddons(withSelectedPackageSkip(FALLBACK_ADDONS, selectedPackage));
     setDurations(FALLBACK_DURATIONS);
     setDurationId(pickDefaultDurationId(FALLBACK_DURATIONS));
 
@@ -140,7 +170,10 @@ export default function LogoPackageWizardModal({ open, selectedPackage, onClose 
 
         const nextIndustries =
           data.industries.length > 0 ? data.industries : fallbackIndustryOptions();
-        const nextAddons = data.addons.length > 0 ? data.addons : FALLBACK_ADDONS;
+        const nextAddons = withSelectedPackageSkip(
+          data.addons.length > 0 ? data.addons : FALLBACK_ADDONS,
+          selectedPackage,
+        );
         const nextDurations = data.durations.length > 0 ? data.durations : FALLBACK_DURATIONS;
 
         setIndustries(nextIndustries);
@@ -151,6 +184,7 @@ export default function LogoPackageWizardModal({ open, selectedPackage, onClose 
       } catch (err) {
         if (controller.signal.aborted || err?.name === 'AbortError') return;
         // Keep static fallbacks so checkout still works offline.
+        setAddons(withSelectedPackageSkip(FALLBACK_ADDONS, selectedPackage));
         setDurationId(pickDefaultDurationId(FALLBACK_DURATIONS));
       } finally {
         if (!controller.signal.aborted) setOptionsLoading(false);

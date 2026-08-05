@@ -808,7 +808,7 @@
   }
 
   .addonMedia {
-    width: 112px;
+    width: 135px;
     aspect-ratio: 1 / 1;
     align-self: center;
     min-height: 0;
@@ -942,7 +942,7 @@
   }
 
   .addonMedia {
-    width: 92px;
+    width: 130px;
     aspect-ratio: 1 / 1;
     min-height: 0;
   }

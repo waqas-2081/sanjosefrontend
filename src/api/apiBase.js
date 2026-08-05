@@ -21,7 +21,13 @@ export function apiUrl(path) {
 export function storageUrl(path) {
   if (!path) return '';
   const raw = String(path);
-  if (/^https?:\/\//i.test(raw)) return raw;
-  const cleaned = raw.replace(/^\/+/, '').replace(/^public\//, '');
-  return apiUrl(`/public/storage/${cleaned.replace(/^storage\//, '')}`);
+  if (/^https?:\/\//i.test(raw)) {
+    // Drop mistaken `/public` segment: .../public/storage/... → .../storage/...
+    return raw.replace(/\/public\/storage\//i, '/storage/');
+  }
+  const cleaned = raw
+    .replace(/^\/+/, '')
+    .replace(/^public\//, '')
+    .replace(/^storage\//, '');
+  return apiUrl(`/storage/${cleaned}`);
 }

@@ -1,4 +1,4 @@
-import { apiUrl, getApiOrigin } from './apiBase';
+import { apiUrl, storageUrl } from './apiBase';
 
 function getErrorMessage(data, fallback) {
   if (!data) return fallback;
@@ -25,19 +25,20 @@ async function readJsonResponse(res) {
   return data;
 }
 
-/** Prefer frontend-relative /assets paths; keep absolute storage URLs as-is. */
+/**
+ * Frontend /assets stay relative; uploaded admin files resolve to
+ * https://admin.sanjoselogodesign.com/storage/...
+ */
 function normalizeImage(image) {
   if (!image || typeof image !== 'string') return null;
-  try {
-    if (image.startsWith('/assets/') || image.startsWith('assets/')) {
-      return `/${image.replace(/^\/+/, '')}`;
-    }
-    const url = new URL(image, getApiOrigin());
-    if (url.pathname.startsWith('/assets/')) return url.pathname;
-  } catch {
-    /* keep original */
+  const raw = image.trim();
+  if (!raw) return null;
+
+  if (raw.startsWith('/assets/') || raw.startsWith('assets/')) {
+    return `/${raw.replace(/^\/+/, '')}`;
   }
-  return image;
+
+  return storageUrl(raw);
 }
 
 /**
