@@ -36,6 +36,7 @@ import ProtectedRoute from './components/dashboard/ProtectedRoute';
 import DashboardPaymentsPage from './pages/dashboard/DashboardPaymentsPage';
 import DashboardWebsiteProjectsPage from './pages/dashboard/DashboardWebsiteProjectsPage';
 import DashboardLogoProjectsPage from './pages/dashboard/DashboardLogoProjectsPage';
+import DashboardAddonsPage from './pages/dashboard/DashboardAddonsPage';
 import DashboardRevisionsPage from './pages/dashboard/DashboardRevisionsPage';
 import DashboardLogoBriefPage from './pages/dashboard/DashboardLogoBriefPage';
 import DashboardWebsiteBriefPage from './pages/dashboard/DashboardWebsiteBriefPage';
@@ -72,6 +73,7 @@ function App() {
             <Route path="payments" element={<DashboardPaymentsPage />} />
             <Route path="website-projects" element={<DashboardWebsiteProjectsPage />} />
             <Route path="logo-projects" element={<DashboardLogoProjectsPage />} />
+            <Route path="addons" element={<DashboardAddonsPage />} />
             <Route path="revisions" element={<DashboardRevisionsPage />} />
             <Route path="logo-brief" element={<DashboardLogoBriefPage />} />
             <Route path="website-brief" element={<DashboardWebsiteBriefPage />} />

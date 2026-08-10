@@ -1,0 +1,267 @@
+.page {
+  width: 100%;
+}
+
+.intro {
+  margin: 0.35rem 0 0;
+  font-size: 0.88rem;
+  color: #7b7f90;
+  line-height: 1.45;
+}
+
+.body {
+  padding: 1.25rem;
+}
+
+.state {
+  margin: 0;
+  padding: 2rem 0.5rem;
+  text-align: center;
+  color: #7b7f90;
+  font-size: 0.95rem;
+}
+
+.hint {
+  margin: 0 0 1rem;
+  padding: 0.7rem 0.9rem;
+  border-radius: 10px;
+  background: rgba(255, 94, 44, 0.06);
+  border: 1px solid rgba(255, 94, 44, 0.18);
+  color: #8a4b2a;
+  font-size: 0.85rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+  text-align: left;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid #e8ecf2;
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.card:hover {
+  border-color: rgba(255, 94, 44, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.07);
+}
+
+.card:hover .selectBtn {
+  filter: brightness(1.05);
+}
+
+.cardSelected {
+  border-color: #ff5e2c;
+  box-shadow: 0 0 0 2px rgba(255, 94, 44, 0.16), 0 8px 20px rgba(255, 94, 44, 0.12);
+}
+
+.media {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 120px;
+  padding: 8px;
+  background: #f6f7fb;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.media img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.mediaFallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  color: #9aa0b4;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.cardBody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  padding: 0.8rem 0.85rem 0.9rem;
+  flex: 1;
+}
+
+.cardTitle {
+  margin: 0;
+  font-family: 'Mona Sans', system-ui, sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #333;
+  line-height: 1.35;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.cardFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-top: auto;
+}
+
+.priceRow {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.priceNow {
+  color: #ff5e2c;
+  font-weight: 800;
+  font-size: 0.92rem;
+}
+
+.priceWas {
+  color: #9aa0b4;
+  text-decoration: line-through;
+  font-size: 0.74rem;
+}
+
+.selectBtn {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 30px;
+  padding: 0 0.75rem;
+  border-radius: 8px;
+  background: linear-gradient(118deg, #e04a1a, #ff5e2c 55%, #ff7a45);
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  box-shadow: 0 4px 12px rgba(255, 94, 44, 0.28);
+  transition: filter 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.selectBtnActive {
+  background: #fff;
+  color: #ff5e2c;
+  border: 1px solid rgba(255, 94, 44, 0.45);
+  box-shadow: none;
+}
+
+.actionBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1.25rem;
+  padding: 1rem 1.15rem;
+  border-radius: 14px;
+  background: #fafbfd;
+  border: 1px solid #e8ecf2;
+  animation: barIn 0.28s ease;
+}
+
+@keyframes barIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.actionInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.actionLabel {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #7b7f90;
+}
+
+.actionTitle {
+  font-size: 1rem;
+  color: #333;
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.actionPrice {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #ff5e2c;
+}
+
+.completeBtn {
+  flex-shrink: 0;
+  min-width: 11rem;
+}
+
+.error {
+  margin: 0.85rem 0 0;
+  color: #c0392b;
+  font-size: 0.88rem;
+}
+
+@media (max-width: 1100px) {
+  .grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .actionBar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .completeBtn {
+    width: 100%;
+  }
+
+  .actionTitle {
+    white-space: normal;
+  }
+}
