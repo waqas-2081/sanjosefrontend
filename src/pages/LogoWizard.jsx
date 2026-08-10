@@ -156,7 +156,7 @@ function Step1({ data, onChange, onNext, pending, error }) {
       <div className="hero-text">
         <h2 className="hero-title">
           <>
-            Get Your <span className="accent">FREE  Custom Logo Design</span>
+            Generate Your <span className="accent">FREE Logo with AI</span>
           </>
         </h2>
         <h1 className="hero-sub">

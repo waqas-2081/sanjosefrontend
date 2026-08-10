@@ -5,7 +5,7 @@ import { postBrandingBrief, autoSaveBrandingBrief } from '../../api/brandingBrie
 import { saveCheckoutCustomer } from '../../lib/checkoutCustomer';
 import { useClientIp } from '../../hooks/useClientIp';
 
-const OPEN_DELAY_MS = 3500;
+const OPEN_DELAY_MS = 15000;
 const AUTOSAVE_DELAY_MS = 3000; // 3 seconds
 
 const emptyForm = {

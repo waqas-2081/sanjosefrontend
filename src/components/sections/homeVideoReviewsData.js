@@ -7,12 +7,12 @@ const videoUrl = (file) =>
 
 export const HOME_VIDEO_REVIEWS = [
   {
-    id: 'review-1',
-    name: 'Marcus Whitfield',
-    role: 'Founder, Cobalt & Pine Design Co.',
+    id: 'review-3',
+    name: 'Edgar Luna',
+    role: 'Owner, Blue Grid Plumbing',
     rating: 5,
-    text: 'San Jose Logo Design talked me out of it, thank god, and what we ended up with, it\'s just... it\'s actually us. People bring it up unprompted. Clients, vendors, randomly. That\'s never happened before.',
-    videoSrc: videoUrl('review-1.mp4'),
+    text: 'San Jose Logo Design gave Blue Grid Plumbing a look that finally matches the quality of our work. Clients notice it right away, and it\'s made us feel more professional every time we show up on a job.',
+    videoSrc: videoUrl('review-2.mp4'),
   },
   {
     id: 'review-2',
@@ -23,12 +23,12 @@ export const HOME_VIDEO_REVIEWS = [
     videoSrc: videoUrl('review-4.mp4'),
   },
   {
-    id: 'review-3',
-    name: 'Devon Castellano',
-    role: 'Owner, Redwood Grove Roasters',
+    id: 'review-1',
+    name: 'Marcus Whitfield',
+    role: 'Founder, Cobalt & Pine Design Co.',
     rating: 5,
-    text: 'San Jose Logo Design redid our merch, our packaging, all of it. And people just... bring the bags back in. To show me pictures. Of the bag. I did not expect that to be a thing. But it\'s a thing.',
-    videoSrc: videoUrl('review-2.mp4'),
+    text: 'San Jose Logo Design talked me out of it, thank god, and what we ended up with, it\'s just... it\'s actually us. People bring it up unprompted. Clients, vendors, randomly. That\'s never happened before.',
+    videoSrc: videoUrl('review-1.mp4'),
   },
   {
     id: 'review-4',

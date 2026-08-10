@@ -1885,7 +1885,7 @@ section {
 }
 
 .brand-potential .brand-content {
-    padding: 0 0px 0 90px;
+    padding: 0 0px 0 5px;
     display: flex;
     flex-direction: column;
     gap: 40px;
