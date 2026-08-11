@@ -71,8 +71,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 120px;
-  padding: 8px;
   background: #f6f7fb;
   overflow: hidden;
   box-sizing: border-box;
