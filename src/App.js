@@ -22,6 +22,7 @@ import TermsConditionsPage from './pages/TermsConditionsPage';
 import SeoPage from './pages/SeoPage';
 import ServicesPage from './pages/ServicesPage';
 import ThankYouPage from './pages/ThankYouPage';
+import LogoCreatorCompletedPage from './pages/LogoCreatorCompletedPage';
 import WebsiteBriefPage from './pages/WebsiteBriefPage';
 import WebsitePage from './pages/WebsitePage';
 import HomePage from './pages/HomePage';
@@ -108,6 +109,7 @@ function App() {
             <Route path="payment-completed/:token" element={<PaymentCompletedPage />} />
             <Route path="logo-offer" element={<LogoOfferPage />} />
             <Route path="thankyou" element={<ThankYouPage />} />
+            <Route path="logocreator-completed" element={<LogoCreatorCompletedPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Route>
         </Routes>

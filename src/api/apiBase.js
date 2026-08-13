@@ -17,17 +17,30 @@ export function apiUrl(path) {
   return `${origin}${normalized}`;
 }
 
-/** Public storage / uploaded asset URL on the API host */
+/** Public storage / uploaded asset URL on the API host (REACT_APP_API_BASE_URL). */
 export function storageUrl(path) {
   if (!path) return '';
-  const raw = String(path);
+  const raw = String(path).trim();
+  let cleaned = raw;
+
   if (/^https?:\/\//i.test(raw)) {
-    // Drop mistaken `/public` segment: .../public/storage/... → .../storage/...
-    return raw.replace(/\/public\/storage\//i, '/storage/');
+    // Always rebuild from REACT_APP_API_BASE_URL — backend APP_URL is often wrong for the SPA.
+    const match = raw.match(/\/(?:public\/)?storage\/(.+?)(?:\?.*)?$/i);
+    if (match) {
+      cleaned = match[1];
+    } else {
+      try {
+        cleaned = new URL(raw).pathname.replace(/^\/+/, '');
+      } catch {
+        return raw;
+      }
+    }
   }
-  const cleaned = raw
+
+  cleaned = cleaned
     .replace(/^\/+/, '')
-    .replace(/^public\//, '')
-    .replace(/^storage\//, '');
+    .replace(/^public\//i, '')
+    .replace(/^storage\//i, '');
+
   return apiUrl(`/storage/${cleaned}`);
 }

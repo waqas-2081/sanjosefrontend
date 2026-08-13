@@ -67,3 +67,52 @@ export async function postLogoCreatorStep(payload, options = {}) {
   }
   return data;
 }
+
+/**
+ * POST /api/logo-creator/generate — body: { session_token, browser_id }
+ * Returns up to 2 generated logo image URLs.
+ */
+export async function postLogoCreatorGenerate(sessionToken, browserId, options = {}) {
+  const res = await fetch(apiUrl('/api/logo-creator/generate'), {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      'X-Requested-With': 'XMLHttpRequest',
+    },
+    body: JSON.stringify({
+      session_token: sessionToken,
+      browser_id: browserId,
+    }),
+    signal: options.signal,
+  });
+  const data = await readJsonResponse(res);
+  if (data.success !== true) {
+    throw new Error(getErrorMessage(data, 'Could not generate logos.'));
+  }
+  return data;
+}
+
+/**
+ * POST /api/logo-creator/select — body: { session_token, selected_index }
+ */
+export async function postLogoCreatorSelect(sessionToken, selectedIndex, options = {}) {
+  const res = await fetch(apiUrl('/api/logo-creator/select'), {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      'X-Requested-With': 'XMLHttpRequest',
+    },
+    body: JSON.stringify({
+      session_token: sessionToken,
+      selected_index: selectedIndex,
+    }),
+    signal: options.signal,
+  });
+  const data = await readJsonResponse(res);
+  if (data.success !== true) {
+    throw new Error(getErrorMessage(data, 'Could not save logo selection.'));
+  }
+  return data;
+}

@@ -1,9 +1,49 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { postLogoCreatorStart, postLogoCreatorStep } from "../api/logoCreatorApi";
+import { postLogoCreatorStart, postLogoCreatorStep, postLogoCreatorGenerate } from "../api/logoCreatorApi";
+import { storageUrl } from "../api/apiBase";
+import { persistLogoCreatorCompleted } from "./LogoCreatorCompletedPage";
 import { resetViewportForSpaNavigation } from "../lib/resetViewportForSpaNavigation";
 
 const BRAND_LOGO = `${process.env.PUBLIC_URL || ""}/assets/images/logo/logo-white.png`;
+
+const GENERATE_STAGES = [
+  { id: "submit", label: "Submitting your information" },
+  { id: "analyze", label: "Analyzing brand details" },
+  { id: "generate", label: "Generating AI logo concepts" },
+  { id: "finalize", label: "Finalizing your logos" },
+];
+
+const BROWSER_ID_KEY = "logoCreatorBrowserId";
+
+function getLogoCreatorBrowserId() {
+  const makeId = () => {
+    if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+      return crypto.randomUUID().replace(/-/g, "");
+    }
+    return `${Date.now().toString(16)}${Math.random().toString(16).slice(2)}`.padEnd(16, "0").slice(0, 32);
+  };
+
+  try {
+    const existing = window.localStorage.getItem(BROWSER_ID_KEY);
+    if (existing && /^[a-zA-Z0-9_-]{16,64}$/.test(existing)) {
+      return existing;
+    }
+    const created = makeId();
+    window.localStorage.setItem(BROWSER_ID_KEY, created);
+    return created;
+  } catch {
+    return makeId();
+  }
+}
+
+function resolveGeneratedImageUrl(img) {
+  if (!img) return "";
+  if (typeof img === "string") return storageUrl(img);
+  if (img.path) return storageUrl(img.path);
+  if (img.url) return storageUrl(img.url);
+  return "";
+}
 
 const INDUSTRIES = [
   "Technology", "Healthcare", "Finance", "Education",
@@ -148,20 +188,22 @@ function Particles() {
 }
 
 // Step 1: Business Name
-function Step1({ data, onChange, onNext, pending, error }) {
+function Step1({ data, onChange, onNext, pending, error, isLogoCreatorPage }) {
   const [focused, setFocused] = useState(false);
 
   return (
-    <div className="step-content animate-in">
+    <div className={`step-content animate-in${isLogoCreatorPage ? " step-content--glass" : ""}`}>
       <div className="hero-text">
         <h2 className="hero-title">
           <>
             Generate Your <span className="accent">FREE Logo with AI</span>
           </>
         </h2>
-        <h1 className="hero-sub">
-          Award-winning San Jose Logo Design Agency
-        </h1>
+        {!isLogoCreatorPage ? (
+          <h1 className="hero-sub">
+            Award-winning San Jose Logo Design Agency
+          </h1>
+        ) : null}
       </div>
       {error ? <p className="hero-inline-error" role="alert">{error}</p> : null}
 
@@ -298,7 +340,7 @@ function Step3({ data, onChange, onNext, onPrev, isSaving }) {
 // Step 4: Contact
 function Step4({ data, onChange, onSubmit, onPrev, isSaving }) {
   const handleSubmit = () => {
-    if (!data.email.trim() || isSaving) return;
+    if (!data.email.trim() || !data.phone.trim() || isSaving) return;
     onSubmit();
   };
 
@@ -306,7 +348,7 @@ function Step4({ data, onChange, onSubmit, onPrev, isSaving }) {
     <div className="step-content animate-in modal-step">
       <div className="step-badge">Step 3 of 3</div>
       <h2 className="modal-title">Almost done! Let's get your <span className="accent">contact info</span></h2>
-      <p className="modal-sub">We'll send your logo files to your email</p>
+      <p className="modal-sub">We'll generate 2 AI logo concepts for you</p>
 
       <div className="field-group">
         <label className="field-label">EMAIL ADDRESS <span className="required">*</span></label>
@@ -320,13 +362,14 @@ function Step4({ data, onChange, onSubmit, onPrev, isSaving }) {
       </div>
 
       <div className="field-group">
-        <label className="field-label">PHONE NUMBER (OPTIONAL)</label>
+        <label className="field-label">PHONE NUMBER <span className="required">*</span></label>
         <input
           type="tel"
           placeholder="Enter your phone number"
           value={data.phone}
           onChange={e => onChange("phone", e.target.value)}
           className="field-input"
+          required
         />
       </div>
 
@@ -335,7 +378,7 @@ function Step4({ data, onChange, onSubmit, onPrev, isSaving }) {
           type="button"
           className={`submit-btn ${isSaving ? "loading" : ""}`}
           onClick={handleSubmit}
-          disabled={!data.email.trim() || Boolean(isSaving)}
+          disabled={!data.email.trim() || !data.phone.trim() || Boolean(isSaving)}
         >
           {isSaving ? (
             <span className="loader-dots"><span/><span/><span/></span>
@@ -356,30 +399,61 @@ function Step4({ data, onChange, onSubmit, onPrev, isSaving }) {
   );
 }
 
-// Step 5: Thank You
-function StepDone({ data }) {
-  const navigate = useNavigate();
-
+// Loading step while logos generate (shown before redirect to /logocreator-completed)
+function StepGenerating({ stages, activeIndex, error, onRetry }) {
   return (
-    <div className="step-content animate-in modal-step done-step">
-      <div className="done-icon">
-        <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="40" cy="40" r="38" stroke="#FF6B1A" strokeWidth="3"/>
-          <path d="M22 40L34 52L58 28" stroke="#FF6B1A" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
+    <div className="step-content animate-in modal-step generating-step">
+      <div className="gen-orb" aria-hidden>
+        <span className="gen-orb__ring" />
+        <span className="gen-orb__ring gen-orb__ring--delay" />
+        <span className="gen-orb__core">✦</span>
       </div>
-      <h2 className="modal-title">🎉 Thanks for <span className="accent">Submitting!</span></h2>
-      <p className="modal-sub">Your logo request has been received.</p>
-      <div className="done-card">
-        <div className="done-row"><span>Business</span><strong>{data.businessName}</strong></div>
-        {data.slogan && <div className="done-row"><span>Slogan</span><strong>{data.slogan}</strong></div>}
-        {data.industry && <div className="done-row"><span>Industry</span><strong>{data.industry}</strong></div>}
-        <div className="done-row"><span>Email</span><strong>{data.email}</strong></div>
-      </div>
-     
-      <button type="button" className="nav-btn next-btn done-back-home" onClick={() => navigate("/")}>
-        BACK TO HOME
-      </button>
+      <h2 className="modal-title">
+        Creating your <span className="accent">AI logos</span>
+      </h2>
+      <p className="modal-sub">Hang tight — this usually takes a few seconds.</p>
+
+      <ul className="gen-stages" aria-live="polite">
+        {stages.map((stage, i) => {
+          const done = i < activeIndex;
+          const active = i === activeIndex && !error;
+          const pending = i > activeIndex;
+          return (
+            <li
+              key={stage.id}
+              className={`gen-stage${done ? " is-done" : ""}${active ? " is-active" : ""}${pending ? " is-pending" : ""}`}
+            >
+              <span className="gen-stage__icon" aria-hidden>
+                {done ? (
+                  <svg viewBox="0 0 20 20" width="16" height="16" fill="none">
+                    <circle cx="10" cy="10" r="9" stroke="currentColor" strokeWidth="1.6" />
+                    <path d="M5.5 10.2L8.4 13l6-6.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                ) : active ? (
+                  <span className="gen-stage__spinner" />
+                ) : (
+                  <span className="gen-stage__dot" />
+                )}
+              </span>
+              <span className="gen-stage__label">{stage.label}</span>
+              {active ? <span className="gen-stage__pulse">…</span> : null}
+            </li>
+          );
+        })}
+      </ul>
+
+      {error ? (
+        <div className="logo-gen-error" role="alert">
+          <p>{error}</p>
+          {onRetry ? (
+            <button type="button" className="nav-btn next-btn gen-retry-btn" onClick={onRetry}>
+              TRY AGAIN
+            </button>
+          ) : null}
+        </div>
+      ) : (
+        <p className="gen-hint">Designing 2 custom concepts from your business details…</p>
+      )}
     </div>
   );
 }
@@ -406,11 +480,67 @@ export default function LogoWizard() {
     phone: "",
   });
   const [sessionToken, setSessionToken] = useState(null);
+  const [skipGeneration, setSkipGeneration] = useState(false);
   const [sessionStarting, setSessionStarting] = useState(arrivedWithBusiness);
   const [stepSaving, setStepSaving] = useState(false);
   const [apiError, setApiError] = useState("");
+  const [generatedImages, setGeneratedImages] = useState([]);
+  const [generatingLogos, setGeneratingLogos] = useState(false);
+  const [generateError, setGenerateError] = useState("");
+  const [generateStageIndex, setGenerateStageIndex] = useState(0);
 
   const update = (key, val) => setFormData(prev => ({ ...prev, [key]: val }));
+
+  const generateLogosForSession = async (token) => {
+    if (!token) return null;
+    setGeneratingLogos(true);
+    setGenerateError("");
+    setGenerateStageIndex(0);
+
+    const stageTimers = [
+      window.setTimeout(() => setGenerateStageIndex(1), 700),
+      window.setTimeout(() => setGenerateStageIndex(2), 1600),
+      window.setTimeout(() => setGenerateStageIndex(3), 3200),
+    ];
+
+    try {
+      const data = await postLogoCreatorGenerate(token, getLogoCreatorBrowserId());
+      const images = Array.isArray(data.images)
+        ? data.images
+            .map((img) => (typeof img === "string" ? { url: img } : img))
+            .filter((img) => resolveGeneratedImageUrl(img))
+            .slice(0, 2)
+        : [];
+      setGeneratedImages(images);
+      if (images.length === 0) {
+        setGenerateError("No logos were returned. Please try again.");
+        return null;
+      }
+      setGenerateStageIndex(GENERATE_STAGES.length);
+      return images;
+    } catch (e) {
+      setGenerateError(e?.message || "Could not generate logos. Please try again.");
+      return null;
+    } finally {
+      stageTimers.forEach((id) => window.clearTimeout(id));
+      setGeneratingLogos(false);
+    }
+  };
+
+  const goToCompletedPage = (images, extra = {}) => {
+    const finalImages = Array.isArray(images) && images.length ? images : generatedImages;
+    const payload = {
+      formData: { ...formData },
+      images: extra.skipGeneration ? [] : finalImages,
+      formSubmitted: true,
+      logoCreatorCompleted: true,
+      sessionToken: sessionToken || null,
+      skipGeneration: Boolean(extra.skipGeneration),
+    };
+    persistLogoCreatorCompleted(payload);
+    resetViewportForSpaNavigation();
+    navigate("/logocreator-completed", { state: payload });
+  };
 
   const handleGetStarted = async () => {
     const name = formData.businessName.trim();
@@ -427,6 +557,7 @@ export default function LogoWizard() {
     try {
       const data = await postLogoCreatorStart(name);
       setSessionToken(data.session_token);
+      setSkipGeneration(Boolean(data.skip_generation));
     } catch (e) {
       setApiError(e?.message || "Could not start. Please try again.");
     } finally {
@@ -451,6 +582,7 @@ export default function LogoWizard() {
         const data = await postLogoCreatorStart(cleaned, { signal: ac.signal });
         if (ac.signal.aborted) return;
         setSessionToken(data.session_token);
+        setSkipGeneration(Boolean(data.skip_generation));
       } catch (e) {
         if (e?.name === "AbortError") return;
         setApiError(e?.message || "Could not start. Please try again.");
@@ -513,7 +645,7 @@ export default function LogoWizard() {
 
   const handleContactSubmit = async () => {
     if (!isLogoCreatorPage) {
-      setStep(4);
+      navigate("/logocreator-completed");
       return;
     }
     if (!sessionToken) {
@@ -521,25 +653,50 @@ export default function LogoWizard() {
       return;
     }
     const email = formData.email.trim();
-    if (!email) return;
+    const phone = formData.phone.trim();
+    if (!email || !phone) return;
     setApiError("");
     setStepSaving(true);
+    setGeneratedImages([]);
+    setGenerateError("");
+    setGenerateStageIndex(0);
+    let movedToGenerate = false;
     try {
-      await postLogoCreatorStep({
+      const stepResult = await postLogoCreatorStep({
         session_token: sessionToken,
         step: 3,
         email,
-        phone: formData.phone?.trim() || "",
+        phone,
       });
-      setStep(4);
-      window.setTimeout(() => {
-        navigate('/thankyou');
-      }, 900);
-    } catch (e) {
-      setApiError(e?.message || "Could not submit.");
-    } finally {
+      const skip = Boolean(stepResult?.skip_generation) || skipGeneration;
+      setSkipGeneration(skip);
       setStepSaving(false);
+      if (skip) {
+        goToCompletedPage([], { skipGeneration: true });
+        return;
+      }
+      movedToGenerate = true;
+      setStep(4);
+      const images = await generateLogosForSession(sessionToken);
+      if (images) goToCompletedPage(images);
+    } catch (e) {
+      setStepSaving(false);
+      const message = e?.message || "Could not submit.";
+      if (movedToGenerate) {
+        setGenerateError(message);
+        setStep(4);
+      } else {
+        setApiError(message);
+      }
     }
+  };
+
+  const handleGenerateRetry = async () => {
+    if (!sessionToken || generatingLogos) return;
+    setGenerateError("");
+    setGenerateStageIndex(0);
+    const images = await generateLogosForSession(sessionToken);
+    if (images) goToCompletedPage(images);
   };
 
   useEffect(() => {
@@ -634,18 +791,25 @@ export default function LogoWizard() {
           width: 100%;
           max-width: 900px;
         }
+        .lw-root--creator .step-content--glass {
+          background: rgb(103 103 103 / 31%);
+          border: 1px solid rgba(255, 255, 255, 0.18);
+          border-radius: 22px;
+          padding: 36px 40px 32px;
+          box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+          backdrop-filter: blur(16px);
+          -webkit-backdrop-filter: blur(16px);
+        }
         .lw-root--creator .hero-text {
           margin-bottom: 28px;
         }
         .lw-root--creator .hero-title {
-          font-size: clamp(2.4rem, 6.5vw, 4.25rem);
+          font-size: 54px;
           line-height: 1.05;
           text-shadow: 0 4px 28px rgba(0, 0, 0, 0.65);
         }
         .lw-root--creator .hero-sub {
-          margin-top: 12px;
-          color: rgba(255, 255, 255, 0.72);
-          text-shadow: 0 2px 16px rgba(0, 0, 0, 0.55);
+          display: none;
         }
 
         /* Direct /logo-creator — stays visible above modal overlay */
@@ -1265,7 +1429,7 @@ export default function LogoWizard() {
           margin-bottom: 0;
         }
         .done-icon {
-          width: 80px; height: 80px; margin: 0 auto 24px;
+          width: 56px; height: 56px; margin: 0 auto 14px;
           animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
         }
         .done-icon svg { width: 100%; height: 100%; }
@@ -1273,11 +1437,26 @@ export default function LogoWizard() {
           from { transform: scale(0); opacity: 0; }
           to { transform: scale(1); opacity: 1; }
         }
+        .done-step .modal-title {
+          margin-bottom: 6px;
+        }
+        .done-step .modal-sub {
+          margin-bottom: 18px;
+        }
         .done-card {
           background: rgba(255,255,255,0.05);
           border: 1px solid rgba(255,255,255,0.08);
           border-radius: 10px; padding: 20px;
           margin: 24px 0; text-align: left;
+        }
+        .done-card--compact {
+          padding: 10px 14px;
+          margin: 4px 0 18px;
+          opacity: 0.92;
+        }
+        .done-card--compact .done-row {
+          padding: 5px 0;
+          font-size: 0.82rem;
         }
         .done-row {
           display: flex; justify-content: space-between; align-items: center;
@@ -1292,6 +1471,183 @@ export default function LogoWizard() {
           color: rgba(255,255,255,0.5); font-size: 0.9rem; line-height: 1.6;
         }
         .done-msg strong { color: #FF6B1A; }
+
+        .logo-gen-status {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 12px;
+          margin: 8px 0 20px;
+          color: rgba(255,255,255,0.7);
+          font-size: 0.92rem;
+        }
+        .logo-gen-error {
+          margin: 18px 0 0;
+          padding: 12px 14px;
+          border-radius: 10px;
+          background: rgba(255, 80, 80, 0.12);
+          border: 1px solid rgba(255, 140, 120, 0.35);
+          color: #ffc9c9;
+          font-size: 0.88rem;
+          line-height: 1.45;
+          text-align: center;
+        }
+        .logo-gen-error p { margin: 0 0 12px; }
+        .gen-retry-btn {
+          min-width: 140px;
+          margin: 0 auto;
+        }
+
+        /* Interactive generate loader */
+        .generating-step { text-align: center; }
+        .gen-orb {
+          position: relative;
+          width: 88px;
+          height: 88px;
+          margin: 0 auto 22px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .gen-orb__core {
+          width: 52px;
+          height: 52px;
+          border-radius: 50%;
+          background: linear-gradient(145deg, #ff8c3a, #FF6B1A);
+          color: #fff;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 1.25rem;
+          box-shadow: 0 0 28px rgba(255, 107, 26, 0.45);
+          animation: genCorePulse 1.6s ease-in-out infinite;
+          z-index: 1;
+        }
+        .gen-orb__ring {
+          position: absolute;
+          inset: 0;
+          border-radius: 50%;
+          border: 2px solid rgba(255, 107, 26, 0.35);
+          animation: genRing 2s linear infinite;
+        }
+        .gen-orb__ring--delay { animation-delay: -1s; inset: 8px; border-color: rgba(255, 170, 116, 0.28); }
+        @keyframes genRing {
+          0% { transform: scale(0.72); opacity: 1; }
+          100% { transform: scale(1.2); opacity: 0; }
+        }
+        @keyframes genCorePulse {
+          0%, 100% { transform: scale(1); }
+          50% { transform: scale(1.06); }
+        }
+        .gen-stages {
+          list-style: none;
+          margin: 0 0 18px;
+          padding: 0;
+          text-align: left;
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        }
+        .gen-stage {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 12px 14px;
+          border-radius: 10px;
+          border: 1px solid rgba(255,255,255,0.08);
+          background: rgba(255,255,255,0.04);
+          color: rgba(255,255,255,0.45);
+          transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+        }
+        .gen-stage.is-active {
+          color: #fff;
+          border-color: rgba(255, 107, 26, 0.4);
+          background: rgba(255, 107, 26, 0.12);
+          box-shadow: 0 0 0 1px rgba(255, 107, 26, 0.12);
+        }
+        .gen-stage.is-done {
+          color: rgba(255, 210, 170, 0.95);
+          border-color: rgba(255, 146, 82, 0.28);
+          background: rgba(255, 107, 26, 0.08);
+        }
+        .gen-stage__icon {
+          width: 22px;
+          height: 22px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+          color: #FF6B1A;
+        }
+        .gen-stage__spinner {
+          width: 16px;
+          height: 16px;
+          border-radius: 50%;
+          border: 2px solid rgba(255, 107, 26, 0.25);
+          border-top-color: #FF6B1A;
+          animation: genSpin 0.7s linear infinite;
+        }
+        .gen-stage__dot {
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          background: rgba(255,255,255,0.25);
+        }
+        .gen-stage__label {
+          font-size: 0.95rem;
+          font-weight: 600;
+          letter-spacing: 0.01em;
+        }
+        .gen-stage__pulse {
+          margin-left: auto;
+          color: #FF6B1A;
+          font-weight: 700;
+          letter-spacing: 0.12em;
+          animation: genEllipsis 1.2s steps(3, end) infinite;
+        }
+        .gen-hint {
+          color: rgba(255,255,255,0.45);
+          font-size: 0.88rem;
+          line-height: 1.5;
+          margin: 0;
+        }
+        @keyframes genSpin { to { transform: rotate(360deg); } }
+        @keyframes genEllipsis {
+          0% { opacity: 0.35; }
+          50% { opacity: 1; }
+          100% { opacity: 0.35; }
+        }
+
+        .logo-results {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 16px;
+          margin: 0 auto 18px;
+          width: 100%;
+          max-width: 460px;
+        }
+        .logo-result-item {
+          position: relative;
+          width: 100%;
+          max-width: 300px;
+          margin: 0 auto;
+          aspect-ratio: 1 / 1;
+          border-radius: 14px;
+          overflow: hidden;
+          border: 1px solid rgba(255, 170, 116, 0.35);
+          background: #fff;
+          box-shadow: 0 14px 36px rgba(0, 0, 0, 0.38);
+          user-select: none;
+        }
+        .logo-result-img {
+          width: 100%;
+          height: 100%;
+          max-width: 300px;
+          max-height: 300px;
+          object-fit: cover;
+          display: block;
+          pointer-events: none;
+        }
 
         .modal-box button.nav-btn.next-btn.done-back-home {
           display: block;
@@ -1640,7 +1996,10 @@ export default function LogoWizard() {
           .hero-section { padding: 0 16px; }
           .lw-root--creator .hero-text { margin-bottom: var(--m-text-gap, 20px); }
           .lw-root--creator .hero-title { font-size: var(--m-title, clamp(1.55rem, 7vw, 2.35rem)); }
-          .lw-root--creator .hero-sub { font-size: var(--m-sub, 0.95rem); }
+          .lw-root--creator .step-content--glass {
+            padding: 22px 18px 20px;
+            border-radius: 16px;
+          }
         }
 
         @media (max-width: 600px) {
@@ -1765,8 +2124,9 @@ export default function LogoWizard() {
             padding: 12px 16px;
           }
 
-          .done-icon { width: 64px; height: 64px; margin-bottom: 16px; }
+          .done-icon { width: 48px; height: 48px; margin-bottom: 10px; }
           .done-card { padding: 14px; margin: 16px 0; }
+          .done-card--compact { padding: 8px 12px; margin: 0 0 14px; }
           .done-row {
             flex-wrap: wrap;
             gap: 4px 8px;
@@ -1774,6 +2134,22 @@ export default function LogoWizard() {
           }
           .done-row strong { max-width: 100%; text-align: left; }
           .done-msg { font-size: 0.85rem; }
+          .logo-results {
+            gap: 10px;
+            margin-bottom: 14px;
+            max-width: 100%;
+          }
+          .gen-orb {
+            width: 76px;
+            height: 76px;
+            margin-bottom: 16px;
+          }
+          .gen-orb__core { width: 44px; height: 44px; font-size: 1.05rem; }
+          .gen-stage {
+            padding: 10px 12px;
+            gap: 10px;
+          }
+          .gen-stage__label { font-size: 0.88rem; }
           .modal-box button.nav-btn.next-btn.done-back-home {
             min-width: 0;
             width: 100%;
@@ -1814,6 +2190,7 @@ export default function LogoWizard() {
                 onNext={handleGetStarted}
                 pending={isLogoCreatorPage && sessionStarting && !showModal}
                 error={isLogoCreatorPage && !showModal ? apiError : ""}
+                isLogoCreatorPage={isLogoCreatorPage}
               />
             </div>
           )}
@@ -1866,7 +2243,14 @@ export default function LogoWizard() {
                   isSaving={stepSaving || sessionStarting}
                 />
               )}
-              {step === 4 && <StepDone data={formData} />}
+              {step === 4 && (
+                <StepGenerating
+                  stages={GENERATE_STAGES}
+                  activeIndex={Math.min(generateStageIndex, GENERATE_STAGES.length - 1)}
+                  error={generateError}
+                  onRetry={handleGenerateRetry}
+                />
+              )}
             </div>
           </div>
         )}
