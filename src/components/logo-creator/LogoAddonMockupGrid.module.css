@@ -1,0 +1,163 @@
+.section {
+  margin: 8px 0 28px;
+  width: 100%;
+}
+
+.sectionCompact {
+  margin: 0;
+  width: 100%;
+}
+
+.heading {
+  margin: 0 0 6px;
+  font-size: 22px;
+  font-weight: 800;
+  color: #0f172a;
+  text-align: center;
+}
+
+.subhead {
+  margin: 0 0 18px;
+  color: #64748b;
+  font-size: 15px;
+  text-align: center;
+  line-height: 1.5;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
+}
+
+.cardSelected {
+  border-color: #f97316;
+  box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.16), 0 8px 20px rgba(249, 115, 22, 0.12);
+}
+
+.media {
+  position: relative;
+  aspect-ratio: 3 / 2;
+  background: #f1f5f9;
+  overflow: hidden;
+}
+
+.media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.pending {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(248, 250, 252, 0.55);
+  color: #334155;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 14px 14px;
+}
+
+.title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.3;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.priceNow {
+  color: #ea580c;
+  font-weight: 800;
+  font-size: 16px;
+}
+
+.priceWas {
+  margin-left: 6px;
+  color: #94a3b8;
+  text-decoration: line-through;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.addBtn {
+  flex-shrink: 0;
+  min-height: 36px;
+  padding: 0 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 9px;
+  background: linear-gradient(135deg, #f59e0b, #f97316);
+  color: #fff;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  box-shadow: 0 8px 18px rgba(249, 115, 22, 0.28);
+  cursor: pointer;
+}
+
+.addBtn:disabled {
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+.addBtnActive {
+  background: #16a34a;
+  box-shadow: 0 8px 18px rgba(22, 163, 74, 0.28);
+}
+
+.error {
+  margin: 12px 0 0;
+  color: #b91c1c;
+  font-size: 14px;
+  text-align: center;
+}
+
+@media (max-width: 800px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .heading {
+    font-size: 18px;
+  }
+
+  .grid {
+    gap: 12px;
+  }
+
+  .title {
+    font-size: 14px;
+  }
+}

@@ -2,10 +2,14 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { storageUrl } from '../api/apiBase';
 import { createPaymentRequest } from '../api/paymentRequestApi';
-import { postLogoCreatorSelect } from '../api/logoCreatorApi';
+import { logoCreatorConceptImageUrl, postLogoCreatorSelect } from '../api/logoCreatorApi';
+import { formatMoney } from '../components/checkout/logoPackageWizardData';
 import { CashAppMark, PayPalMark, StripeMark } from '../components/checkout/PaymentMethodIcons';
+import LogoAddonMockupGrid from '../components/logo-creator/LogoAddonMockupGrid';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
+import { LOGO_CREATOR_ADDONS } from '../lib/logoAddonCatalog';
 import { resetViewportForSpaNavigation } from '../lib/resetViewportForSpaNavigation';
+import styles from './LogoCreatorCompletedPage.module.css';
 
 const STORAGE_KEY = 'logoCreatorCompleted';
 const AI_LOGO_AGENT = 'AI Logo maker';
@@ -27,6 +31,23 @@ const PAYMENT_METHODS = [
   { id: 'paypal', label: 'PayPal', Icon: PayPalMark },
   { id: 'venmo', label: 'Venmo', Icon: VenmoMark },
   { id: 'cashapp', label: 'Cash App', Icon: CashAppMark },
+];
+
+const LOGO_OPTIONS = [
+  {
+    id: 'files',
+    title: 'High-Quality Printable Files',
+    shortTitle: 'Printable Files',
+    description: 'Get the refined logo in print-ready files.',
+    amount: AMOUNT_FILES,
+  },
+  {
+    id: 'edits',
+    title: 'Need Edits to Your Logo?',
+    shortTitle: 'Logo Edits',
+    description: 'Request edits to your selected concept.',
+    amount: AMOUNT_EDITS,
+  },
 ];
 
 function resolveImageUrl(img) {
@@ -207,82 +228,6 @@ function LogoCard({
   );
 }
 
-function OfferCard({
-  title,
-  description,
-  buttonLabel,
-  amount,
-  onPay,
-  busy,
-  busyLabel,
-}) {
-  return (
-    <div
-      style={{
-        background: '#fff7ed',
-        border: '1px solid #fed7aa',
-        borderRadius: 14,
-        padding: '18px 20px',
-        textAlign: 'center',
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        gap: 14,
-      }}
-    >
-      <div>
-        <h3
-          style={{
-            margin: '0 0 8px',
-            fontSize: 20,
-            fontWeight: 800,
-            color: '#c2410c',
-          }}
-        >
-          {title}
-        </h3>
-        <p
-          style={{
-            margin: 0,
-            color: '#57534e',
-            lineHeight: 1.55,
-            fontSize: 15,
-          }}
-        >
-          {description}{' '}
-          <strong>${Number(amount).toFixed(2)}</strong>.
-        </p>
-      </div>
-      <button
-        type="button"
-        onClick={onPay}
-        disabled={busy}
-        style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          minHeight: 48,
-          width: '100%',
-          maxWidth: 320,
-          borderRadius: 10,
-          padding: '12px 20px',
-          background: 'linear-gradient(135deg, #f59e0b, #f97316)',
-          color: '#ffffff',
-          fontWeight: 700,
-          border: '1px solid rgba(255, 255, 255, 0.12)',
-          boxShadow: '0 10px 25px rgba(249, 115, 22, 0.35)',
-          cursor: busy ? 'wait' : 'pointer',
-          opacity: busy ? 0.85 : 1,
-        }}
-      >
-        {busy ? busyLabel : buttonLabel}
-      </button>
-    </div>
-  );
-}
-
 export default function LogoCreatorCompletedPage() {
   useDocumentTitle('Logo Creator Completed | San Jose Logo Design');
 
@@ -325,9 +270,22 @@ export default function LogoCreatorCompletedPage() {
     }
     return null;
   });
-  const [paymentMethod, setPaymentMethod] = useState('stripe');
-  const [payingOption, setPayingOption] = useState(null); // 'files' | 'edits' | null
+  const [paymentMethod, setPaymentMethod] = useState(null);
+  const [logoOption, setLogoOption] = useState(null);
+  const [selectedAddonIds, setSelectedAddonIds] = useState([]);
+  const [paying, setPaying] = useState(false);
   const [payError, setPayError] = useState('');
+
+  const selectedLogoUrl =
+    selectedIndex != null && images[selectedIndex] ? images[selectedIndex].url : '';
+  const corsLogoUrl =
+    selectedIndex != null
+      ? logoCreatorConceptImageUrl(payload?.sessionToken, selectedIndex)
+      : '';
+  const mockupLogoUrls = useMemo(
+    () => [corsLogoUrl, selectedLogoUrl].filter(Boolean),
+    [corsLogoUrl, selectedLogoUrl],
+  );
 
   useEffect(() => {
     if (!payload?.formSubmitted || firedRef.current) return;
@@ -361,6 +319,9 @@ export default function LogoCreatorCompletedPage() {
   }, [formData, images.length, navigate]);
 
   const businessName = String(formData.businessName || '').trim();
+  const slogan = String(formData.slogan || '').trim();
+  const email = String(formData.email || '').trim();
+  const phone = String(formData.phone || '').trim();
 
   const persistSelection = (index) => {
     const next = {
@@ -389,19 +350,41 @@ export default function LogoCreatorCompletedPage() {
     }
   };
 
-  const startPayment = async (option) => {
-    if (payingOption || selectedIndex == null) return;
+  const selectedOption = LOGO_OPTIONS.find((option) => option.id === logoOption) || null;
+  const selectedAddons = useMemo(
+    () => LOGO_CREATOR_ADDONS.filter((addon) => selectedAddonIds.includes(addon.id)),
+    [selectedAddonIds],
+  );
+  const addonsTotal = selectedAddons.reduce((sum, addon) => sum + Number(addon.price || 0), 0);
+  const optionAmount = selectedOption ? Number(selectedOption.amount) : 0;
+  const grandTotal = optionAmount + addonsTotal;
+  const paymentMeta = PAYMENT_METHODS.find((method) => method.id === paymentMethod) || null;
+  const canProceed = Boolean(paymentMethod && selectedOption && selectedIndex != null && grandTotal > 0);
+
+  const toggleAddon = (addon) => {
+    if (!addon?.id || paying) return;
+    setSelectedAddonIds((prev) => (
+      prev.includes(addon.id)
+        ? prev.filter((id) => id !== addon.id)
+        : [...prev, addon.id]
+    ));
+  };
+
+  const startCheckout = async () => {
+    if (paying || !canProceed) return;
     setPayError('');
-    setPayingOption(option);
+    setPaying(true);
 
     const customerName = businessName || formData.email || 'AI Logo Customer';
-    const amount = option === 'edits' ? AMOUNT_EDITS : AMOUNT_FILES;
     const conceptLabel = `Concept ${selectedIndex + 1}`;
     const baseName = businessName || 'Logo';
-    const packageName =
-      option === 'edits'
-        ? `AI Logo Edit Payment: ${baseName} (${conceptLabel})`
-        : `AI Logo Payment: ${baseName} (${conceptLabel})`;
+    const addonNames = selectedAddons.map((addon) => addon.title);
+    const addonsLabel = addonNames.join(', ');
+    const packageName = [
+      `AI Logo: ${baseName} (${conceptLabel})`,
+      selectedOption.shortTitle,
+      ...addonNames,
+    ].join(' + ');
 
     try {
       const { id, paymentLink } = await createPaymentRequest({
@@ -410,7 +393,7 @@ export default function LogoCreatorCompletedPage() {
         email: formData.email?.trim() || null,
         phone: formData.phone?.trim() || null,
         packageName,
-        amount,
+        amount: grandTotal,
         paymentMethod,
       });
 
@@ -420,25 +403,32 @@ export default function LogoCreatorCompletedPage() {
           customerName,
           email: formData.email?.trim() || '',
           phone: formData.phone?.trim() || '',
-          packageName,
-          amount: String(amount),
+          packageName: `AI Logo: ${baseName} (${conceptLabel}) — ${selectedOption.title}`,
+          addons: addonNames,
+          addonsLabel,
+          amount: String(grandTotal),
           salesAgent: AI_LOGO_AGENT,
           paymentMethod,
           paymentRequestId: id,
           paymentLink,
           serviceType: 'ai-logo',
-          logoOption: option,
+          logoOption,
           selectedConcept: selectedIndex + 1,
         },
       });
     } catch (err) {
       setPayError(err?.message || 'Unable to start payment. Please try again.');
-      setPayingOption(null);
+      setPaying(false);
     }
   };
 
+  const proceedHint = !paymentMethod
+    ? 'Select a payment method to continue.'
+    : !selectedOption
+      ? 'Choose printable files or logo edits to continue.'
+      : 'Add any product designs you want, then proceed to payment.';
+
   const hasSelection = selectedIndex != null;
-  const isBusy = payingOption != null;
   const skipGeneration = Boolean(payload?.skipGeneration);
 
   return (
@@ -469,234 +459,229 @@ export default function LogoCreatorCompletedPage() {
       <section className="contact-section py-5">
         <div className="container">
           {skipGeneration ? (
-            <div
-              style={{
-                maxWidth: 640,
-                margin: '0 auto',
-                textAlign: 'center',
-              }}
-            >
-              <p style={{ fontSize: 18, color: '#334155', lineHeight: 1.6, marginBottom: 28 }}>
+            <div className={styles.thanks}>
+              <p>
                 We received your logo request
                 {businessName ? ` for ${businessName}` : ''}. Our team will review your details
                 and contact you shortly.
               </p>
-              <Link
-                to="/"
-                className="px-4"
-                onClick={() => resetViewportForSpaNavigation()}
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  minHeight: 46,
-                  borderRadius: 10,
-                  paddingTop: 10,
-                  paddingBottom: 10,
-                  background: 'linear-gradient(135deg, #f59e0b, #f97316)',
-                  color: '#ffffff',
-                  fontWeight: 700,
-                  textDecoration: 'none',
-                  border: '1px solid rgba(255, 255, 255, 0.12)',
-                  boxShadow: '0 10px 25px rgba(249, 115, 22, 0.35)',
-                }}
-              >
+              <Link to="/" className={styles.homeBtn} onClick={() => resetViewportForSpaNavigation()}>
                 Go to Home
               </Link>
             </div>
           ) : (
-            <div
-            style={{
-              maxWidth: 820,
-              margin: '0 auto',
-              width: '100%',
-            }}
-          >
-            {images.length > 0 ? (
-              <>
-                <p
-                  style={{
-                    textAlign: 'center',
-                    margin: '0 0 14px',
-                    color: '#64748b',
-                    fontSize: 15,
-                    fontWeight: 600,
-                  }}
-                >
-                  {hasSelection
-                    ? `Concept ${selectedIndex + 1} selected — choose an option below`
-                    : 'Tap or click a concept to select it'}
-                </p>
-                <div
-                  style={{
-                    display: 'grid',
-                    gridTemplateColumns: '1fr 1fr',
-                    gap: 16,
-                    marginBottom: 28,
-                    width: '100%',
-                  }}
-                >
-                  {images.map((img, i) => (
-                    <div key={img.key} style={{ minWidth: 0 }}>
-                      <LogoCard
-                        img={img}
-                        index={i}
-                        businessName={businessName}
-                        selectable
-                        selected={selectedIndex === i}
-                        onSelect={handleSelectConcept}
-                      />
-                    </div>
-                  ))}
-                </div>
-              </>
-            ) : null}
+            <div className={styles.shell}>
+              {images.length > 0 ? (
+                <>
+                  <p className={styles.hint}>
+                    {hasSelection
+                      ? `Concept ${selectedIndex + 1} selected — complete your order below`
+                      : 'Tap or click a concept to select it'}
+                  </p>
+                  <div className={styles.conceptGrid}>
+                    {images.map((img, i) => (
+                      <div key={img.key} style={{ minWidth: 0 }}>
+                        <LogoCard
+                          img={img}
+                          index={i}
+                          businessName={businessName}
+                          selectable
+                          selected={selectedIndex === i}
+                          onSelect={handleSelectConcept}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </>
+              ) : null}
 
             {hasSelection ? (
-              <>
-                <div
-                  style={{
-                    background: '#fff',
-                    border: '1px solid #e5e7eb',
-                    borderRadius: 14,
-                    padding: '16px 18px',
-                    marginBottom: 16,
-                    width: '100%',
-                    boxSizing: 'border-box',
-                  }}
-                >
-                  <h3
-                    style={{
-                      margin: '0 0 12px',
-                      fontSize: 14,
-                      fontWeight: 700,
-                      letterSpacing: '0.06em',
-                      textTransform: 'uppercase',
-                      color: '#6b7280',
-                      textAlign: 'center',
-                    }}
-                  >
-                    Select payment method
-                  </h3>
-                  <div
-                    role="radiogroup"
-                    aria-label="Payment method"
-                    style={{
-                      display: 'grid',
-                      gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
-                      gap: 10,
-                    }}
-                  >
-                    {PAYMENT_METHODS.map(({ id, label, Icon }) => {
-                      const active = paymentMethod === id;
-                      return (
-                        <button
-                          key={id}
-                          type="button"
-                          role="radio"
-                          aria-checked={active}
-                          onClick={() => setPaymentMethod(id)}
-                          disabled={isBusy}
-                          style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            gap: 6,
-                            minHeight: 72,
-                            padding: '10px 8px',
-                            borderRadius: 12,
-                            border: active ? '2px solid #f97316' : '1px solid #e5e7eb',
-                            background: active
-                              ? 'linear-gradient(135deg, #f59e0b, #f97316)'
-                              : '#f8fafc',
-                            color: active ? '#fff' : '#334155',
-                            cursor: isBusy ? 'not-allowed' : 'pointer',
-                            boxShadow: active
-                              ? '0 8px 20px rgba(249, 115, 22, 0.28)'
-                              : 'none',
-                          }}
-                        >
-                          <Icon active={active} />
-                          <span style={{ fontSize: 13, fontWeight: 700 }}>{label}</span>
-                        </button>
-                      );
-                    })}
+                <div className={styles.checkout}>
+                  <div className={styles.main}>
+                    <div className={styles.panel}>
+                      <div className={styles.panelHead}>
+                        <span className={styles.step}>1</span>
+                        <h3 className={styles.panelTitle}>Select payment method</h3>
+                      </div>
+                      <div className={styles.methods} role="radiogroup" aria-label="Payment method">
+                        {PAYMENT_METHODS.map(({ id, label, Icon }) => {
+                          const active = paymentMethod === id;
+                          return (
+                            <button
+                              key={id}
+                              type="button"
+                              role="radio"
+                              aria-checked={active}
+                              className={`${styles.methodBtn}${active ? ` ${styles.methodBtnActive}` : ''}`}
+                              onClick={() => setPaymentMethod(id)}
+                              disabled={paying}
+                            >
+                              <Icon active={active} />
+                              <span className={styles.methodLabel}>{label}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {paymentMethod ? (
+                      <div className={styles.panel}>
+                        <div className={styles.panelHead}>
+                          <span className={styles.step}>2</span>
+                          <h3 className={styles.panelTitle}>Choose your logo option</h3>
+                        </div>
+                        <p className={styles.panelSub}>
+                          Pick printable files or logo edits. The price is added to your summary.
+                        </p>
+                        <div className={styles.offerGrid}>
+                          {LOGO_OPTIONS.map((option) => {
+                            const selected = logoOption === option.id;
+                            return (
+                              <button
+                                key={option.id}
+                                type="button"
+                                className={`${styles.offerCard}${selected ? ` ${styles.offerCardSelected}` : ''}`}
+                                onClick={() => setLogoOption(option.id)}
+                                disabled={paying}
+                                aria-pressed={selected}
+                              >
+                                <h3 className={styles.offerTitle}>{option.title}</h3>
+                                <p className={styles.offerCopy}>{option.description}</p>
+                                <div className={styles.offerMeta}>
+                                  <span className={styles.offerPrice}>{formatMoney(option.amount)}</span>
+                                  <span className={styles.offerPick}>{selected ? 'Selected' : 'Select'}</span>
+                                </div>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    ) : null}
+
+                    {payError ? (
+                      <p role="alert" className={styles.error}>{payError}</p>
+                    ) : null}
+                  </div>
+
+                  <aside className={styles.sidebar} aria-label="Order summary">
+                    <h3 className={styles.sidebarTitle}>Order summary</h3>
+                    {selectedLogoUrl ? (
+                      <div className={styles.conceptPreview}>
+                        <img src={selectedLogoUrl} alt="" />
+                        <div>
+                          <p className={styles.conceptPreviewName}>
+                            {businessName || 'Your logo'}
+                          </p>
+                          <p className={styles.conceptPreviewMeta}>
+                            Concept {selectedIndex + 1}
+                          </p>
+                        </div>
+                      </div>
+                    ) : null}
+
+                    <div className={styles.rows}>
+                      <div className={`${styles.row}${paymentMeta ? '' : ` ${styles.rowMuted}`}`}>
+                        <span className={styles.rowLabel}>Payment</span>
+                        <span className={styles.rowValue}>
+                          {paymentMeta ? paymentMeta.label : 'Choose a method'}
+                        </span>
+                      </div>
+                      <div className={`${styles.row}${selectedOption ? '' : ` ${styles.rowMuted}`}`}>
+                        <span className={styles.rowLabel}>Logo option</span>
+                        <span className={styles.rowStack}>
+                          <span className={styles.rowValue}>
+                            {selectedOption ? selectedOption.shortTitle : 'Choose an option'}
+                          </span>
+                          {selectedOption ? (
+                            <span className={styles.rowValue}>{formatMoney(selectedOption.amount)}</span>
+                          ) : null}
+                        </span>
+                      </div>
+                      {selectedAddons.length ? selectedAddons.map((addon) => (
+                        <div key={addon.id} className={styles.row}>
+                          <span className={styles.rowLabel}>{addon.title}</span>
+                          <span className={styles.rowStack}>
+                            <span className={styles.rowValue}>{formatMoney(addon.price)}</span>
+                            <button
+                              type="button"
+                              className={styles.removeBtn}
+                              onClick={() => toggleAddon(addon)}
+                              disabled={paying}
+                            >
+                              Remove
+                            </button>
+                          </span>
+                        </div>
+                      )) : (
+                        <div className={`${styles.row} ${styles.rowMuted}`}>
+                          <span className={styles.rowLabel}>Add-ons</span>
+                          <span className={styles.rowValue}>None yet</span>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className={styles.total}>
+                      <span className={styles.totalLabel}>Total</span>
+                      <span className={styles.totalValue}>{formatMoney(grandTotal)}</span>
+                    </div>
+                    <button
+                      type="button"
+                      className={styles.proceedBtn}
+                      onClick={startCheckout}
+                      disabled={!canProceed || paying}
+                      aria-busy={paying}
+                    >
+                      {paying ? 'Opening checkout…' : 'Proceed to Payment'}
+                    </button>
+                    {!canProceed ? <p className={styles.proceedHint}>{proceedHint}</p> : null}
+                  </aside>
+
+                  {logoOption ? (
+                    <div className={styles.addons}>
+                      <div className={styles.panelHead}>
+                        <span className={styles.step}>3</span>
+                        <h3 className={styles.panelTitle}>Add product designs</h3>
+                      </div>
+                      <p className={styles.panelSub}>
+                        Optional — select as many as you want. Each one is added to your summary.
+                      </p>
+                      <LogoAddonMockupGrid
+                        logoUrls={mockupLogoUrls}
+                        businessName={businessName}
+                        slogan={slogan}
+                        email={email}
+                        phone={phone}
+                        selectedIds={selectedAddonIds}
+                        onToggle={toggleAddon}
+                        disabled={paying}
+                        compact
+                      />
+                    </div>
+                  ) : null}
+
+                  <div className={styles.mobileBar}>
+                    <div className={styles.mobileTotal}>
+                      <span>Total</span>
+                      <span>{formatMoney(grandTotal)}</span>
+                    </div>
+                    <button
+                      type="button"
+                      className={styles.proceedBtn}
+                      onClick={startCheckout}
+                      disabled={!canProceed || paying}
+                      aria-busy={paying}
+                    >
+                      {paying ? 'Opening…' : 'Proceed'}
+                    </button>
                   </div>
                 </div>
-
-                <div
-                  style={{
-                    display: 'grid',
-                    gridTemplateColumns: '1fr 1fr',
-                    gap: 16,
-                    marginBottom: 24,
-                    width: '100%',
-                  }}
-                >
-                  <OfferCard
-                    title="High-Quality Printable Files"
-                    description="To get the refined logo in printable files, click the button below and pay"
-                    buttonLabel="Pay $30.00 for High-Quality Files"
-                    amount={AMOUNT_FILES}
-                    onPay={() => startPayment('files')}
-                    busy={isBusy}
-                    busyLabel={
-                      payingOption === 'files' ? 'Opening checkout…' : 'Please wait…'
-                    }
-                  />
-                  <OfferCard
-                    title="Need Edits to Your Logo?"
-                    description="If you want any edits to your selected logo, click the button below and pay"
-                    buttonLabel="Pay $50.00 for Logo Edits"
-                    amount={AMOUNT_EDITS}
-                    onPay={() => startPayment('edits')}
-                    busy={isBusy}
-                    busyLabel={
-                      payingOption === 'edits' ? 'Opening checkout…' : 'Please wait…'
-                    }
-                  />
-                </div>
-                {payError ? (
-                  <p
-                    role="alert"
-                    style={{
-                      margin: '0 0 16px',
-                      color: '#b91c1c',
-                      fontSize: 14,
-                      textAlign: 'center',
-                    }}
-                  >
-                    {payError}
-                  </p>
-                ) : null}
-              </>
             ) : null}
 
-            <div className="d-flex justify-content-center">
-              <Link
-                to="/"
-                className="px-4"
-                onClick={() => resetViewportForSpaNavigation()}
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  minHeight: 46,
-                  borderRadius: 10,
-                  paddingTop: 10,
-                  paddingBottom: 10,
-                  background: 'linear-gradient(135deg, #f59e0b, #f97316)',
-                  color: '#ffffff',
-                  fontWeight: 700,
-                  textDecoration: 'none',
-                  border: '1px solid rgba(255, 255, 255, 0.12)',
-                  boxShadow: '0 10px 25px rgba(249, 115, 22, 0.35)',
-                }}
-              >
-                Go to Home
-              </Link>
-            </div>
+              <div className={styles.homeWrap}>
+                <Link to="/" className={styles.homeBtn} onClick={() => resetViewportForSpaNavigation()}>
+                  Go to Home
+                </Link>
+              </div>
           </div>
           )}
         </div>

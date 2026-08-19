@@ -1,5 +1,16 @@
 import { apiUrl } from './apiBase';
 
+/** CORS-enabled concept PNG for canvas compositing. */
+export function logoCreatorConceptImageUrl(sessionToken, index) {
+  if (typeof sessionToken !== 'string' || sessionToken.length !== 64) return '';
+  const params = new URLSearchParams({
+    session_token: sessionToken,
+    index: String(index),
+    clean: '2',
+  });
+  return apiUrl(`/api/logo-creator/image?${params.toString()}`);
+}
+
 function getErrorMessage(data, fallback) {
   if (!data) return fallback;
   if (typeof data.message === 'string' && data.message.trim()) return data.message;
