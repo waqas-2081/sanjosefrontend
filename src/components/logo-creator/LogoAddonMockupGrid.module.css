@@ -41,6 +41,31 @@
   box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
 }
 
+.cardLocked {
+  opacity: 0.92;
+}
+
+.mediaBlurred {
+  filter: blur(7px);
+  transform: scale(1.04);
+}
+
+.lockedOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  background: rgba(248, 250, 252, 0.45);
+  color: #475569;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-align: center;
+}
+
 .cardSelected {
   border-color: #f97316;
   box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.16), 0 8px 20px rgba(249, 115, 22, 0.12);

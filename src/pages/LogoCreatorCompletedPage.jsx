@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { storageUrl } from '../api/apiBase';
 import { createPaymentRequest } from '../api/paymentRequestApi';
-import { logoCreatorConceptImageUrl, postLogoCreatorSelect } from '../api/logoCreatorApi';
+import { logoCreatorConceptImageUrl, postLogoCreatorCheckoutNotify, postLogoCreatorSelect } from '../api/logoCreatorApi';
 import { formatMoney } from '../components/checkout/logoPackageWizardData';
 import { CashAppMark, PayPalMark, StripeMark } from '../components/checkout/PaymentMethodIcons';
 import LogoAddonMockupGrid from '../components/logo-creator/LogoAddonMockupGrid';
@@ -339,6 +339,7 @@ export default function LogoCreatorCompletedPage() {
 
   const handleSelectConcept = (index) => {
     setSelectedIndex(index);
+    setSelectedAddonIds([]);
     setPayError('');
     persistSelection(index);
 
@@ -396,6 +397,21 @@ export default function LogoCreatorCompletedPage() {
         amount: grandTotal,
         paymentMethod,
       });
+
+      const token = payload?.sessionToken;
+      if (typeof token === 'string' && token.length === 64) {
+        postLogoCreatorCheckoutNotify({
+          session_token: token,
+          selected_index: selectedIndex,
+          logo_option: logoOption,
+          payment_method: paymentMethod,
+          amount: grandTotal,
+          payment_link: paymentLink,
+          selected_addons: addonNames,
+        }).catch((err) => {
+          console.warn('Could not notify admin of logo checkout', err);
+        });
+      }
 
       resetViewportForSpaNavigation();
       navigate(`/complete-payment/${paymentLink}`, {
@@ -607,8 +623,9 @@ export default function LogoCreatorCompletedPage() {
                               className={styles.removeBtn}
                               onClick={() => toggleAddon(addon)}
                               disabled={paying}
+                              aria-label={`Remove ${addon.title}`}
                             >
-                              Remove
+                              <i className="fa-solid fa-xmark" aria-hidden="true" />
                             </button>
                           </span>
                         </div>
@@ -636,29 +653,6 @@ export default function LogoCreatorCompletedPage() {
                     {!canProceed ? <p className={styles.proceedHint}>{proceedHint}</p> : null}
                   </aside>
 
-                  {logoOption ? (
-                    <div className={styles.addons}>
-                      <div className={styles.panelHead}>
-                        <span className={styles.step}>3</span>
-                        <h3 className={styles.panelTitle}>Add product designs</h3>
-                      </div>
-                      <p className={styles.panelSub}>
-                        Optional — select as many as you want. Each one is added to your summary.
-                      </p>
-                      <LogoAddonMockupGrid
-                        logoUrls={mockupLogoUrls}
-                        businessName={businessName}
-                        slogan={slogan}
-                        email={email}
-                        phone={phone}
-                        selectedIds={selectedAddonIds}
-                        onToggle={toggleAddon}
-                        disabled={paying}
-                        compact
-                      />
-                    </div>
-                  ) : null}
-
                   <div className={styles.mobileBar}>
                     <div className={styles.mobileTotal}>
                       <span>Total</span>
@@ -676,6 +670,36 @@ export default function LogoCreatorCompletedPage() {
                   </div>
                 </div>
             ) : null}
+
+              {images.length > 0 ? (
+                <div className={styles.addons}>
+                  {hasSelection ? (
+                    <div className={styles.panelHead}>
+                      <span className={styles.step}>3</span>
+                      <h3 className={styles.panelTitle}>Add product designs</h3>
+                    </div>
+                  ) : (
+                    <h3 className={styles.addonsTitle}>Add product designs</h3>
+                  )}
+                  <p className={styles.panelSub}>
+                    {hasSelection
+                      ? 'Optional — select as many as you want. Each one is added to your summary.'
+                      : 'Select a concept above to preview your logo on these products.'}
+                  </p>
+                  <LogoAddonMockupGrid
+                    logoUrls={mockupLogoUrls}
+                    businessName={businessName}
+                    slogan={slogan}
+                    email={email}
+                    phone={phone}
+                    selectedIds={selectedAddonIds}
+                    onToggle={toggleAddon}
+                    disabled={paying}
+                    locked={!hasSelection}
+                    compact
+                  />
+                </div>
+              ) : null}
 
               <div className={styles.homeWrap}>
                 <Link to="/" className={styles.homeBtn} onClick={() => resetViewportForSpaNavigation()}>

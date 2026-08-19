@@ -105,6 +105,27 @@ export async function postLogoCreatorGenerate(sessionToken, browserId, options =
 }
 
 /**
+ * POST /api/logo-creator/checkout-notify — notify admin when user proceeds to payment.
+ */
+export async function postLogoCreatorCheckoutNotify(payload, options = {}) {
+  const res = await fetch(apiUrl('/api/logo-creator/checkout-notify'), {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      'X-Requested-With': 'XMLHttpRequest',
+    },
+    body: JSON.stringify(payload),
+    signal: options.signal,
+  });
+  const data = await readJsonResponse(res);
+  if (data.success !== true) {
+    throw new Error(getErrorMessage(data, 'Could not notify admin of checkout.'));
+  }
+  return data;
+}
+
+/**
  * POST /api/logo-creator/select — body: { session_token, selected_index }
  */
 export async function postLogoCreatorSelect(sessionToken, selectedIndex, options = {}) {

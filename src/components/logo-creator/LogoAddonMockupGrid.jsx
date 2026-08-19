@@ -14,6 +14,7 @@ export default function LogoAddonMockupGrid({
   onToggle,
   disabled,
   compact = false,
+  locked = false,
 }) {
   const [previews, setPreviews] = useState({});
   const [composing, setComposing] = useState(false);
@@ -25,7 +26,12 @@ export default function LogoAddonMockupGrid({
   );
 
   useEffect(() => {
-    if (!urls.length) return undefined;
+    if (locked || !urls.length) {
+      setPreviews({});
+      setComposing(false);
+      setComposeError('');
+      return undefined;
+    }
 
     let cancelled = false;
     setComposing(true);
@@ -55,7 +61,9 @@ export default function LogoAddonMockupGrid({
     return () => {
       cancelled = true;
     };
-  }, [urls, businessName, slogan, email, phone]);
+  }, [urls, businessName, slogan, email, phone, locked]);
+
+  const selectionDisabled = disabled || locked;
 
   return (
     <section className={compact ? styles.sectionCompact : styles.section} aria-label="Logo product add-ons">
@@ -63,27 +71,33 @@ export default function LogoAddonMockupGrid({
         <>
           <h2 className={styles.heading}>See your logo on products</h2>
           <p className={styles.subhead}>
-            Personalized previews of your selected concept. Add as many as you like.
+            {locked
+              ? 'Select a concept above to preview your logo on these products.'
+              : 'Personalized previews of your selected concept. Add as many as you like.'}
           </p>
         </>
       )}
       <div className={styles.grid}>
         {LOGO_CREATOR_ADDONS.map((addon) => {
-          const preview = previews[addon.id] || addon.template;
-          const ready = Boolean(previews[addon.id]);
-          const selected = selectedIds.includes(addon.id);
+          const preview = locked ? addon.template : (previews[addon.id] || addon.template);
+          const ready = !locked && Boolean(previews[addon.id]);
+          const selected = !locked && selectedIds.includes(addon.id);
           return (
             <article
               key={addon.id}
-              className={`${styles.card}${selected ? ` ${styles.cardSelected}` : ''}`}
+              className={`${styles.card}${selected ? ` ${styles.cardSelected}` : ''}${locked ? ` ${styles.cardLocked}` : ''}`}
             >
               <div className={styles.media}>
                 <img
                   src={preview}
                   alt={`${addon.title} preview${businessName ? ` for ${businessName}` : ''}`}
                   loading="lazy"
+                  className={locked ? styles.mediaBlurred : undefined}
                 />
-                {composing && !ready ? (
+                {locked ? (
+                  <div className={styles.lockedOverlay}>Select a concept</div>
+                ) : null}
+                {!locked && composing && !ready ? (
                   <div className={styles.pending}>Applying logo…</div>
                 ) : null}
               </div>
@@ -100,7 +114,7 @@ export default function LogoAddonMockupGrid({
                     type="button"
                     className={`${styles.addBtn}${selected ? ` ${styles.addBtnActive}` : ''}`}
                     onClick={() => onToggle?.(addon)}
-                    disabled={disabled}
+                    disabled={selectionDisabled}
                     aria-pressed={selected}
                   >
                     {selected ? 'Added' : 'Add'}
@@ -111,7 +125,7 @@ export default function LogoAddonMockupGrid({
           );
         })}
       </div>
-      {composeError ? <p className={styles.error}>{composeError}</p> : null}
+      {!locked && composeError ? <p className={styles.error}>{composeError}</p> : null}
     </section>
   );
 }
