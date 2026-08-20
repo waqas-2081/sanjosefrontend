@@ -215,7 +215,7 @@ export default function TermsConditionsPage() {
               <ol className="legal-ordered-list">
                 <li>
                   Claim your refund specifying your concern by contacting us via any of the following: toll-free{' '}
-                  <a href="tel:+15102797593">(510) 279-7593</a>, live chat, or email{' '}
+                  <a href="tel:+12144491305">(214) 449-1305</a>, live chat, or email{' '}
                   <a href="mailto:info@sanjoselogodesign.com">info@sanjoselogodesign.com</a>.
                 </li>
                 <li>
