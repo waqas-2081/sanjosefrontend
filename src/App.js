@@ -1,6 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import MainLayout from './components/layout/MainLayout';
 import ScrollToTop from './components/layout/ScrollToTop';
+import MetaPixelPageView from './components/layout/MetaPixelPageView';
 import './styles/globalMotion.css';
 import AboutPage from './pages/AboutPage';
 import AnimationsPage from './pages/AnimationsPage';
@@ -49,6 +50,7 @@ function App() {
     <AuthProvider>
       <BrowserRouter>
         <ScrollToTop />
+        <MetaPixelPageView />
         <Routes>
           {/* Standalone routes — NO site layout (no header/footer) */}
           <Route path="logo-creator" element={<LogoCreatorPage />} />
