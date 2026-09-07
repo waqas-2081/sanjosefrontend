@@ -75,7 +75,7 @@ export function HomeLeadPopup({ autoOpenOnLoad = false }) {
   const formRef = useRef(form);
   const isAutoSavingRef = useRef(false);
   
-  const leftImage = useMemo(() => `${process.env.PUBLIC_URL || ''}/assets/images/popupp.png`, []);
+  const leftImage = useMemo(() => `${process.env.PUBLIC_URL || ''}/assets/images/popup.png`, []);
 
   // Keep formRef updated with latest form values
   useEffect(() => {
