@@ -139,7 +139,6 @@ export default function BlogDetail() {
         const response = await fetch(apiUrl(`/api/v1/blogs/${encodeURIComponent(slug)}`), {
           headers: {
             Accept: 'application/json',
-            'X-Requested-With': 'XMLHttpRequest',
           },
         });
         const contentType = response.headers.get('content-type') || '';

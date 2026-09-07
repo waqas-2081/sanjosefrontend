@@ -9,7 +9,6 @@ export async function fetchPackagesByServiceType(serviceType) {
   const response = await fetch(url, {
     headers: {
       Accept: 'application/json',
-      'X-Requested-With': 'XMLHttpRequest',
     },
   });
   const contentType = response.headers.get('content-type') || '';

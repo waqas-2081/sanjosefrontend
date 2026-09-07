@@ -48,7 +48,6 @@ export default function BlogsPage() {
         const response = await fetch(`${apiUrl('/api/v1/blogs')}?${qs.toString()}`, {
           headers: {
             Accept: 'application/json',
-            'X-Requested-With': 'XMLHttpRequest',
           },
         });
 

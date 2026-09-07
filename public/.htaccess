@@ -23,6 +23,11 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
+
+  # Same-origin API/storage proxy — must run before the SPA fallback.
+  RewriteRule ^api/(.*)$ api-proxy.php?path=$1 [QSA,L]
+  RewriteRule ^storage/(.*)$ api-proxy.php?storage=$1 [QSA,L]
+
   RewriteRule ^index\.html$ - [L]
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d

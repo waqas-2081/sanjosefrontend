@@ -1,4 +1,4 @@
-import { apiUrl, storageUrl } from '../api/apiBase';
+import { apiUrl, storageUrl, JSON_HEADERS } from '../api/apiBase';
 
 export function getPortfoliosEndpoint() {
   return apiUrl('/api/v1/portfolios');
@@ -11,11 +11,6 @@ export function getPortfolioCategoriesEndpoint() {
 /** @deprecated use getPortfoliosEndpoint() — kept for callers that read at call-time */
 export const PORTFOLIOS_ENDPOINT = getPortfoliosEndpoint();
 export const PORTFOLIO_CATEGORIES_ENDPOINT = getPortfolioCategoriesEndpoint();
-
-const JSON_HEADERS = {
-  Accept: 'application/json',
-  'X-Requested-With': 'XMLHttpRequest',
-};
 
 export function getApiErrorMessage(result) {
   if (result?.message && typeof result.message === 'string') return result.message;

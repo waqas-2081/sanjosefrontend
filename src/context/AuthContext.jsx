@@ -22,7 +22,6 @@ export function AuthProvider({ children }) {
       headers: {
         Accept: 'application/json',
         Authorization: `Bearer ${stored}`,
-        'X-Requested-With': 'XMLHttpRequest',
       },
     })
       .then((r) => (r.ok ? r.json() : Promise.reject()))
@@ -61,7 +60,6 @@ export function AuthProvider({ children }) {
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
-        'X-Requested-With': 'XMLHttpRequest',
       },
       body: JSON.stringify({ email, password }),
     });
@@ -77,7 +75,6 @@ export function AuthProvider({ children }) {
       headers: {
         Accept: 'application/json',
         Authorization: `Bearer ${loginToken}`,
-        'X-Requested-With': 'XMLHttpRequest',
       },
     });
     if (!res.ok) throw new Error('Auto-login failed.');
@@ -105,7 +102,6 @@ export function AuthProvider({ children }) {
       ...opts,
       headers: {
         Accept: 'application/json',
-        'X-Requested-With': 'XMLHttpRequest',
         ...(tok ? { Authorization: `Bearer ${tok}` } : {}),
         ...(opts.headers || {}),
       },

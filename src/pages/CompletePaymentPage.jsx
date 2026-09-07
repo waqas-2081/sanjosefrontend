@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
-import { apiUrl } from '../api/apiBase';
+import { apiUrl, JSON_HEADERS, SIMPLE_POST_HEADERS, toFormBody, getNetworkErrorMessage } from '../api/apiBase';
 import styles from './CompletePaymentPage.module.css';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 
@@ -18,12 +18,8 @@ const PAYPAL_SDK_SRC = `https://www.paypal.com/sdk/js?client-id=${PAYPAL_CLIENT}
 async function apiPost(path, body) {
   const res = await fetch(apiUrl(`/api${path.startsWith('/') ? path : `/${path}`}`), {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-      'X-Requested-With': 'XMLHttpRequest',
-    },
-    body: JSON.stringify(body),
+    headers: SIMPLE_POST_HEADERS,
+    body: toFormBody(body).toString(),
   });
   const data = await res.json().catch(() => null);
   if (!res.ok) {
@@ -698,7 +694,7 @@ export default function CompletePaymentPage() {
     (async () => {
       try {
         const res = await fetch(apiUrl(`/api/payment-requests/by-link/${token}`), {
-          headers: { Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+          headers: JSON_HEADERS,
         });
         const data = await res.json().catch(() => null);
         if (!res.ok || !data?.success) {
@@ -739,7 +735,7 @@ export default function CompletePaymentPage() {
           alreadyPaid:      false,
         });
       } catch (err) {
-        setFetchErr(err.message || 'Could not load payment details.');
+        setFetchErr(getNetworkErrorMessage(err, 'Could not load payment details.'));
       } finally {
         setLoading(false);
       }
@@ -806,7 +802,7 @@ export default function CompletePaymentPage() {
         </div>
       </section>
 
-      <section className={`${styles.page} ${styles.surface}`}>
+      <section className={`${styles.page} ${styles.surface}`} data-no-motion="true">
         <div className={`container-fluid ${styles.checkoutShell}`}>
           <div className={styles.wrap}>
             <div className={styles.grid}>

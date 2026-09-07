@@ -1,4 +1,4 @@
-import { apiUrl } from './apiBase';
+import { apiUrl, SIMPLE_POST_HEADERS, toFormBody } from './apiBase';
 
 export function getPaymentRequestApiErrorMessage(result) {
   if (result?.errors && typeof result.errors === 'object') {
@@ -25,12 +25,8 @@ export function getPaymentRequestApiErrorMessage(result) {
 export async function createPaymentRequest(payload) {
   const response = await fetch(apiUrl('/api/payment-requests'), {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-      'X-Requested-With': 'XMLHttpRequest',
-    },
-    body: JSON.stringify({
+    headers: SIMPLE_POST_HEADERS,
+    body: toFormBody({
       profile: payload.salesAgent,
       customer_name: payload.customerName,
       email: payload.email || null,
@@ -38,7 +34,7 @@ export async function createPaymentRequest(payload) {
       package_name: payload.packageName || null,
       amount: payload.amount,
       payment_method: payload.paymentMethod,
-    }),
+    }).toString(),
   });
 
   const contentType = response.headers.get('content-type') || '';

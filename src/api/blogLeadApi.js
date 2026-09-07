@@ -34,7 +34,6 @@ export async function postBlogLead(payload, options = {}) {
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      'X-Requested-With': 'XMLHttpRequest',
     },
     body: JSON.stringify(payload),
     signal: options.signal,

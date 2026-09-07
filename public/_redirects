@@ -1,0 +1,3 @@
+# Same-origin proxy so browsers never need a CORS preflight to the admin host.
+/api/*      https://admin.sanjoselogodesign.com/api/:splat      200
+/storage/*  https://admin.sanjoselogodesign.com/storage/:splat  200

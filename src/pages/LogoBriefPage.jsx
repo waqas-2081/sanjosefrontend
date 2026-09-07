@@ -251,7 +251,6 @@ export default function LogoBriefPage({ embedded = false }) {
         method: 'POST',
         headers: {
           Accept: 'application/json',
-          'X-Requested-With': 'XMLHttpRequest',
         },
         body: formData,
       });

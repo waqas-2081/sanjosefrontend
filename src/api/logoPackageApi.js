@@ -56,7 +56,6 @@ export async function fetchLogoPackageOptions(options = {}) {
   const res = await fetch(apiUrl('/api/v1/logo-package-options'), {
     headers: {
       Accept: 'application/json',
-      'X-Requested-With': 'XMLHttpRequest',
     },
     signal: options.signal,
   });
@@ -114,7 +113,6 @@ export async function submitLogoPackageBrief(payload, options = {}) {
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      'X-Requested-With': 'XMLHttpRequest',
     },
     body: JSON.stringify(payload),
     signal: options.signal,

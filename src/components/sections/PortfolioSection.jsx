@@ -1,13 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { apiUrl } from '../../api/apiBase';
+import { getNetworkErrorMessage } from '../../api/apiBase';
+import { fetchPortfolioCategories, fetchPortfolios, isVideoUrl } from '../../lib/portfolioApi';
 import { refreshPortfolioTabSwipers } from '../../lib/legacyWidgets';
 import { GalleryLightboxPortal } from '../ui/GalleryLightbox';
-import { SuccessStoriesHome } from './SuccessStoriesHome';
-
-function getApiErrorMessage(result) {
-  if (result?.message && typeof result.message === 'string') return result.message;
-  return 'Unable to load portfolio right now.';
-}
 
 const CATEGORY_TO_TAB_ID = {
   Logo: 'tab-logo',
@@ -23,11 +18,6 @@ const HIDDEN_PORTFOLIO_TAB_CATEGORIES = new Set(['Animation']);
 
 function tabIdForCategory(category) {
   return CATEGORY_TO_TAB_ID[category] ?? 'tab-logo';
-}
-
-function isVideoUrl(url) {
-  if (!url || typeof url !== 'string') return false;
-  return /\.(mp4|webm|ogg)(\?|$)/i.test(url);
 }
 
 function mediaFromPortfolioCard(card) {
@@ -79,40 +69,12 @@ export function PortfolioSection() {
       setError('');
 
       try {
-        const [catRes, listRes] = await Promise.all([
-          fetch(apiUrl('/api/v1/portfolio-categories'), {
-            headers: {
-              Accept: 'application/json',
-              'X-Requested-With': 'XMLHttpRequest',
-            },
-          }),
-          fetch(apiUrl('/api/v1/portfolios'), {
-            headers: {
-              Accept: 'application/json',
-              'X-Requested-With': 'XMLHttpRequest',
-            },
-          }),
+        const [cats, list] = await Promise.all([
+          fetchPortfolioCategories(),
+          fetchPortfolios(),
         ]);
 
-        const catContentType = catRes.headers.get('content-type') || '';
-        const listContentType = listRes.headers.get('content-type') || '';
-        const catJson = catContentType.includes('application/json')
-          ? await catRes.json().catch(() => null)
-          : null;
-        const listJson = listContentType.includes('application/json')
-          ? await listRes.json().catch(() => null)
-          : null;
-
-        if (!catRes.ok || !catJson || catJson.success !== true) {
-          throw new Error(getApiErrorMessage(catJson));
-        }
-        if (!listRes.ok || !listJson || listJson.success !== true) {
-          throw new Error(getApiErrorMessage(listJson));
-        }
-
         if (cancelled) return;
-        const cats = Array.isArray(catJson.data) ? catJson.data : [];
-        const list = Array.isArray(listJson.data) ? listJson.data : [];
         setCategories(cats);
         setItems(list);
         const visibleCats = cats.filter((c) => !HIDDEN_PORTFOLIO_TAB_CATEGORIES.has(c));
@@ -123,7 +85,7 @@ export function PortfolioSection() {
         }
       } catch (e) {
         if (!cancelled) {
-          setError(e.message || 'Unable to load portfolio right now.');
+          setError(getNetworkErrorMessage(e, 'Unable to load portfolio right now.'));
           setCategories([]);
           setItems([]);
         }
@@ -199,7 +161,7 @@ export function PortfolioSection() {
 
   return (
     <>
-      <section className="portfolio-sec">
+      <section className="portfolio-sec" data-no-motion="true">
         <div className="container-fluid">
           <div className="portfolio-header text-center">
             <h2>

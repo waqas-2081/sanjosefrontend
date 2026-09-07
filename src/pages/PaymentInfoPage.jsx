@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { apiUrl } from '../api/apiBase';
+import { apiUrl, SIMPLE_POST_HEADERS, toFormBody, getNetworkErrorMessage } from '../api/apiBase';
 import styles from './PaymentInfoPage.module.css';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 
@@ -91,12 +91,8 @@ export default function PaymentInfoPage() {
     try {
       const response = await fetch(apiUrl('/api/payment-requests'), {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-          'X-Requested-With': 'XMLHttpRequest',
-        },
-        body: JSON.stringify(body),
+        headers: SIMPLE_POST_HEADERS,
+        body: toFormBody(body).toString(),
       });
 
       const contentType = response.headers.get('content-type') || '';
@@ -132,7 +128,7 @@ export default function PaymentInfoPage() {
         },
       });
     } catch (error) {
-      setSubmitError(error.message || 'Unable to submit payment details. Please try again.');
+      setSubmitError(getNetworkErrorMessage(error, 'Unable to submit payment details. Please try again.'));
     } finally {
       setIsSubmitting(false);
     }
@@ -171,7 +167,7 @@ export default function PaymentInfoPage() {
         </div>
       </section>
 
-      <section className={`contact-section py-5 ${styles.page} ${styles.surface}`}>
+      <section className={`contact-section py-5 ${styles.page} ${styles.surface}`} data-no-motion="true">
         <div className="container-fluid">
           <div className={styles.wrap}>
             <header className={styles.pageHeader}>

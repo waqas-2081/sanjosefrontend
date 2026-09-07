@@ -37,7 +37,6 @@ export async function postContact(payload, options = {}) {
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      'X-Requested-With': 'XMLHttpRequest',
     },
     body: JSON.stringify(payload),
     signal: options.signal,
@@ -58,7 +57,6 @@ export async function autoSaveContact(payload, options = {}) {
     headers: {
       'Content-Type': 'application/json',   
       Accept: 'application/json',
-      'X-Requested-With': 'XMLHttpRequest',
     },
     body: JSON.stringify(payload),
     signal: options.signal,

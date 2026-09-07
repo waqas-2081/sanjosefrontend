@@ -21,7 +21,6 @@ export async function requestPasswordReset(email, options = {}) {
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      'X-Requested-With': 'XMLHttpRequest',
     },
     body: JSON.stringify({ email }),
     signal: options.signal,
@@ -52,7 +51,6 @@ export async function resetPassword(payload, options = {}) {
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      'X-Requested-With': 'XMLHttpRequest',
     },
     body: JSON.stringify(payload),
     signal: options.signal,

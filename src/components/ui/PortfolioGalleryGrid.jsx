@@ -61,7 +61,7 @@ export function PortfolioGalleryGrid({
 
   return (
     <>
-      <section className="portfolio-sec inner-portfolio-sec">
+      <section className="portfolio-sec inner-portfolio-sec" data-no-motion="true">
         <div className="container-fluid">
           <div className="portfolio-tabs mt-0">
             <div className={`portfolio-tab active`} id={tabId}>

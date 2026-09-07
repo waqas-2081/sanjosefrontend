@@ -287,12 +287,12 @@ export default function HomePage() {
       <LogoWizard />
       <HomeVideoReviews />
       <HomeLogoPackages />
-      {/* Desktop/tablet only — keep mobile home light */}
+      <CtaProjects />
+      {/* Desktop/tablet only — portfolio stays hidden on mobile */}
       <div className="home-desktop-only">
         <HomeAbout />
         <FeaturedStories />
         <PortfolioSection />
-        <CtaProjects />
         <BrandPotential />
         <SolutionsSection />
         <AwesomeProjects />

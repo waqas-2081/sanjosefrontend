@@ -75,6 +75,28 @@ body {
   transform: translateY(-1px);
 }
 
+/* If IntersectionObserver never fires, content must stay visible */
+.section-motion-target.is-motion-fallback .section-motion-item,
+.section-motion-target.is-motion-fallback .section-motion-card,
+.section-motion-target.is-motion-fallback .section-motion-media {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+@media (max-width: 991.98px) {
+  .section-motion-target,
+  .section-motion-target .section-motion-item,
+  .section-motion-target .section-motion-card,
+  .section-motion-target .section-motion-media,
+  .section-motion-target .section-motion-button,
+  .section-motion-target .section-motion-icon {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

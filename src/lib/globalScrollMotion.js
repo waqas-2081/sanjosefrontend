@@ -73,9 +73,24 @@ function isElementVisibleForInitialState(rect, viewportHeight) {
   return rect.top < viewportHeight * 0.84 && rect.bottom > viewportHeight * 0.12;
 }
 
+function isHiddenFromLayout(el) {
+  if (!el || typeof window === 'undefined') return true;
+  if (el.closest('[data-no-motion="true"]')) return true;
+  const style = window.getComputedStyle(el);
+  if (style.display === 'none' || style.visibility === 'hidden') return true;
+  const parent = el.parentElement;
+  if (parent) {
+    const parentStyle = window.getComputedStyle(parent);
+    if (parentStyle.display === 'none' || parentStyle.visibility === 'hidden') return true;
+  }
+  return false;
+}
+
 export function initGlobalScrollMotion(root = document) {
   if (typeof window === 'undefined' || !root?.querySelectorAll) return () => {};
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return () => {};
+  /* Small / zoomed screens: observer + opacity:0 left pages looking empty */
+  if (window.matchMedia('(max-width: 991.98px)').matches) return () => {};
 
   const targets = [...root.querySelectorAll(TARGET_SELECTOR)];
   if (targets.length === 0) return () => {};
@@ -83,7 +98,7 @@ export function initGlobalScrollMotion(root = document) {
   const seen = new Set();
   const uniqueTargets = targets.filter((el) => {
     if (el.classList?.contains('main-banner')) return false;
-    if (el.closest('[data-no-motion="true"]')) return false;
+    if (isHiddenFromLayout(el)) return false;
     if (seen.has(el)) return false;
     seen.add(el);
     return true;
@@ -159,8 +174,8 @@ export function initGlobalScrollMotion(root = document) {
       });
     },
     {
-      threshold: 0.08,
-      rootMargin: '0px 0px -4% 0px',
+      threshold: 0.01,
+      rootMargin: '80px 0px 80px 0px',
     }
   );
 
@@ -178,19 +193,20 @@ export function initGlobalScrollMotion(root = document) {
   };
 
   const resetForReplay = () => {
-    uniqueTargets.forEach((el) => {
-      el.classList.remove('is-revealed');
-      observe(el);
-    });
+    /* Re-measure only — never hide already-visible content (caused empty pages). */
     requestAnimationFrame(measureAndReveal);
   };
 
   const measureRaf = requestAnimationFrame(measureAndReveal);
+  const failsafeId = window.setTimeout(() => {
+    uniqueTargets.forEach(reveal);
+  }, 700);
 
   const teardownScrollReplay = onScrollTopReplay(resetForReplay);
 
   return () => {
     cancelAnimationFrame(measureRaf);
+    window.clearTimeout(failsafeId);
     teardownScrollReplay();
     observer.disconnect();
     observed.clear();

@@ -42,7 +42,7 @@ export default function PaymentCompletedPage() {
     (async () => {
       try {
         const res  = await fetch(apiUrl(`/api/payment-requests/by-link/${token}`), {
-          headers: { Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+          headers: { Accept: 'application/json' },
         });
         const data = await res.json().catch(() => null);
         if (!res.ok || !data?.success) throw new Error(data?.message || 'Payment not found.');

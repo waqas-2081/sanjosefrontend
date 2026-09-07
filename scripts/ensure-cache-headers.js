@@ -10,7 +10,7 @@ const root = path.join(__dirname, '..');
 const pub = path.join(root, 'public');
 const build = path.join(root, 'build');
 
-const files = ['_headers', '.htaccess'];
+const files = ['_headers', '.htaccess', '_redirects', 'api-proxy.php'];
 
 if (!fs.existsSync(build)) {
   console.error('build/ missing — run react-scripts build first');

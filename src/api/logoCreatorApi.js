@@ -46,7 +46,6 @@ export async function postLogoCreatorStart(businessName, options = {}) {
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      'X-Requested-With': 'XMLHttpRequest',
     },
     body: JSON.stringify({ business_name: String(businessName).trim() }),
     signal: options.signal,
@@ -67,7 +66,6 @@ export async function postLogoCreatorStep(payload, options = {}) {
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      'X-Requested-With': 'XMLHttpRequest',
     },
     body: JSON.stringify(payload),
     signal: options.signal,
@@ -89,7 +87,6 @@ export async function postLogoCreatorGenerate(sessionToken, browserId, options =
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      'X-Requested-With': 'XMLHttpRequest',
     },
     body: JSON.stringify({
       session_token: sessionToken,
@@ -113,7 +110,6 @@ export async function postLogoCreatorCheckoutNotify(payload, options = {}) {
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      'X-Requested-With': 'XMLHttpRequest',
     },
     body: JSON.stringify(payload),
     signal: options.signal,
@@ -134,7 +130,6 @@ export async function postLogoCreatorSelect(sessionToken, selectedIndex, options
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      'X-Requested-With': 'XMLHttpRequest',
     },
     body: JSON.stringify({
       session_token: sessionToken,
