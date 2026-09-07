@@ -24,7 +24,11 @@
   RewriteEngine On
   RewriteBase /
 
-  # Same-origin API/storage proxy — must run before the SPA fallback.
+  # Gateway paths (NOT /api) — Cloudflare WAF often blocks "/api/*" at the edge.
+  RewriteRule ^sjld-svc/(.*)$ api-proxy.php?path=$1 [QSA,L]
+  RewriteRule ^sjld-media/(.*)$ api-proxy.php?storage=$1 [QSA,L]
+
+  # Legacy /api + /storage (keep for old builds / bookmarks)
   RewriteRule ^api/(.*)$ api-proxy.php?path=$1 [QSA,L]
   RewriteRule ^storage/(.*)$ api-proxy.php?storage=$1 [QSA,L]
 

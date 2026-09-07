@@ -1,3 +1,5 @@
-# Same-origin proxy so browsers never need a CORS preflight to the admin host.
-/api/*      https://admin.sanjoselogodesign.com/api/:splat      200
-/storage/*  https://admin.sanjoselogodesign.com/storage/:splat  200
+# Prefer non-/api paths — Cloudflare WAF often challenges "/api/*".
+/sjld-svc/*    https://admin.sanjoselogodesign.com/api/:splat      200
+/sjld-media/*  https://admin.sanjoselogodesign.com/storage/:splat  200
+/api/*         https://admin.sanjoselogodesign.com/api/:splat      200
+/storage/*     https://admin.sanjoselogodesign.com/storage/:splat  200

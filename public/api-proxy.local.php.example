@@ -1,0 +1,14 @@
+<?php
+
+/**
+ * OPTIONAL — upload as api-proxy.local.php next to api-proxy.php on the LIVE server.
+ * Put your real hosting/origin IP (Cloudflare DNS → grey-cloud "DNS only" A record shows it,
+ * or cPanel → Server Information).
+ *
+ * This lets the proxy talk to Laravel without going through Cloudflare WAF.
+ */
+return [
+    // 'origin_ip' => '130.195.212.66',
+    // 'origin_port' => 443,
+    // 'admin_host' => 'admin.sanjoselogodesign.com',
+];
