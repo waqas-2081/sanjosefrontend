@@ -1,6 +1,9 @@
 import { Link } from 'react-router-dom';
+import { useSiteSettings } from '../../context/SiteSettingsContext';
 
 export default function Footer() {
+  const { email, phone, location, social, phoneHref, emailHref } = useSiteSettings();
+
   return (
     <footer className="site-footer">
       <img src="/assets/images/icon/section_bottom_shape_black.svg" alt="" className="section_top_shape" />
@@ -109,30 +112,38 @@ export default function Footer() {
               <ul className="footer-contact-list">
               <li>
                   <i className="fa-solid fa-phone" aria-hidden="true" />
-                  <a href="tel:+12144491305">(214) 449-1305</a>
+                  <a href={phoneHref}>{phone}</a>
                 </li>
               <li>
                   <i className="fa-solid fa-envelope" aria-hidden="true" />
-                  <a href="mailto:info@sanjoselogodesign.com">info@sanjoselogodesign.com</a>
+                  <a href={emailHref}>{email}</a>
                 </li>
                 <li>
                   <i className="fa-solid fa-location-dot" aria-hidden="true" />
-                  <span>14A S 1st St, San Jose, CA 95113, USA</span>
+                  <span>{location}</span>
                 </li>                 
               </ul>
               <div className="footer-social-links">
-                <a href="https://www.facebook.com/SanJoselogodesign" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
-                  <i className="fa-brands fa-facebook-f" />
-                </a>
-                <a href="https://www.instagram.com/sanjoselogodesign/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-                  <i className="fa-brands fa-instagram" />
-                </a>
-                <a href="https://x.com/SJLogoDesigns" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
-                  <i className="fa-brands fa-x-twitter" />
-                </a>
-                  <a href="https://www.linkedin.com/company/san-jose-logo-design" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                {social.facebook ? (
+                  <a href={social.facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+                    <i className="fa-brands fa-facebook-f" />
+                  </a>
+                ) : null}
+                {social.instagram ? (
+                  <a href={social.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                    <i className="fa-brands fa-instagram" />
+                  </a>
+                ) : null}
+                {social.x ? (
+                  <a href={social.x} target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+                    <i className="fa-brands fa-x-twitter" />
+                  </a>
+                ) : null}
+                {social.linkedin ? (
+                  <a href={social.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
                     <i className="fa-brands fa-linkedin" />
                   </a>
+                ) : null}
               </div>
             </div>
           </div>

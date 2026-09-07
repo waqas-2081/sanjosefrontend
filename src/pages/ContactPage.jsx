@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { postContact, autoSaveContact } from '../api/contactApi';
 import { useClientIp } from '../hooks/useClientIp';
+import { useSiteSettings } from '../context/SiteSettingsContext';
 
 const AUTOSAVE_DELAY_MS = 3000; // 3 seconds
 
@@ -20,6 +21,7 @@ export default function ContactPage() {
 
   const clientIp = useClientIp();
   const navigate = useNavigate();
+  const { email, phone, location, phoneHref, emailHref } = useSiteSettings();
   
   const [form, setForm] = useState(initialForm);
   const [submitted, setSubmitted] = useState(false);
@@ -267,7 +269,7 @@ export default function ContactPage() {
                     <i className="fa-solid fa-phone" />
                   </span>
                   <p>
-                    <a href="tel:+12144491305">(214) 449-1305</a>
+                    <a href={phoneHref}>{phone}</a>
                   </p>
                 </div>
 
@@ -276,7 +278,7 @@ export default function ContactPage() {
                     <i className="fa-solid fa-envelope" />
                   </span>
                   <p>
-                    <a href="mailto:info@sanjoselogodesign.com">info@sanjoselogodesign.com</a>
+                    <a href={emailHref}>{email}</a>
                   </p>
                 </div>
 
@@ -284,7 +286,7 @@ export default function ContactPage() {
                   <span className="contact-info-icon" aria-hidden="true">
                     <i className="fa-solid fa-location-dot" />
                   </span>
-                  <p>14A S 1st St, San Jose, CA 95113, USA</p>
+                  <p>{location}</p>
                 </div>
 
                 

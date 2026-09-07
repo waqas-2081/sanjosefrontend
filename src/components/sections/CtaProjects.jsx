@@ -1,27 +1,7 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import { motion, useAnimationControls, useInView } from "framer-motion";
 import { onScrollTopReplay } from "../../lib/scrollMotionReplay";
-
-const CONTACTS = [
-  {
-    icon: "fa-phone",
-    label: "24/7 Support",
-    value: "(214) 449-1305",
-    href: "tel:+12144491305",
-  },
-  {
-    icon: "fa-comments",
-    label: "Talk to Us",
-    value: "Live Chat",
-    href: "/contact-us",
-  },
-  {
-    icon: "fa-envelope",
-    label: "Email us at",
-    value: "info@sanjoselogodesign.com",
-    href: "mailto:info@sanjoselogodesign.com",
-  },
-];
+import { useSiteSettings } from "../../context/SiteSettingsContext";
 
 const stagger = {
   hidden: {},
@@ -80,6 +60,31 @@ export function CtaProjects() {
   const sectionRef = useRef(null);
   const controls = useAnimationControls();
   useSectionReplay(sectionRef, controls);
+  const { phone, email, phoneHref, emailHref } = useSiteSettings();
+
+  const contacts = useMemo(
+    () => [
+      {
+        icon: "fa-phone",
+        label: "24/7 Support",
+        value: phone,
+        href: phoneHref,
+      },
+      {
+        icon: "fa-comments",
+        label: "Talk to Us",
+        value: "Live Chat",
+        href: "/contact-us",
+      },
+      {
+        icon: "fa-envelope",
+        label: "Email us at",
+        value: email,
+        href: emailHref,
+      },
+    ],
+    [phone, email, phoneHref, emailHref]
+  );
 
   return (
     <section
@@ -132,8 +137,8 @@ export function CtaProjects() {
           </div>
 
           <motion.div className="cta-projects__bar" variants={rise}>
-            {CONTACTS.map((item) => (
-              <ContactItem key={item.href} {...item} />
+            {contacts.map((item) => (
+              <ContactItem key={`${item.label}-${item.href}`} {...item} />
             ))}
           </motion.div>
         </motion.div>

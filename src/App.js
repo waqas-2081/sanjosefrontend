@@ -44,10 +44,12 @@ import DashboardLogoBriefPage from './pages/dashboard/DashboardLogoBriefPage';
 import DashboardWebsiteBriefPage from './pages/dashboard/DashboardWebsiteBriefPage';
 import DashboardProfilePage from './pages/dashboard/DashboardProfilePage';
 import { AuthProvider } from './context/AuthContext';
+import { SiteSettingsProvider } from './context/SiteSettingsContext';
 
 function App() {
   return (
     <AuthProvider>
+      <SiteSettingsProvider>
       <BrowserRouter>
         <ScrollToTop />
         <MetaPixelPageView />
@@ -116,6 +118,7 @@ function App() {
           </Route>
         </Routes>
       </BrowserRouter>
+      </SiteSettingsProvider>
     </AuthProvider>
   );
 }

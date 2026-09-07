@@ -1,5 +1,9 @@
 import React from 'react';
+import { useSiteSettings } from '../../context/SiteSettingsContext';
+
 export function MainBanner() {
+  const { social } = useSiteSettings();
+
   return (
     <section className="main-banner">
         <div className="banner-images">
@@ -32,24 +36,26 @@ export function MainBanner() {
             <h3>Connect</h3>
             <span></span>
             <div className="social-links">
-                <a
-                  href="https://www.facebook.com/SanJoselogodesign"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Facebook"
-                >
-                    <i className="fa-brands fa-facebook-f"></i>
-                </a>
-                <a
-                  href="https://www.instagram.com/sanjoselogodesign/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Instagram"
-                >
-                    <i className="fa-brands fa-instagram"></i>
-                </a>
-               
-                
+                {social.facebook ? (
+                  <a
+                    href={social.facebook}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Facebook"
+                  >
+                      <i className="fa-brands fa-facebook-f"></i>
+                  </a>
+                ) : null}
+                {social.instagram ? (
+                  <a
+                    href={social.instagram}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Instagram"
+                  >
+                      <i className="fa-brands fa-instagram"></i>
+                  </a>
+                ) : null}
             </div>
         </div>
         <div className="bottom-area">

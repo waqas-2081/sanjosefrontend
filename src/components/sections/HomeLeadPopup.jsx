@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { postBrandingBrief, autoSaveBrandingBrief } from '../../api/brandingBriefApi';
 import { saveCheckoutCustomer } from '../../lib/checkoutCustomer';
 import { useClientIp } from '../../hooks/useClientIp';
+import { useSiteSettings } from '../../context/SiteSettingsContext';
 
 const OPEN_DELAY_MS = 15000;
 const AUTOSAVE_DELAY_MS = 3000; // 3 seconds
@@ -61,6 +62,7 @@ function FloatingOrbs() {
 export function HomeLeadPopup({ autoOpenOnLoad = false }) {
   const navigate = useNavigate();
   const clientIp = useClientIp();
+  const { popupImage } = useSiteSettings();
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState(emptyForm);
   const [submitting, setSubmitting] = useState(false);
@@ -75,7 +77,10 @@ export function HomeLeadPopup({ autoOpenOnLoad = false }) {
   const formRef = useRef(form);
   const isAutoSavingRef = useRef(false);
   
-  const leftImage = useMemo(() => `${process.env.PUBLIC_URL || ''}/assets/images/popup.png`, []);
+  const leftImage = useMemo(
+    () => popupImage || `${process.env.PUBLIC_URL || ''}/assets/images/popup.png`,
+    [popupImage]
+  );
 
   // Keep formRef updated with latest form values
   useEffect(() => {
