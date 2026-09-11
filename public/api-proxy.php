@@ -70,19 +70,88 @@ $headers = [
     'X-Requested-By: sanjose-frontend-proxy',
 ];
 
+$requestContentType = '';
 if (!empty($_SERVER['CONTENT_TYPE'])) {
-    $headers[] = 'Content-Type: '.$_SERVER['CONTENT_TYPE'];
+    $requestContentType = (string) $_SERVER['CONTENT_TYPE'];
 } elseif (!empty($_SERVER['HTTP_CONTENT_TYPE'])) {
-    $headers[] = 'Content-Type: '.$_SERVER['HTTP_CONTENT_TYPE'];
+    $requestContentType = (string) $_SERVER['HTTP_CONTENT_TYPE'];
+}
+
+$isMultipart = stripos($requestContentType, 'multipart/form-data') !== false;
+
+// For multipart, curl must set Content-Type + boundary itself when POSTFIELDS is an array.
+if (!$isMultipart && $requestContentType !== '') {
+    $headers[] = 'Content-Type: '.$requestContentType;
 }
 if (!empty($_SERVER['HTTP_AUTHORIZATION'])) {
     $headers[] = 'Authorization: '.$_SERVER['HTTP_AUTHORIZATION'];
 }
 
+/**
+ * Rebuild multipart fields from $_POST / $_FILES.
+ * PHP empties php://input for multipart requests, so raw forwarding always drops the body.
+ *
+ * @return array<string, mixed>
+ */
+function sjld_build_multipart_fields()
+{
+    $fields = [];
+
+    $flatten = function ($key, $value) use (&$flatten, &$fields) {
+        if (is_array($value)) {
+            foreach ($value as $i => $item) {
+                $flatten($key.'['.$i.']', $item);
+            }
+            return;
+        }
+        $fields[$key] = $value;
+    };
+
+    foreach ($_POST as $key => $value) {
+        $flatten($key, $value);
+    }
+
+    foreach ($_FILES as $key => $file) {
+        if (!isset($file['name'])) {
+            continue;
+        }
+
+        if (is_array($file['name'])) {
+            foreach ($file['name'] as $i => $name) {
+                $error = $file['error'][$i] ?? UPLOAD_ERR_NO_FILE;
+                if ($error !== UPLOAD_ERR_OK || empty($file['tmp_name'][$i])) {
+                    continue;
+                }
+                $fields[$key.'['.$i.']'] = new CURLFile(
+                    $file['tmp_name'][$i],
+                    !empty($file['type'][$i]) ? $file['type'][$i] : 'application/octet-stream',
+                    $name
+                );
+            }
+            continue;
+        }
+
+        if (($file['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK || empty($file['tmp_name'])) {
+            continue;
+        }
+        $fields[$key] = new CURLFile(
+            $file['tmp_name'],
+            !empty($file['type']) ? $file['type'] : 'application/octet-stream',
+            $file['name']
+        );
+    }
+
+    return $fields;
+}
+
 $method = strtoupper($_SERVER['REQUEST_METHOD'] ?? 'GET');
 $body = null;
 if (in_array($method, ['POST', 'PUT', 'PATCH', 'DELETE'], true)) {
-    $body = file_get_contents('php://input');
+    if ($isMultipart) {
+        $body = sjld_build_multipart_fields();
+    } else {
+        $body = file_get_contents('php://input');
+    }
 }
 
 /**
@@ -100,7 +169,8 @@ function sjld_proxy_request($target, $method, $headers, $body, $resolve = null, 
     curl_setopt($ch, CURLOPT_HEADER, true);
     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
     curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 20);
+    // File uploads (briefs) need more than a short JSON timeout.
+    curl_setopt($ch, CURLOPT_TIMEOUT, is_array($body) ? 120 : 20);
     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 4);
 
     if ($insecureSsl) {
