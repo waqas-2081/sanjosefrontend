@@ -4,7 +4,7 @@ import { apiUrl, SIMPLE_POST_HEADERS, toFormBody, getNetworkErrorMessage } from 
 import styles from './PaymentInfoPage.module.css';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 
-const SALES_AGENTS = ['Jared', 'Luke', 'Robert', 'Shawn', 'Sam', 'Zack'];
+const SALES_AGENTS = ['Jared', 'Luke', 'Robert', 'Shawn', 'Sam', 'Zack', 'Rick', 'David'];
 
 const PAYMENT_TYPES = [
   { id: 'front',  label: 'Front' },
