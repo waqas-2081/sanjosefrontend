@@ -52,6 +52,18 @@ const INDUSTRIES = [
   "Automotive", "Sports", "Photography", "Music", "Other"
 ];
 
+const LOGO_TYPES = [
+  { value: "wordmark", label: "Wordmark" },
+  { value: "lettermark", label: "Lettermark" },
+  { value: "mascot", label: "Mascot" },
+  { value: "emblem", label: "Emblem" },
+  { value: "abstract", label: "Abstract" },
+  { value: "combination_mark", label: "Combination Mark" },
+];
+
+const DEFAULT_PRIMARY_COLOR = "#FF6B1A";
+const DEFAULT_SECONDARY_COLOR = "#1A1A2E";
+
 const HERO_LOGO_BASE = `${process.env.PUBLIC_URL || ""}/assets/images/hero-logos`;
 const HERO_LOGO_IMAGES = Array.from({ length: 16 }, (_, i) => `${HERO_LOGO_BASE}/${i + 1}.png`);
 
@@ -241,7 +253,7 @@ function Step1({ data, onChange, onNext, pending, error, isLogoCreatorPage }) {
 function Step2({ data, onChange, onNext, isSaving }) {
   return (
     <div className="step-content animate-in modal-step">
-      <div className="step-badge">Step 1 of 3</div>
+      <div className="step-badge">Step 1 of 4</div>
       <h2 className="modal-title">Add a catchy <span className="accent">SLOGAN</span></h2>
       <p className="modal-sub">This is optional but can make your logo more memorable</p>
 
@@ -271,11 +283,11 @@ function Step3({ data, onChange, onNext, onPrev, isSaving }) {
 
   return (
     <div className="step-content animate-in modal-step">
-      <div className="step-badge">Step 2 of 3</div>
+      <div className="step-badge">Step 2 of 4</div>
       <h2 className="modal-title">What's your <span className="accent">industry?</span></h2>
       <p className="modal-sub">This helps us suggest the perfect design style</p>
 
-      <div className="field-group">
+      <div className={`field-group${open ? " field-group--select-open" : ""}`}>
         <label className="field-label">INDUSTRY (OPTIONAL)</label>
         <div className={`custom-select ${open ? "open" : ""}`}>
           <div
@@ -337,7 +349,175 @@ function Step3({ data, onChange, onNext, onPrev, isSaving }) {
   );
 }
 
-// Step 4: Contact
+function isValidHexColor(value) {
+  return /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(String(value || "").trim());
+}
+
+// Step 4: Business Information
+function StepBusinessInfo({ data, onChange, onNext, onPrev, isSaving }) {
+  const [open, setOpen] = useState(false);
+  const selectedType = LOGO_TYPES.find((t) => t.value === data.logoType);
+  const primaryColor = isValidHexColor(data.primaryColor)
+    ? data.primaryColor
+    : DEFAULT_PRIMARY_COLOR;
+  const secondaryColor = isValidHexColor(data.secondaryColor)
+    ? data.secondaryColor
+    : DEFAULT_SECONDARY_COLOR;
+
+  return (
+    <div className="step-content animate-in modal-step">
+      <div className="step-badge">Step 3 of 4</div>
+      <h2 className="modal-title">
+        Your <span className="accent">BUSINESS</span> Information
+      </h2>
+      <p className="modal-sub">Tell us how you want your logo to look and feel</p>
+
+      <div className={`field-group${open ? " field-group--select-open" : ""}`}>
+        <label className="field-label">LOGO TYPE (OPTIONAL)</label>
+        <div className={`custom-select ${open ? "open" : ""}`}>
+          <div
+            className="select-display"
+            onClick={() => setOpen((o) => !o)}
+            role="button"
+            aria-expanded={open}
+            aria-haspopup="listbox"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                setOpen((o) => !o);
+              }
+            }}
+          >
+            {selectedType?.label || "Select logo type"}
+            <span className="select-arrow">{open ? "▲" : "▼"}</span>
+          </div>
+          {open && (
+            <div className="select-dropdown" onClick={(e) => e.stopPropagation()}>
+              <div
+                className="select-opt bold-opt"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onChange("logoType", "");
+                  setOpen(false);
+                }}
+              >
+                Select logo type
+              </div>
+              {LOGO_TYPES.map((type) => (
+                <div
+                  key={type.value}
+                  className={`select-opt ${data.logoType === type.value ? "selected" : ""}`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onChange("logoType", type.value);
+                    setOpen(false);
+                  }}
+                >
+                  {type.label}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="color-fields-row">
+        <div className="field-group">
+          <label className="field-label" htmlFor="lw-primary-color">PRIMARY COLOR</label>
+          <div className="color-picker-field">
+            <input
+              id="lw-primary-color"
+              type="color"
+              className="color-picker-swatch"
+              value={primaryColor}
+              onChange={(e) => onChange("primaryColor", e.target.value)}
+              aria-label="Primary color"
+            />
+            <input
+              type="text"
+              className="field-input color-picker-hex"
+              value={data.primaryColor || ""}
+              placeholder="#FF6B1A"
+              maxLength={7}
+              onChange={(e) => {
+                const next = e.target.value.trim();
+                if (next === "" || /^#[0-9A-Fa-f]{0,6}$/.test(next)) {
+                  onChange("primaryColor", next);
+                }
+              }}
+              onBlur={() => {
+                const raw = String(data.primaryColor || "").trim();
+                if (raw && !isValidHexColor(raw)) {
+                  onChange("primaryColor", DEFAULT_PRIMARY_COLOR);
+                }
+              }}
+            />
+          </div>
+        </div>
+
+        <div className="field-group">
+          <label className="field-label" htmlFor="lw-secondary-color">SECONDARY COLOR</label>
+          <div className="color-picker-field">
+            <input
+              id="lw-secondary-color"
+              type="color"
+              className="color-picker-swatch"
+              value={secondaryColor}
+              onChange={(e) => onChange("secondaryColor", e.target.value)}
+              aria-label="Secondary color"
+            />
+            <input
+              type="text"
+              className="field-input color-picker-hex"
+              value={data.secondaryColor || ""}
+              placeholder="#1A1A2E"
+              maxLength={7}
+              onChange={(e) => {
+                const next = e.target.value.trim();
+                if (next === "" || /^#[0-9A-Fa-f]{0,6}$/.test(next)) {
+                  onChange("secondaryColor", next);
+                }
+              }}
+              onBlur={() => {
+                const raw = String(data.secondaryColor || "").trim();
+                if (raw && !isValidHexColor(raw)) {
+                  onChange("secondaryColor", DEFAULT_SECONDARY_COLOR);
+                }
+              }}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="field-group field-group--grow">
+        <label className="field-label" htmlFor="lw-logo-description">
+          DESCRIPTION ABOUT YOUR LOGO (OPTIONAL)
+        </label>
+        <textarea
+          id="lw-logo-description"
+          className="field-textarea"
+          placeholder="Describe the style, vibe, symbols, or ideas you want in your logo..."
+          value={data.logoDescription}
+          onChange={(e) => onChange("logoDescription", e.target.value)}
+          rows={3}
+          maxLength={2000}
+        />
+      </div>
+
+      <div className="step-nav">
+        <button type="button" className="nav-btn prev-btn" onClick={onPrev} disabled={Boolean(isSaving)}>
+          ← PREVIOUS
+        </button>
+        <button type="button" className="nav-btn next-btn" onClick={onNext} disabled={Boolean(isSaving)}>
+          {isSaving ? "SAVING…" : "NEXT →"}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// Step 5: Contact
 function Step4({ data, onChange, onSubmit, onPrev, isSaving }) {
   const handleSubmit = () => {
     if (!data.email.trim() || !data.phone.trim() || isSaving) return;
@@ -346,7 +526,7 @@ function Step4({ data, onChange, onSubmit, onPrev, isSaving }) {
 
   return (
     <div className="step-content animate-in modal-step">
-      <div className="step-badge">Step 3 of 3</div>
+      <div className="step-badge">Step 4 of 4</div>
       <h2 className="modal-title">Almost done! Let's get your <span className="accent">contact info</span></h2>
       <p className="modal-sub">We'll generate 2 AI logo concepts for you</p>
 
@@ -476,6 +656,10 @@ export default function LogoWizard() {
     businessName: inboundBusinessName,
     slogan: "",
     industry: "",
+    logoType: "",
+    primaryColor: "",
+    secondaryColor: "",
+    logoDescription: "",
     email: "",
     phone: "",
   });
@@ -643,6 +827,36 @@ export default function LogoWizard() {
     }
   };
 
+  const handleBusinessInfoNext = async () => {
+    if (!isLogoCreatorPage) {
+      setStep(4);
+      return;
+    }
+    if (!sessionToken) {
+      setApiError("Session missing. Please close and enter your business name again.");
+      return;
+    }
+    setApiError("");
+    setStepSaving(true);
+    try {
+      const primary = String(formData.primaryColor || "").trim();
+      const secondary = String(formData.secondaryColor || "").trim();
+      await postLogoCreatorStep({
+        session_token: sessionToken,
+        step: 3,
+        logo_type: formData.logoType || "",
+        primary_color: isValidHexColor(primary) ? primary : "",
+        secondary_color: isValidHexColor(secondary) ? secondary : "",
+        logo_description: formData.logoDescription?.trim() || "",
+      });
+      setStep(4);
+    } catch (e) {
+      setApiError(e?.message || "Could not save business information.");
+    } finally {
+      setStepSaving(false);
+    }
+  };
+
   const handleContactSubmit = async () => {
     if (!isLogoCreatorPage) {
       navigate("/logocreator-completed");
@@ -664,7 +878,7 @@ export default function LogoWizard() {
     try {
       const stepResult = await postLogoCreatorStep({
         session_token: sessionToken,
-        step: 3,
+        step: 4,
         email,
         phone,
       });
@@ -676,7 +890,7 @@ export default function LogoWizard() {
         return;
       }
       movedToGenerate = true;
-      setStep(4);
+      setStep(5);
       const images = await generateLogosForSession(sessionToken);
       if (images) goToCompletedPage(images);
     } catch (e) {
@@ -684,7 +898,7 @@ export default function LogoWizard() {
       const message = e?.message || "Could not submit.";
       if (movedToGenerate) {
         setGenerateError(message);
-        setStep(4);
+        setStep(5);
       } else {
         setApiError(message);
       }
@@ -1187,7 +1401,20 @@ export default function LogoWizard() {
         .field-group { margin-bottom: 20px; }
         .modal-step .field-group {
           position: relative;
-          z-index: 2;
+          z-index: 1;
+        }
+        /* Open dropdown must stack above later fields (colors/textarea) */
+        .modal-step .field-group:has(.custom-select.open),
+        .modal-step .field-group--select-open {
+          z-index: 100;
+        }
+        .modal-step .color-fields-row,
+        .color-fields-row {
+          position: relative;
+          z-index: 1;
+        }
+        .modal-step .field-group--grow {
+          z-index: 1;
         }
         .panel-logos {
           position: absolute;
@@ -1276,6 +1503,90 @@ export default function LogoWizard() {
           background: rgba(255,145,72,0.14);
           box-shadow: 0 0 0 3px rgba(255,145,72,0.18);
         }
+        .field-textarea {
+          width: 100%;
+          min-height: 88px;
+          padding: 14px 18px;
+          background: rgba(255,255,255,0.08);
+          border: 1px solid rgba(255,255,255,0.18);
+          border-radius: 8px;
+          color: #fff;
+          font-size: 0.95rem;
+          font-family: 'Barlow', sans-serif;
+          outline: none;
+          resize: vertical;
+          line-height: 1.45;
+          transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+        }
+        .field-textarea::placeholder { color: rgba(255,255,255,0.25); }
+        .field-textarea:focus {
+          border-color: #FF6B1A;
+          background: rgba(255,145,72,0.14);
+          box-shadow: 0 0 0 3px rgba(255,145,72,0.18);
+        }
+        .color-fields-row {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 14px;
+          position: relative;
+          z-index: 1;
+        }
+        .color-picker-field {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+        .color-picker-swatch {
+          width: 48px;
+          height: 48px;
+          padding: 0;
+          border: 1px solid rgba(255,255,255,0.22);
+          border-radius: 8px;
+          background: transparent;
+          cursor: pointer;
+          flex-shrink: 0;
+          overflow: hidden;
+        }
+        .color-picker-swatch::-webkit-color-swatch-wrapper { padding: 3px; }
+        .color-picker-swatch::-webkit-color-swatch {
+          border: none;
+          border-radius: 5px;
+        }
+        .color-picker-swatch::-moz-color-swatch {
+          border: none;
+          border-radius: 5px;
+        }
+        .color-picker-hex {
+          flex: 1 1 auto;
+          min-width: 0;
+          text-transform: uppercase;
+          letter-spacing: 0.04em;
+        }
+        .field-group--grow {
+          flex: 1 1 auto;
+          min-height: 0;
+        }
+        .modal-box--biz {
+          height: clamp(640px, min(68vh, 100dvh - 40px), 720px);
+          max-height: min(720px, calc(100dvh - 32px));
+        }
+        .modal-box--biz > .step-content.modal-step {
+          overflow-y: auto;
+          overflow-x: hidden;
+          padding-right: 2px;
+        }
+        /* Business step: expand logo-type list in-flow so it never covers color/description fields */
+        .modal-box--biz .field-group--select-open .select-dropdown,
+        .modal-box--biz .custom-select.open .select-dropdown {
+          position: static;
+          max-height: 168px;
+          margin-top: 0;
+          border-radius: 0 0 8px 8px;
+          box-shadow: none;
+        }
+        .modal-box--biz .custom-select.open .select-display {
+          border-bottom-color: rgba(255,107,26,0.35);
+        }
 
         /* Custom Select — dropdown absolute so fixed modal height does not change when open */
         .custom-select {
@@ -1284,7 +1595,7 @@ export default function LogoWizard() {
           z-index: 1;
         }
         .custom-select.open {
-          z-index: 40;
+          z-index: 90;
         }
         .select-display {
           height: 52px; padding: 0 18px;
@@ -1300,6 +1611,7 @@ export default function LogoWizard() {
           border-color: #FF6B1A;
           border-radius: 8px 8px 0 0;
           border-bottom-color: transparent;
+          background: #241910;
         }
         .select-arrow { color: rgba(255,255,255,0.4); font-size: 0.8rem; }
         .select-dropdown {
@@ -1308,27 +1620,29 @@ export default function LogoWizard() {
           left: 0;
           right: 0;
           margin-top: 0;
-          background: #1a1a1a;
-          border: 1px solid rgba(255,107,26,0.3);
+          background: #241910;
+          border: 1px solid rgba(255,107,26,0.45);
           border-top: none;
           border-radius: 0 0 8px 8px;
           max-height: 220px;
           overflow-y: auto;
-          z-index: 50;
-          box-shadow: 0 16px 40px rgba(0,0,0,0.55);
+          z-index: 120;
+          box-shadow: 0 18px 44px rgba(0,0,0,0.72);
+          isolation: isolate;
         }
         .select-dropdown::-webkit-scrollbar { width: 4px; }
         .select-dropdown::-webkit-scrollbar-track { background: #111; }
         .select-dropdown::-webkit-scrollbar-thumb { background: #FF6B1A; border-radius: 2px; }
         .select-opt {
-          padding: 12px 18px; color: rgba(255,255,255,0.7);
+          padding: 12px 18px; color: rgba(255,255,255,0.78);
           font-size: 0.9rem; cursor: pointer;
-          border-bottom: 1px solid rgba(255,255,255,0.04);
+          background: #241910;
+          border-bottom: 1px solid rgba(255,255,255,0.06);
           transition: background 0.15s, color 0.15s;
         }
-        .select-opt:hover { background: rgba(255,107,26,0.12); color: #FF6B1A; }
-        .select-opt.selected { color: #FF6B1A; background: rgba(255,107,26,0.08); }
-        .bold-opt { font-weight: 700; color: rgba(255,255,255,0.3); }
+        .select-opt:hover { background: #3a2418; color: #FF6B1A; }
+        .select-opt.selected { color: #FF6B1A; background: #3a2418; }
+        .bold-opt { font-weight: 700; color: rgba(255,255,255,0.35); }
 
         /* Step Nav — pin to bottom of fixed-height modal */
         .step-nav {
@@ -2123,6 +2437,17 @@ export default function LogoWizard() {
             height: auto;
             padding: 12px 16px;
           }
+          .color-fields-row {
+            grid-template-columns: 1fr;
+            gap: 12px;
+          }
+          .modal-box--biz {
+            height: auto;
+            max-height: calc(100dvh - 20px);
+          }
+          .field-textarea {
+            min-height: 76px;
+          }
 
           .done-icon { width: 48px; height: 48px; margin-bottom: 10px; }
           .done-card { padding: 14px; margin: 16px 0; }
@@ -2200,7 +2525,7 @@ export default function LogoWizard() {
 
         {showModal && (
           <div className="modal-overlay">
-            <div className={`modal-box${step === 4 ? " modal-box--done" : ""}`}>
+            <div className={`modal-box${step === 5 ? " modal-box--done" : ""}${step === 3 ? " modal-box--biz" : ""}`}>
               <div className="modal-bg" />
               <PanelLogos />
               {apiError ? (
@@ -2235,15 +2560,24 @@ export default function LogoWizard() {
                 />
               )}
               {step === 3 && (
-                <Step4
+                <StepBusinessInfo
                   data={formData}
                   onChange={update}
-                  onSubmit={handleContactSubmit}
+                  onNext={handleBusinessInfoNext}
                   onPrev={() => setStep(2)}
                   isSaving={stepSaving || sessionStarting}
                 />
               )}
               {step === 4 && (
+                <Step4
+                  data={formData}
+                  onChange={update}
+                  onSubmit={handleContactSubmit}
+                  onPrev={() => setStep(3)}
+                  isSaving={stepSaving || sessionStarting}
+                />
+              )}
+              {step === 5 && (
                 <StepGenerating
                   stages={GENERATE_STAGES}
                   activeIndex={Math.min(generateStageIndex, GENERATE_STAGES.length - 1)}
